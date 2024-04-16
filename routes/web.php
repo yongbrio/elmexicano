@@ -17,7 +17,7 @@ use App\Livewire\General\Proveedores\Proveedores;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('auth/login');
 })->middleware(['guest']);
 
 Route::get('/dashboard', Dashboard::class)->name('dashboard')->middleware(['auth', 'verified']);
