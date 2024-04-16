@@ -26,7 +26,7 @@
 
             {{-- Clientes --}}
             <li>
-                <a href="#"
+                <a href="{{route('clientes-general')}}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <i class="fa-solid fa-user-group"></i>
                     <span class="flex-1 ms-3 whitespace-nowrap">Clientes</span>
@@ -36,7 +36,7 @@
 
             {{-- Proveedores --}}
             <li>
-                <a href="#"
+                <a href="{{route('proveedores-general')}}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <i class="fa-solid fa-users-line"></i>
                     <span class="flex-1 ms-3 whitespace-nowrap">Proveedores</span>
@@ -69,34 +69,34 @@
                 </button>
                 <ul id="dropdown-administration" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="#"
+                        <a href="{{route('admin-clientes')}}"
                             class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <i class="fa-solid fa-user-group"></i> <span class="flex-1 ms-3 whitespace-nowrap">Admin
                                 Clientes</span> </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{route('admin-proveedores')}}"
                             class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <i class="fa-solid fa-users-line"></i>
                             <span class="flex-1 ms-3 whitespace-nowrap">Admin Proveedores</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{route('admin-empresas')}}"
                             class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <i class="fa-solid fa-building"></i>
                             <span class="flex-1 ms-3 whitespace-nowrap">Empresas</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{route('admin-sucursales')}}"
                             class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <i class="fa-solid fa-industry"></i>
                             <span class="flex-1 ms-3 whitespace-nowrap">Sucursales</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{route('admin-cuentas-bancarias')}}"
                             class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <i class="fa-solid fa-piggy-bank"></i>
                             <span class="flex-1 ms-3 whitespace-nowrap">Cuentas Bancarias</span>
