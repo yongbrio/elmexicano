@@ -10,10 +10,14 @@ use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
 use RamonRietdijk\LivewireTables\Columns\ViewColumn;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
+use Livewire\WithPagination;
+
 
 class ListaClientesTable extends LivewireTable
 {
    protected string $model = ClientesModel::class;
+
+   use WithPagination;
 
    protected function columns(): array
    {
