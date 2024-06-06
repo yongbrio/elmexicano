@@ -3,6 +3,8 @@
 namespace App\Livewire\Administracion;
 
 use App\Models\ClientesModel;
+use App\Models\DepartamentosModel;
+use App\Models\MunicipiosModel;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -19,7 +21,9 @@ class RegistrarClientes extends Component
     public $telefono;
     public $nit;
     public $departamento;
+    public $iddepartamento;
     public $ciudad;
+    public $idciudad;
     public $direccion;
     public $sucursal;
     public $correo;
@@ -28,6 +32,7 @@ class RegistrarClientes extends Component
     public $empresaFactura;
     public $importancia;
     public $estado;
+    public $listaMunicipios;
 
     public function render()
     {
@@ -46,8 +51,8 @@ class RegistrarClientes extends Component
             'nit' => $this->nit,
             'sucursal' => $this->sucursal,
             'direccion' => $this->direccion,
-            'ciudad' => $this->ciudad,
-            'departamento' => $this->departamento,
+            'ciudad' => $this->idciudad,
+            'departamento' => $this->iddepartamento,
             'correo' => $this->correo,
             'nombre_encargado' => $this->nombreEncargado,
             'descripcion' => $this->descripcion,
@@ -72,8 +77,8 @@ class RegistrarClientes extends Component
             'grupo' => 'required|string|max:255',
             'telefono' => 'required|integer',
             'nit' => 'required|string|max:20|unique:clientes,nit',  // Asumiendo que es una tabla de clientes
-            'departamento' => 'required|string|max:100',
-            'ciudad' => 'required|string|max:100',
+            'iddepartamento' => 'required',
+            'idciudad' => 'required|string|max:100',
             'direccion' => 'required|string|max:255',
             'sucursal' => 'required|string|max:100',
             'correo' => 'required|email|max:255',
@@ -83,15 +88,15 @@ class RegistrarClientes extends Component
             'importancia' => 'required|string',
             'estado' => 'required|string'
         ], [
-            'nombreComercial.required' => 'El nombre comercial es obligatorio.',
             'nombreLegal.required' => 'El nombre legal es obligatorio.',
+            'nombreComercial.required' => 'El nombre comercial es obligatorio.',
             'grupo.required' => 'El grupo es obligatorio.',
             'telefono.required' => 'El teléfono es obligatorio.',
             'telefono.integer' => 'El teléfono debe ser númerico.',
             'nit.required' => 'El NIT es obligatorio.',
             'nit.unique' => 'El NIT ya está registrado.',
-            'departamento.required' => 'El departamento es obligatorio.',
-            'ciudad.required' => 'La ciudad es obligatoria.',
+            'iddepartamento.required' => 'El departamento es obligatorio.',
+            'idciudad.required' => 'La ciudad es obligatoria.',
             'correo.required' => 'El correo electrónico es obligatorio.',
             'correo.email' => 'El correo debe ser una dirección de email válida.',
             'direccion.required' => 'La dirección es obligatoria.',
@@ -113,5 +118,39 @@ class RegistrarClientes extends Component
     public function redirgir()
     {
         return redirect()->route('admin-clientes');
+    }
+
+    public function buscarCiudad()
+    {
+        if (!empty(trim($this->ciudad))) {
+
+            $this->listaMunicipios = MunicipiosModel::where('nombre_municipio', 'like', '%' . $this->ciudad . '%')
+                ->orderBy('nombre_municipio')
+                ->take(5)
+                ->get();
+
+            $this->idciudad = null;
+            $this->departamento = null;
+            $this->iddepartamento = null;
+            
+        } else {
+
+            $this->listaMunicipios = null;
+        }
+    }
+
+    public function setearNombreCiudad($id)
+    {
+        $this->listaMunicipios = null;
+
+        $nombreCiudad = MunicipiosModel::find($id);
+
+        if ($nombreCiudad) {
+            $this->ciudad = $nombreCiudad->nombre_municipio;
+            $this->idciudad = $id;
+            $departamento = DepartamentosModel::where('codigo_dane', $nombreCiudad->codigo_departamento)->first();
+            $this->departamento = $departamento->nombre_departamento;
+            $this->iddepartamento = $departamento->id;
+        }
     }
 }

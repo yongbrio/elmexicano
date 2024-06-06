@@ -18,6 +18,9 @@ export default {
             backgroundImage: {
                 'fondo': "url('/images/fondo.png')",
             },
+            scale: {
+                '175': '1.75',
+            },
         },
     },
 

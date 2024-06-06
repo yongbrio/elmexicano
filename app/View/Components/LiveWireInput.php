@@ -14,11 +14,15 @@ class LiveWireInput extends Component
     public $placeholder;
     public $typeInput;
     public $model;
+    public $disabled;
+    public $modelblur;
+    public $wire;
+
 
     /**
      * Create a new component instance.
      */
-    public function __construct($label, $id, $icon, $placeholder, $typeInput, $model = null,)
+    public function __construct($label, $id, $icon, $placeholder, $typeInput, $model = null, $disabled = null, $modelblur = null, $wire = null)
     {
         $this->label = $label;
         $this->id = $id;
@@ -26,6 +30,9 @@ class LiveWireInput extends Component
         $this->model = $model;
         $this->placeholder = $placeholder;
         $this->typeInput = $typeInput;
+        $this->disabled = $disabled;
+        $this->modelblur = $modelblur;
+        $this->wire = $wire;
     }
 
     /**

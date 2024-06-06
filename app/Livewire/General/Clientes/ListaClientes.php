@@ -9,6 +9,8 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
+use App\Models\DepartamentosModel;
+use App\Models\MunicipiosModel;
 
 class ListaClientes extends LivewireTable
 {
@@ -35,8 +37,20 @@ class ListaClientes extends LivewireTable
             Column::make(__('NIT'), 'nit')->sortable()->searchable(),
             Column::make(__('Sucursal'), 'sucursal')->sortable()->searchable(),
             Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
-            Column::make(__('Departamento'), 'departamento')->sortable()->searchable(),
-            Column::make(__('Ciudad'), 'ciudad')->sortable()->searchable(),
+            Column::make(
+                __('Ciudad'),
+                function (mixed $value) {
+                    $nombreCiudad = MunicipiosModel::where('id', $value->ciudad)->first();
+                    return $nombreCiudad->nombre_municipio;
+                }
+            )->sortable()->searchable(),
+            Column::make(
+                __('Departamento'),
+                function (mixed $value) {
+                    $nombreDpto = DepartamentosModel::where('id', $value->departamento)->first();
+                    return $nombreDpto->nombre_departamento;
+                }
+            )->sortable()->searchable(),
             Column::make(__('Correo'), 'correo')->sortable()->searchable(),
             Column::make(__('Nombre encargado'), 'nombre_encargado')->sortable()->searchable(),
             Column::make(__('Descripción'), 'descripcion')->sortable()->searchable(),
@@ -67,9 +81,8 @@ class ListaClientes extends LivewireTable
     }
 
 
-    protected function activado(){
+    protected function activado()
+    {
         return true;
     }
-
-
 }

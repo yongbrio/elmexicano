@@ -1,3 +1,4 @@
 *
 !public/
+!/storage/app/archivos_conf/
 !.gitignore

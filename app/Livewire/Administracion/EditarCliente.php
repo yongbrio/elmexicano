@@ -6,6 +6,8 @@ use App\Models\ClientesModel;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use App\Models\MunicipiosModel;
+use App\Models\DepartamentosModel;
 
 class EditarCliente extends Component
 {
@@ -25,6 +27,9 @@ class EditarCliente extends Component
     public $empresaFactura;
     public $importancia;
     public $estado;
+    public $iddepartamento;
+    public $idciudad;
+    public $listaMunicipios;
 
     public function mount($id)
     {
@@ -41,15 +46,21 @@ class EditarCliente extends Component
             $this->nit = $cliente->nit;
             $this->sucursal = $cliente->sucursal;
             $this->direccion = $cliente->direccion;
-            $this->ciudad = $cliente->ciudad;
-            $this->departamento = $cliente->departamento;
+
+            $nombre_municipio = MunicipiosModel::where('id', $cliente->ciudad)->first();
+            $nombre_departamento = DepartamentosModel::where('id', $cliente->departamento)->first();
+
+            $this->ciudad = $nombre_municipio->nombre_municipio;
+            $this->departamento = $nombre_departamento->nombre_departamento;
+
+            $this->iddepartamento = $cliente->departamento;
+            $this->idciudad = $cliente->ciudad;
             $this->correo = $cliente->correo;
             $this->nombreEncargado = $cliente->nombre_encargado;
             $this->descripcion = $cliente->descripcion;
             $this->empresaFactura = $cliente->empresa_factura;
             $this->importancia = $cliente->importancia;
             $this->estado = $cliente->estado;
-            
         } else {
             $this->redirgir();
         }
@@ -76,8 +87,8 @@ class EditarCliente extends Component
             $cliente->nit = $this->nit;
             $cliente->sucursal = $this->sucursal;
             $cliente->direccion = $this->direccion;
-            $cliente->ciudad = $this->ciudad;
-            $cliente->departamento = $this->departamento;
+            $cliente->ciudad = $this->idciudad;
+            $cliente->departamento = $this->iddepartamento;
             $cliente->correo = $this->correo;
             $cliente->nombre_encargado = $this->nombreEncargado;
             $cliente->descripcion = $this->descripcion;
@@ -104,8 +115,8 @@ class EditarCliente extends Component
             'grupo' => 'required|string|max:255',
             'telefono' => 'required|integer',
             'nit' => 'required|string|max:20|unique:clientes,nit,' . $this->id,  // Asumiendo que es una tabla de clientes
-            'departamento' => 'required|string|max:100',
-            'ciudad' => 'required|string|max:100',
+            'iddepartamento' => 'required',
+            'idciudad' => 'required|string|max:100',
             'direccion' => 'required|string|max:255',
             'sucursal' => 'required|string|max:100',
             'correo' => 'required|email|max:255',
@@ -113,17 +124,17 @@ class EditarCliente extends Component
             'descripcion' => 'required|string|max:1000',
             'empresaFactura' => 'required|string|max:255',
             'importancia' => 'required|string',
-            'estado' => 'required|integer'
+            'estado' => 'required'
         ], [
-            'nombreComercial.required' => 'El nombre comercial es obligatorio.',
             'nombreLegal.required' => 'El nombre legal es obligatorio.',
+            'nombreComercial.required' => 'El nombre comercial es obligatorio.',
             'grupo.required' => 'El grupo es obligatorio.',
             'telefono.required' => 'El teléfono es obligatorio.',
             'telefono.integer' => 'El teléfono debe ser númerico.',
             'nit.required' => 'El NIT es obligatorio.',
             'nit.unique' => 'El NIT ya está registrado.',
-            'departamento.required' => 'El departamento es obligatorio.',
-            'ciudad.required' => 'La ciudad es obligatoria.',
+            'iddepartamento.required' => 'El departamento es obligatorio.',
+            'idciudad.required' => 'La ciudad es obligatoria.',
             'correo.required' => 'El correo electrónico es obligatorio.',
             'correo.email' => 'El correo debe ser una dirección de email válida.',
             'direccion.required' => 'La dirección es obligatoria.',
@@ -136,6 +147,7 @@ class EditarCliente extends Component
         ]);
     }
 
+
     public function cancelarActualizarCliente()
     {
         $this->redirgir();
@@ -145,5 +157,39 @@ class EditarCliente extends Component
     public function redirgir()
     {
         return redirect()->route('admin-clientes');
+    }
+
+
+    public function buscarCiudad()
+    {
+        if (!empty(trim($this->ciudad))) {
+
+            $this->listaMunicipios = MunicipiosModel::where('nombre_municipio', 'like', '%' . $this->ciudad . '%')
+                ->orderBy('nombre_municipio')
+                ->take(5)
+                ->get();
+
+            $this->idciudad = null;
+            $this->departamento = null;
+            $this->iddepartamento = null;
+        } else {
+
+            $this->listaMunicipios = null;
+        }
+    }
+
+    public function setearNombreCiudad($id)
+    {
+        $this->listaMunicipios = null;
+
+        $nombreCiudad = MunicipiosModel::find($id);
+
+        if ($nombreCiudad) {
+            $this->ciudad = $nombreCiudad->nombre_municipio;
+            $this->idciudad = $id;
+            $departamento = DepartamentosModel::where('codigo_dane', $nombreCiudad->codigo_departamento)->first();
+            $this->departamento = $departamento->nombre_departamento;
+            $this->iddepartamento = $departamento->id;
+        }
     }
 }
