@@ -7,6 +7,7 @@ use App\Livewire\Administracion\CuentasBancarias\AdminCuentasBancarias;
 use App\Livewire\Administracion\CuentasBancarias\EditarCuentaBancaria;
 use App\Livewire\Administracion\EditarCliente;
 use App\Livewire\Administracion\Egresos\AdminEgresos;
+use App\Livewire\Administracion\Egresos\EditarEgreso;
 use App\Livewire\Administracion\Empresas\AdminEmpresas;
 use App\Livewire\Administracion\Empresas\EditarEmpresa;
 use App\Livewire\Administracion\Inventario\AdminInventario;
@@ -67,6 +68,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/perfiles', AdminPerfiles::class)->name('admin-perfiles')->middleware('can:seguridad.perfiles');
     /* Egresos */
     Route::get('/egresos', AdminEgresos::class)->name('admin-egresos')->middleware('can:admin.egresos');
+    Route::get('/egresos/{id}', EditarEgreso::class)->name('editar-egreso')->middleware('can:admin.egresos');
     /* Acceso a imagenes */
     Route::get('/storage/{modulo}/{filename}', function ($modulo, $filename) {
         $fullPath = storage_path("app/imagenes/{$modulo}/{$filename}");

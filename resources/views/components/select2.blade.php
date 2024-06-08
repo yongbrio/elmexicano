@@ -1,7 +1,7 @@
 <div>
     <label for="{{ $id }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $label }}</label>
     <div class="flex">
-        
+
         <span
             class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-lg dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
             <i class="{{ $icon }}"></i>
@@ -54,6 +54,9 @@
             @foreach ($perfiles as $perfil)
             <option value="{{$perfil->role_id}}">{{$perfil->role_name}}</option>
             @endforeach
+            @elseif ($id == 'tipo_egreso')
+            <option value="1">Insumo</option>
+            <option value="2">Regular</option>
             @else
             @foreach ( $empresas as $empresa )
             <option value="{{$empresa->id}}">{{$empresa->nombre_comercial}}</option>
