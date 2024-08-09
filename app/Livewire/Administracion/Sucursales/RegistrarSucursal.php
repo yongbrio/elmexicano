@@ -27,7 +27,7 @@ class RegistrarSucursal extends Component
     {
         $this->validacionCampos();
 
-        $empresa = SucursalesModel::create([
+        $sucursal = SucursalesModel::create([
             'identificador' => $this->identificador,
             'nombre_sucursal' => $this->nombre_sucursal,
             'direccion' => $this->direccion,
@@ -37,7 +37,7 @@ class RegistrarSucursal extends Component
             'registrado_por' => Auth::user()->id,
         ]);
 
-        if ($empresa) {
+        if ($sucursal) {
             $message = "La sucursal ha sido creada con éxito";
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
         } else {

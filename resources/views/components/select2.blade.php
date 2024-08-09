@@ -6,7 +6,7 @@
             class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-lg dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
             <i class="{{ $icon }}"></i>
         </span>
-        <select id="{{ $id }}" {{ $model ? 'wire:model=' .$model : '' }} {{ $wire ? 'wire:' .$wire : '' }}
+        <select id="{{ $id }}" {{ $model ? 'wire:model=' .$model : '' }} {{ $wire ? 'wire:' .$wire : '' }} {{$disabled ? $disabled: ''}}
             class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option selected value="">{{$optionTextDefault}}</option>
             @if ($id == 'estado')

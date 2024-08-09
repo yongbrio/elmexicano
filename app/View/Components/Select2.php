@@ -23,6 +23,7 @@ class Select2 extends Component
     public $model;
     public $optionTextDefault;
     public $idSucursalOrigen;
+    public $disabled;
 
     /* Variables para las opciones de los select */
     public $empresas;
@@ -38,12 +39,13 @@ class Select2 extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct($label, $id, $icon, $model, $optionTextDefault, $wire = null, $idSucursalOrigen = null)
+    public function __construct($label, $id, $icon, $model, $optionTextDefault, $wire = null, $idSucursalOrigen = null, $disabled = '')
     {
         $this->label = $label;
         $this->id = $id;
         $this->icon = $icon;
         $this->model = $model;
+        $this->disabled = $disabled;
         $this->optionTextDefault = $optionTextDefault;
         $this->empresas = EmpresasModel::where('estado', 1)->get();
         $this->sucursales = SucursalesModel::where('estado', 1)->get();

@@ -8,6 +8,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\MunicipiosModel;
 use App\Models\DepartamentosModel;
+use App\Models\LogModel;
 
 class EditarCliente extends Component
 {
@@ -100,6 +101,7 @@ class EditarCliente extends Component
             $actualizado = $cliente->save();
 
             if ($actualizado) {
+
                 $message = "El cliente se ha actualizado con éxito";
                 $this->dispatch('estadoActualizacion', title: "Actualizado", icon: 'success', message: $message);
             } else {

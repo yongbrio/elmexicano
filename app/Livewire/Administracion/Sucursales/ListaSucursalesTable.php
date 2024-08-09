@@ -48,14 +48,18 @@ class ListaSucursalesTable extends LivewireTable
 
     public function cambiarEstado($id, $estado)
     {
+        $accion = '';
+
         if ($estado == 0) {
             $estado = 1;
+            $accion = 'Activar Sucursal';
         } else {
             $estado = 0;
+            $accion = 'Desactivar Sucursal';
         }
 
-        $cliente = SucursalesModel::find($id);
-        $cliente->estado = $estado;
-        $cliente->save();
+        $sucursal = SucursalesModel::find($id);
+        $sucursal->estado = $estado;
+        $sucursal->save();
     }
 }

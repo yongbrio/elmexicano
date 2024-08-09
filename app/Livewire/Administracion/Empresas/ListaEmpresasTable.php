@@ -27,14 +27,14 @@ class ListaEmpresasTable extends LivewireTable
             Column::make(__('Estado'), function (mixed $value) {
                 $activado = "";
                 if ($value->estado == 1) {
-                   $activado = "checked";
+                    $activado = "checked";
                 }
                 return view('livewire.acciones.activar-estado')->with([
-                   'id' => $value->id,
-                   'estado' => $value->estado,
-                   'activado' => $activado
+                    'id' => $value->id,
+                    'estado' => $value->estado,
+                    'activado' => $activado
                 ]);
-             })->asHtml(),
+            })->asHtml(),
         ];
     }
 
@@ -50,15 +50,18 @@ class ListaEmpresasTable extends LivewireTable
 
     public function cambiarEstado($id, $estado)
     {
-       if ($estado == 0) {
-          $estado = 1;
-       } else {
-          $estado = 0;
-       }
-       
-       $cliente = EmpresasModel::find($id);
-       $cliente->estado = $estado;
-       $cliente->save();
-    }
+        $accion = "";
 
+        if ($estado == 0) {
+            $estado = 1;
+            $accion = "Activar Empresa";
+        } else {
+            $estado = 0;
+            $accion = "Desactivar Empresa";
+        }
+
+        $empresa = EmpresasModel::find($id);
+        $empresa->estado = $estado;
+        $empresa->save();
+    }
 }

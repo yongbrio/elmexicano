@@ -11,7 +11,10 @@ use RamonRietdijk\LivewireTables\Columns\Column;
 use RamonRietdijk\LivewireTables\Columns\ViewColumn;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
 use App\Models\DepartamentosModel;
+use App\Models\LogModel;
 use App\Models\MunicipiosModel;
+use App\Models\SucursalesModel;
+use Illuminate\Support\Facades\Auth;
 
 class ListaClientesTable extends LivewireTable
 {
@@ -28,7 +31,10 @@ class ListaClientesTable extends LivewireTable
          Column::make(__('Nombre Comercial'), 'nombre_comercial')->sortable()->searchable(),
          Column::make(__('Nombre Legal'), 'nombre_legal')->sortable()->searchable(),
          Column::make(__('NIT'), 'nit')->sortable()->searchable(),
-         Column::make(__('Sucursal'), 'sucursal')->sortable()->searchable(),
+         Column::make(__('Sucursal'), function (mixed $value) {
+            $sucursal = SucursalesModel::find($value->sucursal);
+            return $sucursal->nombre_sucursal;
+         })->sortable()->searchable(),
          Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
          Column::make(
             __('Ciudad'),
@@ -80,9 +86,21 @@ class ListaClientesTable extends LivewireTable
    public function cambiarEstado($id, $estado)
    {
       if ($estado == 0) {
+
          $estado = 1;
       } else {
+
          $estado = 0;
+      }
+
+      $accion = "";
+
+      if ($estado == 1) {
+
+         $accion = "Activar Cliente";
+      } else if ($estado == 0) {
+
+         $accion = "Desactivar Cliente";
       }
 
       $cliente = ClientesModel::find($id);

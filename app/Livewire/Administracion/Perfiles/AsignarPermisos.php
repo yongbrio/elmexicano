@@ -33,6 +33,8 @@ class AsignarPermisos extends Component
             ['nombre_modulo' => 'Proveedores', 'id' => 'proveedores' . $this->role_id, 'name_permission' => 'proveedores', 'activate' => $this->validarSiPermisoExiste("proveedores")],
             ['nombre_modulo' => 'Inventario', 'id' => 'inventario' . $this->role_id, 'name_permission' => 'inventario', 'activate' => $this->validarSiPermisoExiste("inventario")],
             ['nombre_modulo' => 'Egresos', 'id' => 'egresos' . $this->role_id, 'name_permission' => 'egresos', 'activate' => $this->validarSiPermisoExiste("egresos")],
+/*             ['nombre_modulo' => 'Ordenes Ingreso', 'id' => 'ordenes_ingreso' . $this->role_id, 'name_permission' => 'ordenes_ingreso', 'activate' => $this->validarSiPermisoExiste("ordenes_ingreso")],
+            ['nombre_modulo' => 'Ordenes Egreso', 'id' => 'ordenes_egreso' . $this->role_id, 'name_permission' => 'ordenes_egreso', 'activate' => $this->validarSiPermisoExiste("ordenes_egreso")], */
         ];
 
         $this->modulosArrayAdministracion = [
@@ -44,6 +46,7 @@ class AsignarPermisos extends Component
             ['nombre_modulo' => 'Admin Inventario', 'id' => 'admin_inventario' . $this->role_id, 'name_permission' => 'admin.inventario', 'activate' => $this->validarSiPermisoExiste("admin.inventario")],
             ['nombre_modulo' => 'Categoría Productos', 'id' => 'admin_categoria_productos' . $this->role_id, 'name_permission' => 'admin.categoria.productos', 'activate' => $this->validarSiPermisoExiste("admin.categoria.productos")],
             ['nombre_modulo' => 'Admin Egresos', 'id' => 'admin_egresos' . $this->role_id, 'name_permission' => 'admin.egresos', 'activate' => $this->validarSiPermisoExiste("admin.egresos")],
+            ['nombre_modulo' => 'Admin Ordenes', 'id' => 'admin_ordenes' . $this->role_id, 'name_permission' => 'admin.ordenes', 'activate' => $this->validarSiPermisoExiste("admin.ordenes")],
         ];
 
         $this->modulosArraySeguridad = [

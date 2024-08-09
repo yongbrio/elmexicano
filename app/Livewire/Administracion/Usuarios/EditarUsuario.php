@@ -35,7 +35,7 @@ class EditarUsuario extends Component
     public $password;
     public $password_confirmation;
     public $perfil;
-    public $caja;
+    public $sucursal;
     public $estado;
     #[Validate('image')]
     public $imagen;
@@ -69,7 +69,7 @@ class EditarUsuario extends Component
             $this->imagen_db = $usuario->imagen;
             $this->cargo = $usuario->cargo;
             $this->perfil = $usuario->perfil;
-            $this->caja = $usuario->caja;
+            $this->sucursal = $usuario->caja;
             $this->estado = $usuario->estado;
         } else {
 
@@ -126,7 +126,7 @@ class EditarUsuario extends Component
             $usuario->cargo = $this->cargo;
             $usuario->password = $this->password;
             $usuario->perfil = $this->perfil;
-            $usuario->caja = $this->caja;
+            $usuario->caja = $this->sucursal;
             if (!$this->imagen_db && $this->imagen) {
                 $usuario->imagen = "$rutaImagen";
             } else if (!$this->imagen_db && !$this->imagen) {
@@ -173,7 +173,7 @@ class EditarUsuario extends Component
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
                 'password_confirmation' => 'required',
                 'perfil' => 'required',
-                'caja' => 'required',
+                'sucursal' => 'required',
                 'estado' => 'required',
 
             ],
@@ -209,7 +209,7 @@ class EditarUsuario extends Component
                 'password.confirmed' => 'La contraseña no coincide con la verificación',
                 'password_confirmation.required' => 'La confirmación de la contraseña es requerida',
                 'perfil.required' => 'El perfil es requerido',
-                'caja.required' => 'La caja es requerida',
+                'sucursal.required' => 'La sucursal es requerida',
                 'estado.required' => 'El estado es requerido',
             ]
         );

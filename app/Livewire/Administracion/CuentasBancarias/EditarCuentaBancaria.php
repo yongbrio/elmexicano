@@ -32,7 +32,6 @@ class EditarCuentaBancaria extends Component
             $this->empresa = $cuenta->empresa;
             $this->fecha_apertura = $cuenta->fecha_apertura->format('Y-m-d');
             $this->estado = $cuenta->estado;
-            
         } else {
 
             $this->redirgir();

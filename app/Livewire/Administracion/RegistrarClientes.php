@@ -4,6 +4,7 @@ namespace App\Livewire\Administracion;
 
 use App\Models\ClientesModel;
 use App\Models\DepartamentosModel;
+use App\Models\LogModel;
 use App\Models\MunicipiosModel;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Auth;
@@ -63,8 +64,10 @@ class RegistrarClientes extends Component
         ]);
 
         if ($cliente) {
+  
             $message = "El cliente ha sido creado con éxito";
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
+
         } else {
         }
     }
@@ -132,7 +135,6 @@ class RegistrarClientes extends Component
             $this->idciudad = null;
             $this->departamento = null;
             $this->iddepartamento = null;
-            
         } else {
 
             $this->listaMunicipios = null;

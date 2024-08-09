@@ -35,7 +35,7 @@ class RegistrarUsuarios extends Component
     public $password;
     public $password_confirmation;
     public $perfil;
-    public $caja;
+    public $sucursal;
     public $estado;
 
     #[Validate('image')]
@@ -88,7 +88,7 @@ class RegistrarUsuarios extends Component
                 'numero_cuenta' => $this->numero_cuenta,
                 'cargo' => $this->cargo,
                 'perfil' => $this->perfil,
-                'caja' => $this->caja,
+                'caja' => $this->sucursal,
                 'imagen' => "$rutaImagen",
                 'estado' => $this->estado
             ]
@@ -166,7 +166,7 @@ class RegistrarUsuarios extends Component
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
                 'password_confirmation' => 'required',
                 'perfil' => 'required',
-                'caja' => 'required',
+                'sucursal' => 'required',
                 'estado' => 'required',
 
             ],
@@ -202,7 +202,7 @@ class RegistrarUsuarios extends Component
                 'password.confirmed' => 'La contraseña no coincide con la verificación',
                 'password_confirmation.required' => 'La confirmación de la contraseña es requerida',
                 'perfil.required' => 'El perfil es requerido',
-                'caja.required' => 'La caja es requerida',
+                'sucursal.required' => 'La sucursal es requerida',
                 'estado.required' => 'El estado es requerido',
             ]
         );

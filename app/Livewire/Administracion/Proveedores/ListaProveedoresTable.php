@@ -3,6 +3,7 @@
 namespace App\Livewire\Administracion\Proveedores;
 
 use App\Models\ProveedoresModel;
+use App\Models\SucursalesModel;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
@@ -22,7 +23,10 @@ class ListaProveedoresTable extends LivewireTable
             Column::make(__('Nombre Comercial'), 'nombre_comercial')->sortable()->searchable(),
             Column::make(__('Nombre Legal'), 'nombre_legal')->sortable()->searchable(),
             Column::make(__('NIT'), 'nit')->sortable()->searchable(),
-            Column::make(__('Sucursal'), 'sucursal')->sortable()->searchable(),
+            Column::make(__('Sucursal'), function (mixed $value) {
+                $sucursal = SucursalesModel::find($value->sucursal);
+                return $sucursal->nombre_sucursal;
+            })->sortable()->searchable(),
             Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
             Column::make(__('Ciudad'), 'ciudad')->sortable()->searchable(),
             Column::make(__('Departamento'), 'departamento')->sortable()->searchable(),
@@ -55,14 +59,18 @@ class ListaProveedoresTable extends LivewireTable
 
     public function cambiarEstado($id, $estado)
     {
+        $accion = "";
+
         if ($estado == 0) {
             $estado = 1;
+            $accion = "Activar Proveedor";
         } else {
             $estado = 0;
+            $accion = "Desactivar Proveedor";
         }
 
-        $cliente = ProveedoresModel::find($id);
-        $cliente->estado = $estado;
-        $cliente->save();
+        $proveedor = ProveedoresModel::find($id);
+        $proveedor->estado = $estado;
+        $proveedor->save();
     }
 }

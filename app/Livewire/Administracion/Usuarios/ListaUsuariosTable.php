@@ -54,7 +54,10 @@ class ListaUsuariosTable extends LivewireTable
                 $role = Role::find($value->perfil);
                 return $role->name;
             })->sortable()->searchable(),
-            Column::make(__('Caja'), 'caja')->sortable()->searchable(),
+            Column::make(__('Sucursal'),  function (mixed $value) {
+                $sucursal = SucursalesModel::find($value->caja);
+                return $sucursal->nombre_sucursal;
+            })->sortable()->searchable(),
 
             Column::make(__('Estado'), function (mixed $value) {
                 $activado = "";

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Administracion\Proveedores;
 
+use App\Models\LogModel;
 use App\Models\ProveedoresModel;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -83,6 +85,7 @@ class EditarProveedor extends Component
             if ($actualizado) {
                 $message = "La sucursal ha sido actualizada con éxito";
                 $this->dispatch('estadoActualizacion', title: "Actualizado", icon: 'success', message: $message);
+
             } else {
             }
         }

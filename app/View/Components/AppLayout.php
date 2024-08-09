@@ -2,6 +2,9 @@
 
 namespace App\View\Components;
 
+use App\Models\SucursalesModel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -10,8 +13,15 @@ class AppLayout extends Component
     /**
      * Get the view / contents that represents the component.
      */
+
+    public $sucursal;
+
     public function render(): View
     {
-        return view('layouts.app');
+        $sucursalId = Auth::user()->caja;
+        $this->sucursal = SucursalesModel::find($sucursalId);
+        Log::debug("Soy la sucursal " . $this->sucursal);
+        Log::debug("Soy la sucursal " );
+        return view('layouts.app'/* , ['sucursal' => $this->sucursal] */);
     }
 }

@@ -14,7 +14,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -39,7 +39,7 @@
         <!-- Page Content -->
         <main>
             @include('layouts.navigation')
-            @include('layouts.aside')
+            @include('layouts.aside'/* , ['sucursal' => $sucursal] */)
             <div class="p-4 text-4xl sm:ml-64">
                 <div class="py-12">
                     {{ $slot }}
@@ -47,6 +47,7 @@
             </div>
         </main>
     </div>
+    <livewire:general.ordenes.modal-ordenes>
 </body>
 
 </html>

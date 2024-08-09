@@ -17,8 +17,9 @@
         <x-live-wire-input label="NIT" id="nit" icon="fa-solid fa-address-card" model="nit" placeholder="900000000"
             typeInput="number"></x-live-wire-input>
 
-        <x-live-wire-input label="Sucursal" id="sucursal" icon="fa-solid fa-shop" model="sucursal"
-            placeholder="Sucursal" typeInput="text"></x-live-wire-input>
+        <x-select2 label="Sucursal" id="sucursal" icon="fa-solid fa-ruler-horizontal" model="sucursal"
+            optionTextDefault="Seleccione la sucursal asociada">
+        </x-select2>
 
         <x-live-wire-input label="Dirección" id="direccion" icon="fa-regular fa-map" model="direccion"
             placeholder="XXXXXXXXXXXXX" typeInput="text"></x-live-wire-input>
@@ -61,7 +62,7 @@
 
         <x-select2 label="Factura con" id="empresaFactura" icon="fa-solid fa-comment" model="empresaFactura"
             optionTextDefault="Seleccione factura"> </x-select2>
-            
+
         <x-select2 label="Importancia" id="importancia" icon="fa-solid fa-toggle-on" model="importancia"
             optionTextDefault="Seleccione la importancia"> </x-select2>
 

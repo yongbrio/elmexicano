@@ -12,6 +12,7 @@ use App\Livewire\Administracion\Empresas\AdminEmpresas;
 use App\Livewire\Administracion\Empresas\EditarEmpresa;
 use App\Livewire\Administracion\Inventario\AdminInventario;
 use App\Livewire\Administracion\Inventario\EditarInventario;
+use App\Livewire\Administracion\Ordenes\AdminOrdenes;
 use App\Livewire\Administracion\Perfiles\AdminPerfiles;
 use App\Livewire\Administracion\Proveedores\AdminProveedores;
 use App\Livewire\Administracion\Proveedores\EditarProveedor;
@@ -23,6 +24,8 @@ use App\Livewire\Dashboard;
 use App\Livewire\General\Clientes\Clientes;
 use App\Livewire\General\Egresos\Egresos;
 use App\Livewire\General\Inventario\Inventario;
+use App\Livewire\General\Ordenes\Egreso;
+use App\Livewire\General\Ordenes\Ingreso;
 use App\Livewire\General\Proveedores\Proveedores;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -69,6 +72,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     /* Egresos */
     Route::get('/egresos', AdminEgresos::class)->name('admin-egresos')->middleware('can:admin.egresos');
     Route::get('/egresos/{id}', EditarEgreso::class)->name('editar-egreso')->middleware('can:admin.egresos');
+    /* Ordenes */
+    Route::get('/ordenes', AdminOrdenes::class)->name('admin-ordenes')->middleware('can:admin.egresos');
     /* Acceso a imagenes */
     Route::get('/storage/{modulo}/{filename}', function ($modulo, $filename) {
         $fullPath = storage_path("app/imagenes/{$modulo}/{$filename}");
@@ -88,6 +93,10 @@ Route::prefix('general')->middleware(['auth'])->group(function () {
     Route::get('/inventario', Inventario::class)->name('inventario-general')->middleware('can:inventario');
     /* Egresos */
     Route::get('/egresos', Egresos::class)->name('egresos-general')->middleware('can:egresos');
+    /* Ordenes Ingreso*/
+    Route::get('/ingreso/{id}', Ingreso::class)->name('ordenes-ingreso')->middleware('can:clientes');
+    /* Ordenes Egreso*/
+    Route::get('/egreso/{id}', Egreso::class)->name('ordenes-egreso')->middleware('can:proveedores');
 });
 
 require __DIR__ . '/auth.php';

@@ -159,13 +159,13 @@
         <x-live-wire-input label="Confirmar Constraseña" id="password_confirmation" icon="fa-solid fa-lock"
             model="password_confirmation" placeholder="Confirme la constraseña" typeInput="password">
         </x-live-wire-input>
-        
+
         <x-select2 label="Perfil" id="perfil" icon="fa-solid fa-id-badge" model="perfil"
             optionTextDefault="Seleccione un perfil"> </x-select2>
 
-        <x-live-wire-input label="Caja" id="caja" icon="fa-solid fa-store" model="caja" placeholder="Ingrese la caja"
-            typeInput="text">
-        </x-live-wire-input>
+        <x-select2 label="Sucursal" id="sucursal" icon="fa-solid fa-ruler-horizontal" model="sucursal"
+            optionTextDefault="Seleccione la sucursal asociada">
+        </x-select2>
 
         <x-select2 label="Estado" id="estado" icon="fa-solid fa-toggle-on" model="estado"
             optionTextDefault="Seleccione un estado"> </x-select2>
