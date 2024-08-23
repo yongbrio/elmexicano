@@ -23,19 +23,21 @@ class ListaInventario extends LivewireTable
     /** @return Builder<Model> */
     protected function query(): Builder
     {
-        return $this->model()->query()->where('estado', '=', 1);
+        $sucursal = SucursalesModel::find(Auth::user()->caja);
+        if (strtolower($sucursal->nombre_sucursal) == 'corporativo') {
+            return $this->model()->query()->where('estado', '=', 1);
+        } else {
+            return $this->model()->query()->where('estado', '=', 1)->where('sucursal', '=', Auth::user()->caja);
+        }
     }
 
     protected function columns(): array
     {
         return [
             Column::make(__('Agregar'), function ($value): string {
-                $sucursal = SucursalesModel::find(Auth::user()->caja);
-                if (strtolower($sucursal->nombre_sucursal) != 'corporativo') {
-                    return '<button type="button"  wire:click="agregar(' . $value->id . ')" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 ">
+                return '<button type="button"  wire:click="agregar(' . $value->id . ')" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 ">
                     <i class="fa-solid fa-plus"></i>
                 </button>';
-                }
             })->asHtml(),
             Column::make(__('Código'),  'codigo_producto')->sortable()->searchable(),
             Column::make(__('Código del producto'),  function ($value) {

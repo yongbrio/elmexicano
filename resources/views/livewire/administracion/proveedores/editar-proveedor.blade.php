@@ -24,14 +24,38 @@
             optionTextDefault="Seleccione la sucursal asociada">
         </x-select2>
 
+        <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad" icon="fa-solid fa-location-arrow"
+            model="barrio_localidad" placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
+
         <x-live-wire-input label="Dirección" id="direccion" icon="fa-regular fa-map" model="direccion"
             placeholder="XXXXXXXXXXXXX" typeInput="text"></x-live-wire-input>
 
-        <x-live-wire-input label="Ciudad" id="ciudad" icon="fa-solid fa-location-dot" model="ciudad"
-            placeholder="Soacha" typeInput="text"></x-live-wire-input>
-
-        <x-live-wire-input label="Departamento" id="departamento" icon="fa-solid fa-map-location-dot"
-            model="departamento" placeholder="Cundinamarca" typeInput="text"></x-live-wire-input>
+            <div>
+                <x-live-wire-input label="Ciudad" id="ciudad" icon="fa-solid fa-location-dot" model="ciudad"
+                    placeholder="Soacha" typeInput="text" wire='buscarCiudad'></x-live-wire-input>
+    
+                <x-live-wire-input label="" id="idciudad" icon="" model="idciudad" placeholder="" typeInput="hidden">
+                </x-live-wire-input>
+    
+                @if ($listaMunicipios)
+                <ul class="max-w-md p-2 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                    @foreach ($listaMunicipios as $mun)
+                    <li class="cursor-pointer" wire:click='setearNombreCiudad("{{$mun->id}}")'>{{ $mun->nombre_municipio }}
+                    </li>
+                    @endforeach
+                </ul>
+                @endif
+            </div>
+    
+            <div>
+                <x-live-wire-input label="Departamento" id="departamento" icon="fa-solid fa-map-location-dot"
+                    model="departamento" placeholder="Cundinamarca" typeInput="text" disabled='disabled'>
+                </x-live-wire-input>
+                <x-live-wire-input label="" id="iddepartamento" icon="" model="iddepartamento" placeholder=""
+                    typeInput="hidden">
+                </x-live-wire-input>
+            </div>
+    
 
         <x-live-wire-input label="Correo" id="correo" icon="fa-solid fa-envelope" model="correo"
             placeholder="correo@correo.com" typeInput="email"></x-live-wire-input>

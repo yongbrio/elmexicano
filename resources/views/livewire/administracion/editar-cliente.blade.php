@@ -21,7 +21,10 @@
         <x-select2 label="Sucursal" id="sucursal" icon="fa-solid fa-ruler-horizontal" model="sucursal"
             optionTextDefault="Seleccione la sucursal asociada">
         </x-select2>
-
+        
+        <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad" icon="fa-solid fa-location-arrow"
+            model="barrio_localidad" placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
+            
         <x-live-wire-input label="Dirección" id="direccion" icon="fa-regular fa-map" model="direccion"
             placeholder="XXXXXXXXXXXXX" typeInput="text"></x-live-wire-input>
 

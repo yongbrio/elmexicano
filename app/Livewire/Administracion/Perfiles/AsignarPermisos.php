@@ -33,7 +33,7 @@ class AsignarPermisos extends Component
             ['nombre_modulo' => 'Proveedores', 'id' => 'proveedores' . $this->role_id, 'name_permission' => 'proveedores', 'activate' => $this->validarSiPermisoExiste("proveedores")],
             ['nombre_modulo' => 'Inventario', 'id' => 'inventario' . $this->role_id, 'name_permission' => 'inventario', 'activate' => $this->validarSiPermisoExiste("inventario")],
             ['nombre_modulo' => 'Egresos', 'id' => 'egresos' . $this->role_id, 'name_permission' => 'egresos', 'activate' => $this->validarSiPermisoExiste("egresos")],
-/*             ['nombre_modulo' => 'Ordenes Ingreso', 'id' => 'ordenes_ingreso' . $this->role_id, 'name_permission' => 'ordenes_ingreso', 'activate' => $this->validarSiPermisoExiste("ordenes_ingreso")],
+            /*             ['nombre_modulo' => 'Ordenes Ingreso', 'id' => 'ordenes_ingreso' . $this->role_id, 'name_permission' => 'ordenes_ingreso', 'activate' => $this->validarSiPermisoExiste("ordenes_ingreso")],
             ['nombre_modulo' => 'Ordenes Egreso', 'id' => 'ordenes_egreso' . $this->role_id, 'name_permission' => 'ordenes_egreso', 'activate' => $this->validarSiPermisoExiste("ordenes_egreso")], */
         ];
 
@@ -47,11 +47,13 @@ class AsignarPermisos extends Component
             ['nombre_modulo' => 'Categoría Productos', 'id' => 'admin_categoria_productos' . $this->role_id, 'name_permission' => 'admin.categoria.productos', 'activate' => $this->validarSiPermisoExiste("admin.categoria.productos")],
             ['nombre_modulo' => 'Admin Egresos', 'id' => 'admin_egresos' . $this->role_id, 'name_permission' => 'admin.egresos', 'activate' => $this->validarSiPermisoExiste("admin.egresos")],
             ['nombre_modulo' => 'Admin Ordenes', 'id' => 'admin_ordenes' . $this->role_id, 'name_permission' => 'admin.ordenes', 'activate' => $this->validarSiPermisoExiste("admin.ordenes")],
+
         ];
 
         $this->modulosArraySeguridad = [
             ['nombre_modulo' => 'Usuarios', 'id' => 'seguridad_usuarios' . $this->role_id, 'name_permission' => 'seguridad.usuarios', 'activate' => $this->validarSiPermisoExiste("seguridad.usuarios")],
             ['nombre_modulo' => 'Perfiles', 'id' => 'seguridad_perfiles' . $this->role_id, 'name_permission' => 'seguridad.perfiles', 'activate' => $this->validarSiPermisoExiste("seguridad.perfiles")],
+            ['nombre_modulo' => 'Log', 'id' => 'seguridad_log' . $this->role_id, 'name_permission' => 'seguridad.log', 'activate' => $this->validarSiPermisoExiste("seguridad.log")],
         ];
     }
 

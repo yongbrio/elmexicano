@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Administracion\Proveedores;
 
+use App\Models\DepartamentosModel;
+use App\Models\MunicipiosModel;
 use App\Models\ProveedoresModel;
 use App\Models\SucursalesModel;
 use Livewire\Component;
@@ -27,9 +29,31 @@ class ListaProveedoresTable extends LivewireTable
                 $sucursal = SucursalesModel::find($value->sucursal);
                 return $sucursal->nombre_sucursal;
             })->sortable()->searchable(),
+            Column::make(__('Barrio/Localidad'), 'barrio_localidad')->sortable()->searchable(),
             Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
-            Column::make(__('Ciudad'), 'ciudad')->sortable()->searchable(),
-            Column::make(__('Departamento'), 'departamento')->sortable()->searchable(),
+            Column::make(
+                __('Ciudad'),
+                function (mixed $value) {
+                    $nombreCiudad = MunicipiosModel::where('id', $value->ciudad)->first();
+                    if ($nombreCiudad) {
+                        return $nombreCiudad->nombre_municipio;
+                    } else {
+                        return '';
+                    }
+                }
+            )->sortable()->searchable(),
+            Column::make(
+                __('Departamento'),
+                function (mixed $value) {
+                    $nombreDpto = DepartamentosModel::where('id', $value->departamento)->first();
+                    if ($nombreDpto) {
+                        return $nombreDpto->nombre_departamento;
+                    } else {
+                        return '';
+                    }
+                   
+                }
+            )->sortable()->searchable(),
             Column::make(__('Correo'), 'correo')->sortable()->searchable(),
             Column::make(__('Nombre encargado'), 'nombre_encargado')->sortable()->searchable(),
             Column::make(__('Descripción'), 'descripcion')->sortable()->searchable(),

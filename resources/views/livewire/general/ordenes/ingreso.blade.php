@@ -1,7 +1,6 @@
 <div>
-    <div
-        class="flex flex-col-reverse grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-        <div>
+
+        <div class="grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-1">
 
             <div>
                 <i class="text-green-600 fa-solid fa-cart-shopping"></i> Orden Ingreso No. <span
@@ -10,12 +9,12 @@
 
             <hr class="h-[2px] my-4 bg-green-600 border-0">
 
-            <div class="mb-5 text-sm">
+            {{-- <div class="mb-5 text-sm">
                 DETALLE DE INGRESO
-            </div>
+            </div> --}}
             <div class="pl-4 mb-5">
                 <ol
-                    class="relative py-2 text-gray-500 border-gray-200 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
+                    class="relative py-2 font-semibold text-gray-900 border-gray-200 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
                     <li class="mb-5 ms-6">
                         <span
                             class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
@@ -23,25 +22,28 @@
                         </span>
                         <h3 class="text-sm leading-tight mb-0.5"><span
                                 class="bg-green-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{$datos->nit}}</span>-
-                            VENTA PUBLICO</h3>
-                        <p class="text-xs">Venta público (0)</p>
+                            {{strtoupper($datos->nombre_comercial)}}</h3>
+                        <p class="text-xs">{{strtoupper($datos->nombre_legal)}} (0)</p>
                     </li>
                     <li class="mb-5 ms-6">
                         <span
                             class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
                             <i class="text-green-600 fa-solid fa-paper-plane"></i>
                         </span>
-                        <h3 class="text-sm leading-tight"><span class="font-semibold">VENTA PUBLICO</span> - VENTA
-                            PUBLICO <span class="italic">(VENTA PUBLICO)</span> </h3>
-                        <p class="text-xs">VENTA PUBLICO</p>
+                        <h3 class="text-sm leading-tight"><span class="font-semibold">{{$nombre_sucursal}}</span> -
+                            {{strtoupper($datos->barrio_localidad)}} <span
+                                class="italic">({{strtoupper($ciudad->nombre_municipio)." -
+                                ".strtoupper($departamento->nombre_departamento)}})</span> </h3>
+                        <p class="text-xs">{{strtoupper($datos->direccion)}}</p>
                     </li>
                     <li class="mb-8 ms-6">
                         <span
                             class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
                             <i class="text-green-600 fa-solid fa-gears"></i>
                         </span>
-                        <h3 class="pt-2 text-sm leading-tight"><span class="text-semibold">{{$this->fecha}}</span> /
-                            {{$this->nombre_sucursal}} / {{$orden->id_sucursal}} / EFECTIVO - CONCILIADO </h3>
+                        <h3 class="pt-2 text-sm leading-tight"><span class="text-semibold">{{$fecha}}</span> /
+                            {{strtoupper($nombre_sucursal)}} / {{strtoupper($nombre_registrado_por)}} / EFECTIVO -
+                            CONCILIADO </h3>
                         {{-- <p class="text-sm">Step details here</p> --}}
                     </li>
                     <li class="ms-6">
@@ -57,7 +59,7 @@
                                 wire:blur='registrarComentario' wire:model='comentario'
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Registra un comentario..."></textarea>
-
+                            @if($misma_sucursal)
                             <button type="submit" @click="isDisabled = !isDisabled"
                                 class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
                                 <i class="fa-solid fa-pen-to-square" wire:loading.remove></i>
@@ -66,125 +68,152 @@
                                 </div>
                                 <span class="sr-only">Editar</span>
                             </button>
+                            @endif
 
                         </div>
                         {{-- <p class="text-sm">Step details here</p> --}}
                     </li>
                 </ol>
             </div>
-
-            <div class="relative overflow-x-auto shadow-lg sm:rounded-lg shadow-gray-900">
-                <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-                    <thead class="text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-2 py-3 rounded-s-lg">
-                                Código
-                            </th>
-                            <th scope="col" class="px-2 py-3">
-                                Detalle
-                            </th>
-                            <th scope="col" class="px-2 py-3">
-                                Q
-                            </th>
-                            <th scope="col" class="px-2 py-3">
-                                Unitario
-                            </th>
-                            <th scope="col" class="px-2 py-3">
-                                Subtotal
-                            </th>
-                            <th scope="col" class="px-2 py-3 sr-only rounded-e-lg">
-                                Eliminar
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @if (!empty($listaProductosAgregados))
-                        @foreach ($listaProductosAgregados as $prod)
-                        <tr class="bg-white dark:bg-gray-800">
-                            <th scope="row"
-                                class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $prod['codigo_producto'] }}
-                            </th>
-                            <td class="px-2 py-1">
-                                {{ $prod['descripcion'] }}
-                            </td>
-                            <td class="px-2 py-1">
-                                {{ $prod['cantidad_producto'] }}
-                            </td>
-                            <td class="px-2 py-1">
-                                {{ "$ ".number_format($prod['precio_unitario_con_iva'], 0, ',', '.') }}
-                            </td>
-                            <td class="px-2.5 py-1">
-                                {{ "$ ".number_format($prod['total'], 0, ',', '.') }}
-                            </td>
-                            <td class="px-2.5 py-1">
-                                <button type="button" wire:click="eliminarProductoLista({{ $prod['id_producto'] }})"
-                                    class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
-                                    <i class="fa-solid fa-trash"></i>
-                                    <span class="sr-only">Eliminar</span>
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                        @else
-                        <tr class="bg-white dark:bg-gray-800">
-                            <td colspan="6" class="px-2 py-1 text-center">
-                                Aún no ha agregado ningún producto.
-                            </td>
-                        </tr>
-                        @endif
-
-
-                    </tbody>
-                    <tfoot>
-
-                        @php
-
-                        $totalGeneral = 0;
-                        $cantidadTotal = 0;
-
-                        if (!empty($listaProductosAgregados)) {
-                        foreach ($listaProductosAgregados as $prod) {
-                        $totalGeneral += $prod['total'];
-                        $cantidadTotal += $prod['cantidad_producto'];
-                        }
-                        }
-                        @endphp
-
-                        @if (!empty($listaProductosAgregados))
-                        <tr class="font-semibold text-gray-900 dark:text-white">
-                            <th scope="row" class="px-2 py-3 text-base">Total</th>
-                            <td class="px-2 py-3">-----</td>
-                            <td class="px-2 py-3">{{$cantidadTotal}}</td>
-                            <td class="px-2 py-3">-----</td>
-                            <td class="px-2 py-3"><span
-                                    class="bg-green-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{ "$
-                                    ".number_format($totalGeneral, 0, ',', '.') }}</span>
-                            </td>
-                        </tr>
-
-                        @endif
-                    </tfoot>
-                </table>
-            </div>
-
         </div>
-        <div>
+
+        <div
+            class="grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
             <div>
-                <i class="text-green-600 fa-solid fa-truck-moving"></i> Inventario
-            </div>
-            <hr class="h-[2px] my-4 bg-green-600 border-0">
-            <div class="mb-5 text-sm">
-                INVENTARIO DISPONIBLE
+                <div>
+                    <i class="text-green-600 fa-solid fa-bars"></i> Detalle
+                </div>
+                <hr class="h-[2px] my-4 bg-green-600 border-0">
+                <div class="relative overflow-x-auto shadow-lg sm:rounded-lg shadow-gray-900">
+                    <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
+                        <thead class="text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-2 py-3 rounded-s-lg">
+                                    Código
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    Detalle
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    Q
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    Unitario
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    Subtotal
+                                </th>
+                                <th scope="col" class="px-2 py-3 sr-only rounded-e-lg">
+                                    Eliminar
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (!empty($listaProductosAgregados))
+                            @foreach ($listaProductosAgregados as $prod)
+                            <tr class="bg-white dark:bg-gray-800">
+                                <th scope="row"
+                                    class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ $prod['codigo_producto'] }}
+                                </th>
+                                <td class="px-2 py-1">
+                                    {{ $prod['descripcion'] }}
+                                </td>
+                                <td class="px-2 py-1">
+                                    {{ $prod['cantidad_producto'] }}
+                                </td>
+                                <td class="px-2 py-1">
+                                    {{ "$ ".number_format($prod['precio_unitario_con_iva'], 0, ',', '.') }}
+                                </td>
+                                <td class="px-2.5 py-1">
+                                    {{ "$ ".number_format($prod['total'], 0, ',', '.') }}
+                                </td>
+                                <td class="px-2.5 py-1">
+                                    @if($misma_sucursal)
+                                    <button type="button" wire:click="eliminarProductoLista({{ $prod['id_producto'] }})"
+                                        class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
+                                        <i class="fa-solid fa-trash"></i>
+                                        <span class="sr-only">Eliminar</span>
+                                    </button>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                            @else
+                            <tr class="bg-white dark:bg-gray-800">
+                                <td colspan="6" class="px-2 py-1 text-center">
+                                    Aún no ha agregado ningún producto.
+                                </td>
+                            </tr>
+                            @endif
+
+
+                        </tbody>
+                        <tfoot>
+
+                            @php
+
+                            $totalGeneral = 0;
+                            $cantidadTotal = 0;
+
+                            if (!empty($listaProductosAgregados)) {
+                            foreach ($listaProductosAgregados as $prod) {
+                            $totalGeneral += $prod['total'];
+                            $cantidadTotal += $prod['cantidad_producto'];
+                            }
+                            }
+                            @endphp
+
+                            @if (!empty($listaProductosAgregados))
+                            <tr class="font-semibold text-gray-900 dark:text-white">
+                                <th scope="row" class="px-2 py-3 text-base">Total</th>
+                                <td class="px-2 py-3">-----</td>
+                                <td class="px-2 py-3">{{$cantidadTotal}}</td>
+                                <td class="px-2 py-3">-----</td>
+                                <td class="px-2 py-3"><span
+                                        class="bg-green-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{
+                                        "$
+                                        ".number_format($totalGeneral, 0, ',', '.') }}</span>
+                                </td>
+                            </tr>
+
+                            @endif
+                        </tfoot>
+                    </table>
+                </div>
             </div>
 
-            <div
-                class="p-4 mb-5 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
-                <livewire:general.ordenes.lista-inventario>
+
+
+            <div>
+                <div>
+                    <i class="text-green-600 fa-solid fa-truck-moving"></i> Inventario
+                </div>
+                <hr class="h-[2px] my-4 bg-green-600 border-0">
+                {{-- <div class="mb-5 text-sm">
+                    INVENTARIO DISPONIBLE
+                </div> --}}
+
+                <div
+                    class="p-4 mb-5 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
+                    @if($misma_sucursal)
+                    <livewire:general.ordenes.lista-inventario>
+                        @else
+                        <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+                            role="alert">
+                            <span class="font-medium">¡Atención!</span> La sucursal de esta orden es diferente a la
+                            asignada
+                            en tu perfil y no puedes realizar ninguna acción.
+                        </div>
+
+                        @endif
+
+                </div>
             </div>
+
         </div>
-    </div>
+
 
     <!-- Main modal -->
     <div id="modal-datos-productos" tabindex="-1" aria-hidden="true" wire:ignore.self
@@ -214,6 +243,10 @@
 
                     <x-live-wire-input label="Precio Unitario + IVA" id="precio_unitario_con_iva"
                         icon="fa-solid fa-dollar-sign" model="precio_unitario_con_iva" placeholder="0" typeInput="text"
+                        disabled='disabled'></x-live-wire-input>
+
+                    <x-live-wire-input label="Precio Sin IVA" id="precio_unitario_sin_iva"
+                        icon="fa-solid fa-dollar-sign" model="precio_unitario_sin_iva" placeholder="0" typeInput="text"
                         disabled='disabled'></x-live-wire-input>
 
                     <x-live-wire-input label="Stock disponible" id="stock_disponible" icon="fa-solid fa-cubes"

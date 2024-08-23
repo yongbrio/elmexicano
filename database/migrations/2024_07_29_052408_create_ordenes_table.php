@@ -20,9 +20,11 @@ return new class extends Migration
             $table->string('tipo_orden');
             $table->json('datos_empresa');
             $table->json('detalle')->nullable();
-            $table->string('comentarios')->nullable();
+            $table->json('comentarios')->nullable();
+            $table->json('adjuntos')->nullable();
             $table->string('status1');
             $table->string('status2');
+            $table->string('estado_orden')->nullable();
             $table->integer('registrado_por');
             $table->timestamps();
         });

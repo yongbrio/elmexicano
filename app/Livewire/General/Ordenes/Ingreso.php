@@ -2,10 +2,14 @@
 
 namespace App\Livewire\General\Ordenes;
 
+use App\Models\DepartamentosModel;
 use App\Models\InventarioModel;
+use App\Models\MunicipiosModel;
 use App\Models\OrdenesModel;
 use App\Models\SucursalesModel;
+use App\Models\User;
 use DateTime;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -21,6 +25,8 @@ class Ingreso extends Component
     public $producto;
 
     public $precio_unitario_con_iva;
+
+    public $precio_unitario_sin_iva;
 
     public $stock_disponible;
 
@@ -38,6 +44,14 @@ class Ingreso extends Component
 
     public $comentario;
 
+    public $ciudad;
+
+    public $departamento;
+
+    public $nombre_registrado_por;
+
+    public $misma_sucursal = false;
+
     public function mount(int $id)
     {
         $this->id = $id;
@@ -48,9 +62,22 @@ class Ingreso extends Component
 
             $this->orden = $orden;
 
+            $sucursal_usuario = SucursalesModel::find(Auth::user()->caja);
+
+            if (($this->orden->id_sucursal == Auth::user()->caja) || strtolower($sucursal_usuario->nombre_sucursal) == 'corporativo') {
+                $this->misma_sucursal = true;
+            }
+
             $this->datos = json_decode($this->orden->datos);
 
-            $this->comentario = $this->orden->comentarios;
+            $usuario = User::find($this->orden->registrado_por);
+
+            $this->nombre_registrado_por = $usuario->name . " " . $usuario->apellidos;
+
+            $this->comentario = json_decode($this->orden->comentarios);
+
+            $this->ciudad = MunicipiosModel::where('id', $this->datos->ciudad)->first();
+            $this->departamento = DepartamentosModel::where('id', $this->datos->departamento)->first();
 
             $date = new DateTime($this->datos->created_at);
 
@@ -85,7 +112,7 @@ class Ingreso extends Component
 
     public function registrarComentario()
     {
-        $this->orden->comentarios = $this->comentario;
+        $this->orden->comentarios = json_encode($this->comentario);
 
         if ($this->orden->save()) {
             $message = 'Comentario registrado';
@@ -141,6 +168,7 @@ class Ingreso extends Component
     {
         $this->producto = null;
         $this->precio_unitario_con_iva = null;
+        $this->precio_unitario_sin_iva = null;
         $this->stock_disponible = null;
         $this->comision = null;
         $this->stock_transferencia = null;
@@ -151,6 +179,7 @@ class Ingreso extends Component
 
             $this->producto = $producto;
             $this->precio_unitario_con_iva = $producto->precio_unitario_con_iva;
+            $this->precio_unitario_sin_iva = $producto->precio_unitario_sin_iva;
             $this->stock_disponible = $producto->stock;
             $this->comision = $producto->comision;
         }
@@ -166,6 +195,9 @@ class Ingreso extends Component
                 'codigo_producto' => $this->producto->codigo_producto,
                 'cantidad_producto' => $this->stock_transferencia,
                 'precio_unitario_con_iva' => $this->producto->precio_unitario_con_iva,
+                'precio_unitario_sin_iva' => $this->producto->precio_unitario_sin_iva,
+                'comision' => $this->producto->comision,
+                'valor_comision' => (($this->stock_transferencia * $this->producto->precio_unitario_con_iva) * $this->producto->comision) / 100,
                 'descripcion' => $this->producto->descripcion,
                 'total' => $this->stock_transferencia * $this->producto->precio_unitario_con_iva,
             ];
@@ -185,6 +217,7 @@ class Ingreso extends Component
                         // Producto ya existe, actualizar cantidad y total
                         $producto['cantidad_producto'] += $nuevoProducto['cantidad_producto'];
                         $producto['total'] = $producto['cantidad_producto'] * $producto['precio_unitario_con_iva'];
+                        $producto['valor_comision'] = ($producto['total'] * $producto['comision']) / 100;
 
                         $this->producto->stock = ($this->producto->stock - $nuevoProducto['cantidad_producto']);
                         $this->producto->save();

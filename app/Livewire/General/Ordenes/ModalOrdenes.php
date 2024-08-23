@@ -42,6 +42,8 @@ class ModalOrdenes extends Component
     public $producto_nombre;
     public $listaProductosAgregados = [];
 
+    public $isCorporativo = false;
+
     public function mount()
     {
         $sucursalId = Auth::user()->caja;
@@ -132,6 +134,7 @@ class ModalOrdenes extends Component
         if ($paso == 1) {
             $this->sucursal = null;
             $this->tipo_orden = null;
+            $this->isCorporativo = false;
             $this->paso1 = true;
             $this->paso2 = null;
             $this->paso3 = null;
@@ -140,7 +143,15 @@ class ModalOrdenes extends Component
         }
 
         if ($paso == 2) {
+
             $this->validacionSucursal();
+
+            $sucursal = SucursalesModel::find($this->sucursal);
+
+            if (strtolower(trim($sucursal->nombre_sucursal)) == 'corporativo') {
+                $this->isCorporativo = true;
+            }
+
             $this->reiniciarDatos();
             $this->paso1 = 'disabled';
             $this->paso2 = true;

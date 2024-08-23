@@ -15,13 +15,15 @@ class ButtonsComponent extends Component
     public $icono;
     public $tipoBoton;
     public $wireAction;
+    public $xAction;
 
-    public function __construct($texto, $icono = null, $tipoBoton, $wireAction = null)
+    public function __construct($texto, $icono = null, $tipoBoton, $wireAction = null, $xAction = null)
     {
         $this->texto = $texto;
         $this->icono = $icono;
         $this->tipoBoton = $tipoBoton;
         $this->wireAction = $wireAction;
+        $this->xAction = $xAction;
     }
 
     /**

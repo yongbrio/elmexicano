@@ -17,19 +17,21 @@
             {{-- Caja --}}
             @can('caja')
             <li>
-                <a href="#"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                    <i class="fa-solid fa-cash-register"></i>
-                    <span class="ms-3">Caja</span>
+                <div class="flex">
+                    <a href="{{route('caja-general')}}"
+                        class="flex items-center w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <i class="fa-solid fa-cash-register"></i>
+                        <span class="ms-3">Caja</span>
+                    </a>
 
-                    <div class="flex justify-end w-full">
+                    <div class="z-50 flex justify-end">
                         <button type="button" data-modal-target="modal-ordenes" data-modal-toggle="modal-ordenes"
-                            class="px-2 py-1 font-medium text-center text-white bg-green-700 rounded-full text-md hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                            class="px-3 font-medium text-center text-white bg-green-700 rounded-full text-md hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
+                </div>
 
-                </a>
             </li>
 
             @endcan
@@ -209,6 +211,15 @@
                             class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <i class="fa-regular fa-id-badge"></i>
                             <span class="flex-1 ms-3 whitespace-nowrap">Perfiles</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('seguridad.log')
+                    <li>
+                        <a href="{{route('admin-log')}}"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            <span class="flex-1 ms-3 whitespace-nowrap">Log</span>
                         </a>
                     </li>
                     @endcan

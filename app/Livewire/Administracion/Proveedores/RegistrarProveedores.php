@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Administracion\Proveedores;
 
+use App\Models\DepartamentosModel;
+use App\Models\MunicipiosModel;
 use App\Models\ProveedoresModel;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -21,6 +23,10 @@ class RegistrarProveedores extends Component
     public $correo;
     public $nombreEncargado;
     public $descripcion;
+    public $barrio_localidad;
+    public $listaMunicipios;
+    public $idciudad;
+    public $iddepartamento;
     public $estado;
 
     public function render()
@@ -40,12 +46,13 @@ class RegistrarProveedores extends Component
             'nit' => $this->nit,
             'sucursal' => $this->sucursal,
             'direccion' => $this->direccion,
-            'ciudad' => $this->ciudad,
-            'departamento' => $this->departamento,
+            'ciudad' => $this->idciudad,
+            'departamento' => $this->iddepartamento,
             'correo' => $this->correo,
             'nombre_encargado' => $this->nombreEncargado,
             'descripcion' => $this->descripcion,
-            'estado' => $this->estado,
+            'descripcion' => $this->descripcion,
+            'barrio_localidad' => $this->barrio_localidad,
             'registrado_por' => Auth::user()->id,
         ]);
 
@@ -71,6 +78,7 @@ class RegistrarProveedores extends Component
             'correo' => 'required|email|max:255',
             'nombreEncargado' => 'required|string|max:255',
             'descripcion' => 'required|string|max:1000',
+            'barrio_localidad' => 'required|string|max:255',
             'estado' => 'required|string'
         ], [
             'telefono.required' => 'El teléfono es obligatorio.',
@@ -88,6 +96,7 @@ class RegistrarProveedores extends Component
             'direccion.required' => 'La dirección es obligatoria.',
             'nombreEncargado.required' => 'El nombre del encargado es obligatorio.',
             'descripcion.required' => 'La descripción es obligatoria.',
+            'barrio_localidad.required' => 'El barrio o localidad es obligatorio.',
             'estado.required' => 'No asignó un estado.',
         ]);
     }
@@ -101,5 +110,38 @@ class RegistrarProveedores extends Component
     public function redirgir()
     {
         return redirect()->route('admin-proveedores');
+    }
+
+    public function buscarCiudad()
+    {
+        if (!empty(trim($this->ciudad))) {
+
+            $this->listaMunicipios = MunicipiosModel::where('nombre_municipio', 'like', '%' . $this->ciudad . '%')
+                ->orderBy('nombre_municipio')
+                ->take(5)
+                ->get();
+
+            $this->idciudad = null;
+            $this->departamento = null;
+            $this->iddepartamento = null;
+        } else {
+
+            $this->listaMunicipios = null;
+        }
+    }
+
+    public function setearNombreCiudad($id)
+    {
+        $this->listaMunicipios = null;
+
+        $nombreCiudad = MunicipiosModel::find($id);
+
+        if ($nombreCiudad) {
+            $this->ciudad = $nombreCiudad->nombre_municipio;
+            $this->idciudad = $id;
+            $departamento = DepartamentosModel::where('codigo_dane', $nombreCiudad->codigo_departamento)->first();
+            $this->departamento = $departamento->nombre_departamento;
+            $this->iddepartamento = $departamento->id;
+        }
     }
 }

@@ -34,6 +34,7 @@ class RegistrarClientes extends Component
     public $importancia;
     public $estado;
     public $listaMunicipios;
+    public $barrio_localidad;
 
     public function render()
     {
@@ -51,6 +52,7 @@ class RegistrarClientes extends Component
             'telefono' => $this->telefono,
             'nit' => $this->nit,
             'sucursal' => $this->sucursal,
+            'barrio_localidad' => $this->barrio_localidad,
             'direccion' => $this->direccion,
             'ciudad' => $this->idciudad,
             'departamento' => $this->iddepartamento,
@@ -64,10 +66,9 @@ class RegistrarClientes extends Component
         ]);
 
         if ($cliente) {
-  
+
             $message = "El cliente ha sido creado con éxito";
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
-
         } else {
         }
     }
@@ -87,6 +88,7 @@ class RegistrarClientes extends Component
             'correo' => 'required|email|max:255',
             'nombreEncargado' => 'required|string|max:255',
             'descripcion' => 'required|string|max:1000',
+            'barrio_localidad' => 'required|string|max:255',
             'empresaFactura' => 'required|string|max:255',
             'importancia' => 'required|string',
             'estado' => 'required|string'
@@ -108,6 +110,7 @@ class RegistrarClientes extends Component
             'descripcion.required' => 'La descripción es obligatoria.',
             'empresaFactura.required' => 'No seleccionó con que empresa factura.',
             'importancia.required' => 'La importancia es obligatoria.',
+            'barrio_localidad.required' => 'El barrio o localidad es obligatorio.',
             'estado.required' => 'No asignó un estado.',
         ]);
     }

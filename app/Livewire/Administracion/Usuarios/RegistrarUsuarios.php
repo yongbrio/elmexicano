@@ -37,6 +37,8 @@ class RegistrarUsuarios extends Component
     public $perfil;
     public $sucursal;
     public $estado;
+    public $nombre_contacto_emergencia;
+    public $numero_contacto_emergencia;
 
     #[Validate('image')]
     public $imagen;
@@ -90,6 +92,8 @@ class RegistrarUsuarios extends Component
                 'perfil' => $this->perfil,
                 'caja' => $this->sucursal,
                 'imagen' => "$rutaImagen",
+                'nombre_contacto_emergencia' => $this->nombre_contacto_emergencia,
+                'numero_contacto_emergencia' => $this->numero_contacto_emergencia,
                 'estado' => $this->estado
             ]
         );
@@ -167,6 +171,8 @@ class RegistrarUsuarios extends Component
                 'password_confirmation' => 'required',
                 'perfil' => 'required',
                 'sucursal' => 'required',
+                'nombre_contacto_emergencia' => ['required', 'string', 'regex:/^[^0-9]*$/'],
+                'numero_contacto_emergencia' => ['required', 'regex:/^[\d\s\-\+\(\)]+$/'],
                 'estado' => 'required',
 
             ],
@@ -203,6 +209,10 @@ class RegistrarUsuarios extends Component
                 'password_confirmation.required' => 'La confirmación de la contraseña es requerida',
                 'perfil.required' => 'El perfil es requerido',
                 'sucursal.required' => 'La sucursal es requerida',
+                'nombre_contacto_emergencia.required' => 'El nombre del contacto de emergencia es requerido',
+                'nombre_contacto_emergencia.regex' => 'El nombre del contacto de emergencia no debe contener números',
+                'numero_contacto_emergencia.required' => 'El número de teléfono es requerido',
+                'numero_contacto_emergencia.regex' => 'El formato del teléfono no es valido',
                 'estado.required' => 'El estado es requerido',
             ]
         );
@@ -210,6 +220,11 @@ class RegistrarUsuarios extends Component
 
     #[On('redirigir')]
     public function redirgir()
+    {
+        return redirect()->route('admin-usuarios');
+    }
+
+    public function cancelarRegistrarUsuario()
     {
         return redirect()->route('admin-usuarios');
     }

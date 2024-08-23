@@ -11,6 +11,7 @@ use App\Models\EmpresasModel;
 use App\Models\HistorialTransferenciasModel;
 use App\Models\InventarioModel;
 use App\Models\MunicipiosModel;
+use App\Models\OrdenesModel;
 use App\Models\PerfilesModel;
 use App\Models\ProveedoresModel;
 use App\Models\SucursalesModel;
@@ -45,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         HistorialTransferenciasModel::observe(GenericObserver::class);
         InventarioModel::observe(GenericObserver::class);
         MunicipiosModel::observe(GenericObserver::class);
+        OrdenesModel::observe(GenericObserver::class);
         PerfilesModel::observe(GenericObserver::class);
         ProveedoresModel::observe(GenericObserver::class);
         SucursalesModel::observe(GenericObserver::class);

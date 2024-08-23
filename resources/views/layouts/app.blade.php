@@ -17,7 +17,8 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    <script src="{{ asset('js/pdf.min.js') }}"></script>
+    <script src="{{ asset('js/pdf.worker.min.js') }}"></script>
 </head>
 
 <body class="font-sans antialiased">
@@ -49,5 +50,6 @@
     </div>
     <livewire:general.ordenes.modal-ordenes>
 </body>
+
 
 </html>

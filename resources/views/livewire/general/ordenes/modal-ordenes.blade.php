@@ -23,7 +23,6 @@
             <!-- Modal body -->
             <div class="p-4 space-y-4 md:p-5">
                 <div class="grid grid-cols-1">
-
                     {{-- Paso 1 --}}
                     @if ($es_corporativo)
 
@@ -45,20 +44,22 @@
                             class="text-green-600 fa-solid fa-circle-check"></i>':'' !!} </h2>
                     <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
                     <div class="flex">
+
+                        @if (!$isCorporativo)
                         <div class="flex items-center p-1 rounded ps-4 dark:border-gray-700">
                             <input {{$paso3 ? 'disabled' : '' }} id="ingreso" type="radio" value="ingreso"
                                 name="radio-ingreso-egreso" wire:model='tipo_orden' wire:click='cambiar(3)'
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="ingreso"
-                                class="w-full text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Ingreso
+                            <label for="ingreso" class="w-full text-lg font-semibold text-green-600 ms-2">Ingreso
                             </label>
                         </div>
+                        @endif
+
                         <div class="flex items-center p-1 rounded ps-4 dark:border-gray-700">
                             <input {{$paso3 ? 'disabled' : '' }} id="egreso" type="radio" value="egreso"
                                 name="radio-ingreso-egreso" wire:model='tipo_orden' wire:click='cambiar(3)'
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="egreso"
-                                class="w-full text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Egreso
+                            <label for="egreso" class="w-full text-lg font-semibold text-red-600 ms-2">Egreso
                             </label>
                         </div>
                     </div>

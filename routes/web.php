@@ -12,6 +12,7 @@ use App\Livewire\Administracion\Empresas\AdminEmpresas;
 use App\Livewire\Administracion\Empresas\EditarEmpresa;
 use App\Livewire\Administracion\Inventario\AdminInventario;
 use App\Livewire\Administracion\Inventario\EditarInventario;
+use App\Livewire\Administracion\Log\Log;
 use App\Livewire\Administracion\Ordenes\AdminOrdenes;
 use App\Livewire\Administracion\Perfiles\AdminPerfiles;
 use App\Livewire\Administracion\Proveedores\AdminProveedores;
@@ -21,13 +22,14 @@ use App\Livewire\Administracion\Sucursales\EditarSucursal;
 use App\Livewire\Administracion\Usuarios\AdminUsuarios;
 use App\Livewire\Administracion\Usuarios\EditarUsuario;
 use App\Livewire\Dashboard;
+use App\Livewire\General\Caja\Caja;
 use App\Livewire\General\Clientes\Clientes;
 use App\Livewire\General\Egresos\Egresos;
 use App\Livewire\General\Inventario\Inventario;
 use App\Livewire\General\Ordenes\Egreso;
 use App\Livewire\General\Ordenes\Ingreso;
+use App\Livewire\General\Ordenes\Ordenes;
 use App\Livewire\General\Proveedores\Proveedores;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -82,6 +84,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         }
         return response()->file($fullPath);
     })->name('admin.storage');
+
+    /* Log de registros */
+    Route::get('/log', Log::class)->name('admin-log')->middleware('can:seguridad.log');
 });
 //Grupo general
 Route::prefix('general')->middleware(['auth'])->group(function () {
@@ -97,6 +102,10 @@ Route::prefix('general')->middleware(['auth'])->group(function () {
     Route::get('/ingreso/{id}', Ingreso::class)->name('ordenes-ingreso')->middleware('can:clientes');
     /* Ordenes Egreso*/
     Route::get('/egreso/{id}', Egreso::class)->name('ordenes-egreso')->middleware('can:proveedores');
+    /* Caja*/
+    Route::get('/caja', Caja::class)->name('caja-general')->middleware('can:caja');
+    /* Lista Ordenes*/
+    /* Route::get('/ordenes', Ordenes::class)->name('ordenes')->middleware('can:ordenes'); */
 });
 
 require __DIR__ . '/auth.php';

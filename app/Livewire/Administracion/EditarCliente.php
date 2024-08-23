@@ -31,6 +31,7 @@ class EditarCliente extends Component
     public $iddepartamento;
     public $idciudad;
     public $listaMunicipios;
+    public $barrio_localidad;
 
     public function mount($id)
     {
@@ -46,6 +47,7 @@ class EditarCliente extends Component
             $this->telefono = $cliente->telefono;
             $this->nit = $cliente->nit;
             $this->sucursal = $cliente->sucursal;
+            $this->barrio_localidad = $cliente->barrio_localidad;
             $this->direccion = $cliente->direccion;
 
             $nombre_municipio = MunicipiosModel::where('id', $cliente->ciudad)->first();
@@ -87,6 +89,7 @@ class EditarCliente extends Component
             $cliente->telefono = $this->telefono;
             $cliente->nit = $this->nit;
             $cliente->sucursal = $this->sucursal;
+            $cliente->barrio_localidad = $this->barrio_localidad;
             $cliente->direccion = $this->direccion;
             $cliente->ciudad = $this->idciudad;
             $cliente->departamento = $this->iddepartamento;
@@ -119,6 +122,7 @@ class EditarCliente extends Component
             'nit' => 'required|string|max:20|unique:clientes,nit,' . $this->id,  // Asumiendo que es una tabla de clientes
             'iddepartamento' => 'required',
             'idciudad' => 'required|string|max:100',
+            'barrio_localidad' => 'required|string|max:255',
             'direccion' => 'required|string|max:255',
             'sucursal' => 'required|string|max:100',
             'correo' => 'required|email|max:255',
@@ -145,6 +149,7 @@ class EditarCliente extends Component
             'descripcion.required' => 'La descripción es obligatoria.',
             'empresaFactura.required' => 'No seleccionó con que empresa factura.',
             'importancia.required' => 'La importancia es obligatoria.',
+            'barrio_localidad.required' => 'El barrio o localidad es obligatorio.',
             'estado.required' => 'No asignó un estado.',
         ]);
     }

@@ -17,12 +17,15 @@ class GenericObserver
             'action' => 'Creación',
             'model' => get_class($model),
             'model_id' => $model->id,
-            'changes' => json_encode($model->getAttributes()),
+            'old_values' => '',
+            'new_values' => json_encode($model->getAttributes()),
         ]);
     }
 
     public function updated(Model $model)
     {
+        $oldValues = $model->getOriginal();
+        $newValues = $model->getChanges();
         LogModel::create([
             'id_usuario' => Auth::user()->id,
             'nombre_usuario' => Auth::user()->username,
@@ -30,7 +33,8 @@ class GenericObserver
             'action' => 'Actualización',
             'model' => get_class($model),
             'model_id' => $model->id,
-            'changes' => json_encode($model->getChanges()),
+            'old_values' => json_encode($oldValues), // Valores anteriores
+            'new_values' => json_encode($newValues),  // Valores actuales
         ]);
     }
 
@@ -43,7 +47,9 @@ class GenericObserver
             'action' => 'Eliminación',
             'model' => get_class($model),
             'model_id' => $model->id,
-            'changes' => json_encode($model->getAttributes()),
+            'old_values' => '',
+            'new_values' => json_encode($model->getAttributes()),
+
         ]);
     }
 }

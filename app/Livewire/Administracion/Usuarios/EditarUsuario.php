@@ -40,6 +40,8 @@ class EditarUsuario extends Component
     #[Validate('image')]
     public $imagen;
     public $imagen_db;
+    public $nombre_contacto_emergencia;
+    public $numero_contacto_emergencia;
 
 
     public function mount($id)
@@ -70,6 +72,8 @@ class EditarUsuario extends Component
             $this->cargo = $usuario->cargo;
             $this->perfil = $usuario->perfil;
             $this->sucursal = $usuario->caja;
+            $this->nombre_contacto_emergencia = $usuario->nombre_contacto_emergencia;
+            $this->numero_contacto_emergencia = $usuario->numero_contacto_emergencia;
             $this->estado = $usuario->estado;
         } else {
 
@@ -132,6 +136,8 @@ class EditarUsuario extends Component
             } else if (!$this->imagen_db && !$this->imagen) {
                 $usuario->imagen = "$rutaImagen";
             }
+            $usuario->nombre_contacto_emergencia = $this->nombre_contacto_emergencia;
+            $usuario->numero_contacto_emergencia = $this->numero_contacto_emergencia;
             $usuario->estado = $this->estado;
         }
 
@@ -174,6 +180,8 @@ class EditarUsuario extends Component
                 'password_confirmation' => 'required',
                 'perfil' => 'required',
                 'sucursal' => 'required',
+                'nombre_contacto_emergencia' => ['required', 'string', 'regex:/^[^0-9]*$/'],
+                'numero_contacto_emergencia' => ['required', 'regex:/^[\d\s\-\+\(\)]+$/'],
                 'estado' => 'required',
 
             ],
@@ -210,6 +218,10 @@ class EditarUsuario extends Component
                 'password_confirmation.required' => 'La confirmación de la contraseña es requerida',
                 'perfil.required' => 'El perfil es requerido',
                 'sucursal.required' => 'La sucursal es requerida',
+                'nombre_contacto_emergencia.required' => 'El nombre del contacto de emergencia es requerido',
+                'nombre_contacto_emergencia.regex' => 'El nombre del contacto de emergencia no debe contener números',
+                'numero_contacto_emergencia.required' => 'El número de teléfono es requerido',
+                'numero_contacto_emergencia.regex' => 'El formato del teléfono no es valido',
                 'estado.required' => 'El estado es requerido',
             ]
         );

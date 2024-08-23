@@ -18,6 +18,7 @@ class Vista extends Component
     public $departamento;
     public $ciudad;
     public $direccion;
+    public $barrio_localidad;
     public $sucursal;
     public $correo;
     public $nombreEncargado;
@@ -43,6 +44,7 @@ class Vista extends Component
             $this->nit = $cliente->nit;
             $this->sucursal = $cliente->sucursal;
             $this->direccion = $cliente->direccion;
+            $this->barrio_localidad = $cliente->barrio_localidad;
 
             $nombre_municipio = MunicipiosModel::where('id', $cliente->ciudad)->first();
             $nombre_departamento = DepartamentosModel::where('id', $cliente->departamento)->first();

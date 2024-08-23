@@ -58,6 +58,8 @@ class ListaUsuariosTable extends LivewireTable
                 $sucursal = SucursalesModel::find($value->caja);
                 return $sucursal->nombre_sucursal;
             })->sortable()->searchable(),
+            Column::make(__('Nombre contacto emergencia'), 'nombre_contacto_emergencia')->sortable()->searchable(),
+            Column::make(__('Contacto emergencia'), 'numero_contacto_emergencia')->sortable()->searchable(),
 
             Column::make(__('Estado'), function (mixed $value) {
                 $activado = "";

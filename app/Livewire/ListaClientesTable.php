@@ -35,6 +35,7 @@ class ListaClientesTable extends LivewireTable
             $sucursal = SucursalesModel::find($value->sucursal);
             return $sucursal->nombre_sucursal;
          })->sortable()->searchable(),
+         Column::make(__('Barrio/Localidad'), 'barrio_localidad')->sortable()->searchable(),
          Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
          Column::make(
             __('Ciudad'),

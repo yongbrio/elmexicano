@@ -18,6 +18,7 @@ class LogModel extends Model
         'action',
         'model',
         'model_id',
-        'changes'
+        'old_values',
+        'new_values'
     ];
 }
