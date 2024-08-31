@@ -26,6 +26,7 @@ class ClientesModel extends Model
         'descripcion',
         'empresa_factura',
         'importancia',
+        'barrio_localidad',
         'estado',
         'registrado_por'
     ];

@@ -346,7 +346,7 @@ class Egreso extends Component
         $archivo = $this->archivos;
 
         $this->validate([
-            'archivos.*' => 'file|mimes:jpeg,png,pdf|max:2048',
+            'archivos' => 'file|mimes:jpeg,png,pdf|max:2048',
         ]);
 
         // Generar un nuevo nombre de archivo
