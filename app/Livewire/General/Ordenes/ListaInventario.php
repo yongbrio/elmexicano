@@ -40,15 +40,14 @@ class ListaInventario extends LivewireTable
                 </button>';
             })->asHtml(),
             Column::make(__('Código'),  'codigo_producto')->sortable()->searchable(),
-            Column::make(__('Código del producto'),  function ($value) {
-                $sucursal = SucursalesModel::find($value->sucursal);
-                return $value->codigo_producto . " - " . $sucursal->nombre_sucursal;
-            })->searchable(),
             Column::make(__('Categoría'), function ($value) {
                 $categoria = CategoriasModel::find($value->categoria);
                 return $categoria->nombre_categoria;
             })->sortable()->searchable(),
             Column::make(__('Nombre del producto'), 'descripcion')->sortable()->searchable(),
+            Column::make(__('Precio + IVA'), function ($value) {
+                return "$" . number_format($value->precio_unitario_con_iva, 0, ',', '.');
+            })->sortable()->searchable(),
             Column::make(__('Stock'), 'stock')->sortable()->searchable(),
         ];
     }

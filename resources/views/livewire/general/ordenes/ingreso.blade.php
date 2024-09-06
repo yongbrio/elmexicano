@@ -21,9 +21,9 @@
                             <i class="text-green-600 fa-solid fa-users-line"></i>
                         </span>
                         <h3 class="text-sm leading-tight mb-0.5"><span
-                                class="bg-green-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{$datos->nit}}</span>-
+                                class="bg-green-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{$datos->telefono}}</span>-
                             {{strtoupper($datos->nombre_comercial)}}</h3>
-                        <p class="text-xs">{{strtoupper($datos->nombre_legal)}} (0)</p>
+                        <p class="text-xs">{{strtoupper($datos->nombre_legal)}} ({{$datos->grupo}})</p>
                     </li>
                     <li class="mb-5 ms-6">
                         <span
