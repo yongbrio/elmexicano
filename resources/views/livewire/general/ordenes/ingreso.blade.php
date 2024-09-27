@@ -1,64 +1,184 @@
 <div>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    <div class="grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-1">
+        <div>
+            <i class="text-green-600 fa-solid fa-cart-shopping"></i> Orden Ingreso No. <span
+                class="font-semibold">{{$orden->id}}</span>
+        </div>
+        <hr class="h-[2px] my-2 bg-green-600 border-0">
+        {{-- Nuevoooo --}}
+        <div
+            class="grid-cols-[1fr,2fr] gap-4 text-sm normal-case sm:grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[1fr,2fr] ">
+            {{-- accordion --}}
+            <div wire:ignore.self class="" x-data="{ accordion: Alpine.store('accordion') }">
+                <div x-data="accordion(1)" wire:ignore
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
 
-        <div class="grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-1">
+                    <div class="flex mb-1">
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-green-600 fa-solid fa-users-line"></i>
+                            </span>
+                            <h5
+                                class="content-center font-semibold tracking-tight text-gray-900 capitalize dark:text-white">
+                                Cliente No.
 
-            <div>
-                <i class="text-green-600 fa-solid fa-cart-shopping"></i> Orden Ingreso No. <span
-                    class="font-semibold">{{$orden->id}}</span>
-            </div>
+                                <button type="button"
+                                    class="px-2 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{$datos->telefono}}</button>
 
-            <hr class="h-[2px] my-4 bg-green-600 border-0">
 
-            {{-- <div class="mb-5 text-sm">
-                DETALLE DE INGRESO
-            </div> --}}
-            <div class="pl-4 mb-5">
-                <ol
-                    class="relative py-2 font-semibold text-gray-900 border-gray-200 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
-                    <li class="mb-5 ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
-                            <i class="text-green-600 fa-solid fa-users-line"></i>
-                        </span>
-                        <h3 class="text-sm leading-tight mb-0.5"><span
-                                class="bg-green-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{$datos->telefono}}</span>-
-                            {{strtoupper($datos->nombre_comercial)}}</h3>
-                        <p class="text-xs">{{strtoupper($datos->nombre_legal)}} ({{$datos->grupo}})</p>
-                    </li>
-                    <li class="mb-5 ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
-                            <i class="text-green-600 fa-solid fa-paper-plane"></i>
-                        </span>
-                        <h3 class="text-sm leading-tight"><span class="font-semibold">{{$nombre_sucursal}}</span> -
-                            {{strtoupper($datos->barrio_localidad)}} <span
-                                class="italic">({{strtoupper($ciudad->nombre_municipio)." -
-                                ".strtoupper($departamento->nombre_departamento)}})</span> </h3>
-                        <p class="text-xs">{{strtoupper($datos->direccion)}}</p>
-                    </li>
-                    <li class="mb-8 ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
-                            <i class="text-green-600 fa-solid fa-gears"></i>
-                        </span>
-                        <h3 class="pt-2 text-sm leading-tight"><span class="text-semibold">{{$fecha}}</span> /
-                            {{strtoupper($nombre_sucursal)}} / {{strtoupper($nombre_registrado_por)}} / EFECTIVO -
-                            CONCILIADO </h3>
-                        {{-- <p class="text-sm">Step details here</p> --}}
-                    </li>
-                    <li class="ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
-                            <i class="text-green-600 fa-solid fa-comment"></i>
-                        </span>
-                        {{-- <h3 class="font-medium leading-tight">
-                        </h3> --}}
-                        <div class="flex pr-5" x-data="{ isDisabled: true }" x-on:click.away="isDisabled = true"
+                            </h5>
+                        </div>
+                        <div class="flex items-center justify-end w-full">
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-green-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab"
+                        :style="handleToggle()">
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Grupo:</strong>
+                            {{$datos->grupo}}
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Nombre comercial:</strong>
+                            {{($datos->nombre_comercial)}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Nombre legal:</strong>
+                            {{$datos->nombre_legal}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>NIT:</strong>
+                            {{$datos->nit}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Sucursal:</strong>
+                            {{$datos->sucursal}}
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Encargado:</strong>
+                            {{$datos->nombre_encargado}}
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Correo:</strong>
+                            {{$datos->correo}}
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Descripción:</strong>
+                            {{$datos->descripcion}}
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Dirección:</strong>
+                            {{$datos->direccion}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Barrio/Localidad:</strong>
+                            {{$datos->barrio_localidad}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Ciudad:</strong>
+                            {{$ciudad->nombre_municipio}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Departamento:</strong>
+                            {{$departamento->nombre_departamento}}
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Importancia:</strong>
+                            {{$datos->importancia}}
+
+                    </div>
+                </div>
+                <div x-data="accordion(2)" wire:ignore
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+
+                    <div class="flex mb-1">
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-green-600 fa-solid fa-gears"></i>
+                            </span>
+                            <h5
+                                class="content-center font-semibold tracking-tight text-gray-900 capitalize dark:text-white">
+                                Control</h5>
+                        </div>
+                        <div class="flex items-center justify-end w-full">
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-green-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab"
+                        :style="handleToggle()">
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Fecha de creación:</strong>
+                            {{$fecha}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Sucursal:</strong>
+                            {{$nombre_sucursal}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Usuario de
+                                registro:</strong>
+                            {{$nombre_registrado_por}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Factura con:</strong>
+                            {{$empresa_factura}}</p>
+                    </div>
+                </div>
+                <div x-data="accordion(3)" wire:ignore.self
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+                    <div class="flex mb-1" wire:ignore>
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-green-600 fa-solid fa-comment"></i>
+                            </span>
+                            <h5
+                                class="content-center font-semibold tracking-tight text-gray-900 capitalize dark:text-white">
+                                Comentarios</h5>
+                        </div>
+                        <div class="flex items-center justify-end w-full">
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-green-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab" :style="handleToggle()"
+                        wire:ignore.self>
+                        <div class="h-[140px] overflow-y-auto mt-2 rounded-lg"
+                            x-data="{ scrollToBottom() { $el.scrollTop = $el.scrollHeight; } }" x-init="scrollToBottom">
+                            @if ($historialComentarios)
+                            @foreach ( $historialComentarios as $com )
+                            <div class="p-1 mt-1 rounded-lg">
+                                <div class="bg-gray-200 rounded-lg">
+                                    <div class="flex justify-start ps-1">
+                                        <span class="p-1 text-xs font-semibold text-blue-500 rounded-lg">
+                                            {{$com->nombre}}
+                                        </span>
+                                    </div>
+                                    <div class="pb-2 ps-1">
+                                        {{$com->comentario}}
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-end mt-[-10px]">
+                                    <span class="p-[2px] font-semibold text-white bg-blue-500 rounded-lg text-[12px]">
+                                        {{$com->fecha}}
+                                    </span>
+                                </div>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                        <div class="flex items-end mt-5" x-data="{ isDisabled: true }"
+                            x-on:click.away="isDisabled = true"
                             x-init="$watch('isDisabled', value => { if (!value) $refs.textarea.focus(); })">
                             <textarea id="comentario" rows="1" x-ref="textarea" :disabled="isDisabled"
                                 wire:blur='registrarComentario' wire:model='comentario'
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Registra un comentario..."></textarea>
+                                class="h-28 max-h-28 block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Registra un comentario...">
+                            </textarea>
                             @if($misma_sucursal)
                             <button type="submit" @click="isDisabled = !isDisabled"
                                 class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
@@ -69,155 +189,184 @@
                                 <span class="sr-only">Editar</span>
                             </button>
                             @endif
-
                         </div>
-                        {{-- <p class="text-sm">Step details here</p> --}}
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <div
-            class="grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
-            <div>
-                <div>
-                    <i class="text-green-600 fa-solid fa-bars"></i> Detalle
+                    </div>
                 </div>
-                <hr class="h-[2px] my-4 bg-green-600 border-0">
-                <div class="relative overflow-x-auto shadow-lg sm:rounded-lg shadow-gray-900">
-                    <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-                        <thead class="text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-2 py-3 rounded-s-lg">
-                                    Código
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Detalle
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Q
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Unitario
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Subtotal
-                                </th>
-                                <th scope="col" class="px-2 py-3 sr-only rounded-e-lg">
-                                    Eliminar
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div x-data="accordion(4)" wire:ignore
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+                    <div class="flex mb-1">
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-green-600 fa-solid fa-circle-dollar-to-slot"></i>
+                            </span>
+                            <h5
+                                class="content-center font-semibold tracking-tight text-gray-900 capitalize dark:text-white">
+                                Pagos</h5>
+                        </div>
+                        <div class="flex items-center justify-end w-full">
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-green-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab"
+                        :style="handleToggle()">
+                        Hola soy los pagos
+                    </div>
+                </div>
+            </div>
 
-                            @if (!empty($listaProductosAgregados))
-                            @foreach ($listaProductosAgregados as $prod)
-                            <tr class="bg-white dark:bg-gray-800">
-                                <th scope="row"
-                                    class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $prod['codigo_producto'] }}
-                                </th>
-                                <td class="px-2 py-1">
-                                    {{ $prod['descripcion'] }}
-                                </td>
-                                <td class="px-2 py-1">
-                                    {{ $prod['cantidad_producto'] }}
-                                </td>
-                                <td class="px-2 py-1">
-                                    {{ "$ ".number_format($prod['precio_unitario_con_iva'], 0, ',', '.') }}
-                                </td>
-                                <td class="px-2.5 py-1">
-                                    {{ "$ ".number_format($prod['total'], 0, ',', '.') }}
-                                </td>
-                                <td class="px-2.5 py-1">
-                                    @if($misma_sucursal)
-                                    <button type="button" wire:click="eliminarProductoLista({{ $prod['id_producto'] }})"
-                                        class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
-                                        <i class="fa-solid fa-trash"></i>
-                                        <span class="sr-only">Eliminar</span>
-                                    </button>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
+            <div>
+
+                <div
+                    class=" max-h-[392px] p-4 mt-2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+
+                    <div class="flex mb-1">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                            <i class="text-green-600 fa-solid fa-truck-moving"></i>
+                        </span>
+                        <h5 class="content-center font-semibold tracking-tight text-gray-900 dark:text-white">
+                            Inventario</h5>
+                    </div>
+
+                    <hr class="h-[2px] mt-0 mb-2 bg-green-600 border-0">
+
+                    @if($misma_sucursal)
+
+                    <div class="overflow-y-auto max-h-[312px] p-3">
+                        <livewire:general.ordenes.lista-inventario>
+                    </div>
+
+                    @else
+                    <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+                        role="alert">
+                        <span class="font-medium">¡Atención!</span> La sucursal de esta orden es diferente a la
+                        asignada
+                        en tu perfil y no puedes realizar ninguna acción.
+                    </div>
+                    @endif
+
+
+                </div>
+                {{-- Items de la orden --}}
+                <div
+                    class="p-4 mt-2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+                    <div class="flex justify-between">
+                        <div class="flex mb-1">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-green-600 fa-solid fa-cart-arrow-down"></i>
+                            </span>
+                            <h5 class="content-center font-semibold tracking-tight text-gray-900 dark:text-white">
+                                Items de la orden ({{count($listaProductosAgregados)}})</h5>
+                        </div>
+                    </div>
+
+                    <hr class="h-[2px] mt-0 mb-2 bg-green-600 border-0">
+
+                    @if ($listaProductosAgregados)
+
+                    @foreach ($listaProductosAgregados as $productoLista )
+
+                    <div class="flex justify-between">
+
+                        <div class="flex items-center">
+
+                            @if(!empty($productoLista['imagen']))
+
+                            <img src='{{ route("admin.storage", ["modulo" => "productos", "filename" => basename($productoLista["imagen"])]) }}'
+                                alt="Producto"
+                                class="h-[60px] w-[60px] max-h-[60px] max-w-[60px] rounded object-contain">
                             @else
-                            <tr class="bg-white dark:bg-gray-800">
-                                <td colspan="6" class="px-2 py-1 text-center">
-                                    Aún no ha agregado ningún producto.
-                                </td>
-                            </tr>
+                            <img src="{{asset('images/imagen-defecto-producto.jpg')}}" alt="Producto"
+                                class="h-[60px] w-[60px] max-h-[60px] max-w-[60px] rounded object-contain">
                             @endif
 
+                            <div class="grid ml-4 place-content-start">
+                                <p class="text-base font-semibold text-gray-800">{{$productoLista['descripcion']}}
+                                    ({{$productoLista['cantidad_producto']}})</p>
+                                <div class="flex flex-col capitalize place-items-start">
+                                    <div class="flex">
+                                        <p class="text-gray-600">$ {{
+                                            number_format($productoLista['precio_unitario_con_iva'], 0, ',', '.') }}</p>
+                                        <p class="ml-2 text-gray-600">SKU: {{$productoLista['codigo_producto']}}</p>
+                                    </div>
 
-                        </tbody>
-                        <tfoot>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="grid place-content-end text-end">
+                                <p class="flex items-center justify-end text-base font-semibold text-gray-800">
+                                    $ {{ number_format(($productoLista['precio_unitario_con_iva'] *
+                                    $productoLista['cantidad_producto']),0,',','.')}}
+                                </p>
+                                <div class="flex {{-- flex-col --}} items-end capitalize place-items-start">
+                                    <p class="text-gray-600">IVA (19%) - $ {{
+                                        number_format((($productoLista['precio_unitario_con_iva'] -
+                                        $productoLista['precio_unitario_sin_iva']) *
+                                        $productoLista['cantidad_producto']),0,',','.')}}</p>
+                                    <p class="ml-2 text-gray-600">Subtotal - $ {{
+                                        number_format(($productoLista['precio_unitario_sin_iva'] *
+                                        $productoLista['cantidad_producto']),0,',','.')}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr class="h-[2px] my-2 bg-gray-200 border-0">
+                    @endforeach
+
+
+                    <div class="flex justify-end">
+                        <div class="flex">
 
                             @php
-
-                            $totalGeneral = 0;
-                            $cantidadTotal = 0;
-
-                            if (!empty($listaProductosAgregados)) {
-                            foreach ($listaProductosAgregados as $prod) {
-                            $totalGeneral += $prod['total'];
-                            $cantidadTotal += $prod['cantidad_producto'];
-                            }
+                            $total = 0;
+                            $ivaTotal = 0;
+                            $subtotal = 0;
+                            foreach ($listaProductosAgregados as $productoLista ){
+                            $total += $productoLista['total'];
+                            $ivaTotal += ($productoLista['precio_unitario_con_iva'] -
+                            $productoLista['precio_unitario_sin_iva']) * $productoLista['cantidad_producto'];
+                            $subtotal += $productoLista['precio_unitario_sin_iva'] *
+                            $productoLista['cantidad_producto'];
                             }
                             @endphp
 
-                            @if (!empty($listaProductosAgregados))
-                            <tr class="font-semibold text-gray-900 dark:text-white">
-                                <th scope="row" class="px-2 py-3 text-base">Total</th>
-                                <td class="px-2 py-3">-----</td>
-                                <td class="px-2 py-3">{{$cantidadTotal}}</td>
-                                <td class="px-2 py-3">-----</td>
-                                <td class="px-2 py-3"><span
-                                        class="bg-green-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{
-                                        "$
-                                        ".number_format($totalGeneral, 0, ',', '.') }}</span>
-                                </td>
-                            </tr>
+                            <div class="grid place-content-end text-end">
+                                <p class="flex items-center justify-end text-base font-semibold text-gray-800">Total:
+                                    $ {{ number_format($total,0,',','.')}}
+                                </p>
+                                <div class="flex items-end capitalize place-items-start">
+                                    <p class="text-gray-600">IVA - $ {{number_format($ivaTotal,0,',','.')}}</p>
+                                    <p class="ml-2 text-gray-600">Subtotal - $ {{number_format($subtotal,0,',','.')}}
+                                    </p>
+                                </div>
 
-                            @endif
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-
-
-            <div>
-                <div>
-                    <i class="text-green-600 fa-solid fa-truck-moving"></i> Inventario
-                </div>
-                <hr class="h-[2px] my-4 bg-green-600 border-0">
-                {{-- <div class="mb-5 text-sm">
-                    INVENTARIO DISPONIBLE
-                </div> --}}
-
-                <div
-                    class="p-4 mb-5 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
-                    @if($misma_sucursal)
-                    <livewire:general.ordenes.lista-inventario>
-                        @else
-                        <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
-                            role="alert">
-                            <span class="font-medium">¡Atención!</span> La sucursal de esta orden es diferente a la
-                            asignada
-                            en tu perfil y no puedes realizar ninguna acción.
+                            </div>
                         </div>
-
-                        @endif
-
+                    </div>
+                    @endif
                 </div>
+
+
             </div>
 
         </div>
-
+    </div>
 
     <!-- Main modal -->
     <div id="modal-datos-productos" tabindex="-1" aria-hidden="true" wire:ignore.self
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full z-[2000]">
         <div class="relative w-full max-w-2xl max-h-full p-4">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -281,6 +430,40 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener("alpine:init", () => {
+            Alpine.store("accordion", {
+                // Lista de índices abiertos. Aquí están todos abiertos por defecto (por ejemplo, del 1 al 3)
+                openTabs: [1, 2, 3, 4] 
+            });
+        
+            Alpine.data("accordion", (idx) => ({
+                init() {
+                    this.idx = idx;
+                },
+                idx: -1,
+                handleClick() {
+                    // Si el índice ya está abierto, lo eliminamos. Si no, lo añadimos al array.
+                    if (this.$store.accordion.openTabs.includes(this.idx)) {
+                        this.$store.accordion.openTabs = this.$store.accordion.openTabs.filter(tab => tab !== this.idx);
+                    } else {
+                        this.$store.accordion.openTabs.push(this.idx);
+                    }
+                },
+                handleRotate() {
+                    return this.$store.accordion.openTabs.includes(this.idx) ? "-rotate-180" : "";
+                },
+                handleToggle() {
+                    return this.$store.accordion.openTabs.includes(this.idx)
+                        ? `max-height: ${this.$refs.tab.scrollHeight}px`
+                        : "";
+                }
+            }));
+
+        });
+
+    </script>
+
     @script
     <script>
         const $targetEl = document.getElementById('modal-datos-productos');
@@ -289,7 +472,8 @@
             id: 'modal-datos-productos',
             override: true
             };
-            const modal = new Modal($targetEl, instanceOptions);
+            
+        const modal = new Modal($targetEl, instanceOptions);
             
         $wire.on('agregar', (e) => {
             
@@ -298,6 +482,8 @@
             modal.show();
 
         });
+
+
 
         $wire.on('estadoCampos', (e) => {
             const elemento = document.getElementById(''+e.elementId+'');

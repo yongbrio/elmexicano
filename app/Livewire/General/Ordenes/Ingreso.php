@@ -3,6 +3,7 @@
 namespace App\Livewire\General\Ordenes;
 
 use App\Models\DepartamentosModel;
+use App\Models\EmpresasModel;
 use App\Models\InventarioModel;
 use App\Models\MunicipiosModel;
 use App\Models\OrdenesModel;
@@ -44,6 +45,8 @@ class Ingreso extends Component
 
     public $comentario;
 
+    public $historialComentarios;
+
     public $ciudad;
 
     public $departamento;
@@ -51,6 +54,8 @@ class Ingreso extends Component
     public $nombre_registrado_por;
 
     public $misma_sucursal = false;
+
+    public $empresa_factura;
 
     public function mount(int $id)
     {
@@ -74,20 +79,26 @@ class Ingreso extends Component
 
             $this->nombre_registrado_por = $usuario->name . " " . $usuario->apellidos;
 
-            $this->comentario = json_decode($this->orden->comentarios);
-
+            $this->historialComentarios = json_decode($this->orden->comentarios);
+            //Recorer comentarios y obtener el ultimo
+            /* foreaach */
             $this->ciudad = MunicipiosModel::where('id', $this->datos->ciudad)->first();
+
             $this->departamento = DepartamentosModel::where('id', $this->datos->departamento)->first();
 
             $date = new DateTime($this->datos->created_at);
 
-            $formattedDate = $date->format('Y-m-d');
+            $formattedDate = $date->format('Y-m-d H:i:s');
 
             $this->fecha = $formattedDate;
 
             $sucursal = SucursalesModel::find($this->orden->id_sucursal);
 
             $this->nombre_sucursal = $sucursal->nombre_sucursal;
+
+            $this->empresa_factura = EmpresasModel::find($this->datos->empresa_factura);
+
+            $this->empresa_factura = $this->empresa_factura->nombre_legal;
 
             // Verifica si $this->orden->detalle no está vacío y es una cadena
             if (!empty($this->orden->detalle) && is_string($this->orden->detalle)) {
@@ -112,18 +123,41 @@ class Ingreso extends Component
 
     public function registrarComentario()
     {
-        $this->orden->comentarios = json_encode($this->comentario);
-
-        if ($this->orden->save()) {
-            $message = 'Comentario registrado';
-            $icon = 'success';
+        if (empty(trim($this->comentario))) {
+            $message = 'Comentario vacio';
+            $icon = 'warning';
             $this->dispatch('mensajes', message: $message, icon: $icon, state: false);
         } else {
-            $message = 'Error al registrar el comentario';
-            $icon = 'error';
-            $this->dispatch('mensajes', message: $message, icon: $icon, state: false);
+            // Obtener los comentarios existentes, si hay
+            $comentariosExistentes = json_decode($this->orden->comentarios, true) ?? [];
+
+            // Agregar el nuevo comentario al arreglo de comentarios existentes
+            $comentariosExistentes[] = [
+                'idusuario' => Auth::user()->id,
+                'nombre' => Auth::user()->name . " " . Auth::user()->apellidos,
+                'comentario' => $this->comentario,
+                'fecha' => now()->toDateTimeString(), // Agregar la fecha actual
+            ];
+
+            // Guardar el historial actualizado
+            $this->orden->comentarios = json_encode($comentariosExistentes);
+
+            if ($this->orden->save()) {
+                $this->comentario = null;
+                $this->historialComentarios = json_decode($this->orden->comentarios);
+                $this->dispatch('scrollToBottom');
+                $message = 'Comentario registrado';
+                $icon = 'success';
+                $this->dispatch('mensajes', message: $message, icon: $icon, state: false);
+            } else {
+                $this->comentario = null;
+                $message = 'Error al registrar el comentario';
+                $icon = 'error';
+                $this->dispatch('mensajes', message: $message, icon: $icon, state: false);
+            }
         }
     }
+
 
     public function validarStock()
     {
@@ -189,8 +223,11 @@ class Ingreso extends Component
     {
         if ($this->validarStock()) {
 
+            $imagen = $this->producto->imagen;
+            
             $nuevoProducto = [
                 'id_producto' => $this->producto->id,
+                'imagen' => $imagen,
                 'id_sucursal' => $this->producto->sucursal,
                 'codigo_producto' => $this->producto->codigo_producto,
                 'cantidad_producto' => $this->stock_transferencia,
