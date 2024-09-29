@@ -294,10 +294,33 @@
                                 <p class="text-base font-semibold text-gray-800">{{$productoLista['descripcion']}}
                                     ({{$productoLista['cantidad_producto']}})</p>
                                 <div class="flex flex-col capitalize place-items-start">
-                                    <div class="flex">
+                                    <div class="flex items-center">
                                         <p class="text-gray-600">$ {{
                                             number_format($productoLista['precio_unitario_con_iva'], 0, ',', '.') }}</p>
                                         <p class="ml-2 text-gray-600">SKU: {{$productoLista['codigo_producto']}}</p>
+                                        <div class="p-1 border rounded-lg ms-2">
+                                            <button type="button" @if ($productoLista['cantidad_producto'] == 1 ) disabled @else wire:click='disminuirProductoLista({{ $productoLista["id_producto"] }})' @endif
+                                                class="border-0 px-2.5 py-1.5 text-xs font-medium text-center text-gray-900 bg-white  border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                            <span>
+                                                {{$productoLista['cantidad_producto']}}
+                                            </span>
+                                            <button type="button" wire:click='aumentarProductoLista({{$productoLista["id_producto"]}})'
+                                                class="border-0 px-2.5 py-1.5 text-xs font-medium text-center text-gray-900 bg-white  border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="ms-2">
+                                            <button type="button" title="Eliminar"
+                                                wire:click="eliminarProductoLista({{ $productoLista['id_producto'] }})"
+                                                class="inline-flex justify-center text-base text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
+                                                <i class="fa-solid fa-trash"></i>
+                                                <span class="sr-only">Eliminar</span>
+                                            </button>
+                                        </div>
+
+
                                     </div>
 
                                 </div>
@@ -419,11 +442,14 @@
                     class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b md:p-5 dark:border-gray-600">
 
                     <button data-modal-hide="modal-datos-productos" type="button"
-                        class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
+                        class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        Cancelar
+                    </button>
 
                     <button type="button" wire:click='agregarListaProductos()'
                         class="ms-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmar
-                        <i class="fa-solid fa-circle-check"></i></button>
+                        <i class="fa-solid fa-circle-check"></i>
+                    </button>
 
                 </div>
             </div>

@@ -224,7 +224,7 @@ class Ingreso extends Component
         if ($this->validarStock()) {
 
             $imagen = $this->producto->imagen;
-            
+
             $nuevoProducto = [
                 'id_producto' => $this->producto->id,
                 'imagen' => $imagen,
@@ -333,6 +333,55 @@ class Ingreso extends Component
         $this->actualizarInventario($id, $cantidadProducto);
     }
 
+    public function disminuirProductoLista($id)
+    {
+        // Recorre los productos para disminuir en 1 la cantidad del producto con el ID especificado
+        foreach ($this->listaProductosAgregados as &$producto) {
+            if ($producto['id_producto'] === $id) {
+                // Si la cantidad es mayor a 1, solo restamos 1
+                if ($producto['cantidad_producto'] > 1) {
+                    $producto['cantidad_producto']--;
+                    $producto['total'] = $producto['total'] - $producto['precio_unitario_con_iva'];
+                    $producto['valor_comision'] = $producto['valor_comision'] - ($producto['precio_unitario_con_iva'] * $producto['comision']) / 100;
+                } else {
+                    // Si la cantidad es 1, lo eliminamos de la lista
+                    $this->listaProductosAgregados = array_filter($this->listaProductosAgregados, function ($prod) use ($id) {
+                        return $prod['id_producto'] !== $id;
+                    });
+                }
+                break;
+            }
+        }
+
+        // Actualiza el detalle en la orden
+        $this->orden->detalle = json_encode(array_values($this->listaProductosAgregados));
+        $this->orden->save();
+
+        // Actualiza la tabla con la disminución del producto
+        $this->actualizarInventario($id, 1); // Disminuye 1 del inventario
+    }
+
+    public function aumentarProductoLista($id)
+    {
+        // Recorre la lista de productos para encontrar el producto con el ID especificado
+        foreach ($this->listaProductosAgregados as &$producto) {
+            if ($producto['id_producto'] === $id) {
+                // Aumenta la cantidad del producto en 1
+                $producto['cantidad_producto']++;
+                $producto['total'] = $producto['total'] + $producto['precio_unitario_con_iva'];
+                $producto['valor_comision'] = $producto['valor_comision'] + ($producto['precio_unitario_con_iva'] * $producto['comision']) / 100;
+                break;
+            }
+        }
+
+        // Actualiza el detalle en la orden
+        $this->orden->detalle = json_encode(array_values($this->listaProductosAgregados));
+        $this->orden->save();
+
+        // Actualiza el inventario con el incremento del producto
+        $this->actualizarInventario($id, -1); // Aumentamos el producto, restando 1 del inventario
+    }
+
     private function actualizarInventario($id, $cantidadProducto)
     {
         $inventario = InventarioModel::find($id);
@@ -341,8 +390,15 @@ class Ingreso extends Component
 
             $inventario->stock = $inventario->stock + $cantidadProducto;
             $inventario->save();
+
             $this->dispatch('recargarComponente');
-            $message = 'El producto se eliminó de la lista';
+            $message = "";
+            if ($cantidadProducto < 0) {
+                $message = 'El producto se agregó a la lista';
+            } else {
+                $message = 'El producto se eliminó de la lista';
+            }
+
             $icon = 'success';
             $this->dispatch('mensajes', message: $message, icon: $icon, state: false);
         }
