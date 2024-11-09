@@ -3014,16 +3014,16 @@
         },
         {
             "name": "ramonrietdijk/livewire-tables",
-            "version": "4.0.0",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramonrietdijk/livewire-tables.git",
-                "reference": "212e9c0dbe6c6ec8b35b5b2180b03469c80b2dc4"
+                "reference": "5c2532476140c292f7abf75023bf55bc6dbde760"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramonrietdijk/livewire-tables/zipball/212e9c0dbe6c6ec8b35b5b2180b03469c80b2dc4",
-                "reference": "212e9c0dbe6c6ec8b35b5b2180b03469c80b2dc4",
+                "url": "https://api.github.com/repos/ramonrietdijk/livewire-tables/zipball/5c2532476140c292f7abf75023bf55bc6dbde760",
+                "reference": "5c2532476140c292f7abf75023bf55bc6dbde760",
                 "shasum": ""
             },
             "require": {
@@ -3033,9 +3033,10 @@
             },
             "require-dev": {
                 "larastan/larastan": "^2.9",
-                "laravel/pint": "^1.13",
-                "orchestra/testbench": "^9.0",
-                "phpunit/phpunit": "^11.0"
+                "laravel/pint": "^1.16",
+                "orchestra/testbench": "^9.2",
+                "phpstan/phpstan-strict-rules": "^1.6",
+                "phpunit/phpunit": "^11.2"
             },
             "type": "package",
             "extra": {
@@ -3068,7 +3069,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ramonrietdijk/livewire-tables/issues",
-                "source": "https://github.com/ramonrietdijk/livewire-tables/tree/4.0.0"
+                "source": "https://github.com/ramonrietdijk/livewire-tables/tree/4.4.0"
             },
             "funding": [
                 {
@@ -3076,7 +3077,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-16T06:51:48+00:00"
+            "time": "2024-08-29T16:43:03+00:00"
         },
         {
             "name": "ramsey/collection",

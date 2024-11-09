@@ -318,8 +318,9 @@ class ModalOrdenes extends Component
             'datos' => $datos,
             'tipo_orden' => $this->tipo_orden,
             'datos_empresa' => $datos_empresa,
-            'status1' => '',
-            'status2' => '',
+            'forma_pago' => '',
+            'estado_pago' => '',
+            'estado_envio' => 0,
             'registrado_por' => Auth::user()->id,
         ]);
 

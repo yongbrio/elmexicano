@@ -178,6 +178,15 @@
                         </a>
                     </li>
                     @endcan
+                    @can('admin.aprobar.ordenes')
+                    <li>
+                        <a href="{{route('admin-aprobar-ordenes')}}"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span class="flex-1 ms-3 whitespace-nowrap">Aprobar Ordenes</span>
+                        </a>
+                    </li>
+                    @endcan
                 </ul>
             </li>
             {{-- Fin Administración --}}

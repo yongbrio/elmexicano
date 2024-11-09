@@ -280,7 +280,7 @@ class RegistrarOrdenes extends Component
 
     public function medioPago()
     {
-        Log::debug($this->medio_pago);
+
     }
 
     public function darTotalProductos()

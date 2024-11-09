@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Administracion\AdminClientes;
+use App\Livewire\Administracion\AprobarOrdenes\AdminAprobarOrdenes;
 use App\Livewire\Administracion\Categorias\AdminCategorias;
 use App\Livewire\Administracion\CuentasBancarias\AdminCuentasBancarias;
 use App\Livewire\Administracion\CuentasBancarias\EditarCuentaBancaria;
@@ -75,7 +76,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/egresos', AdminEgresos::class)->name('admin-egresos')->middleware('can:admin.egresos');
     Route::get('/egresos/{id}', EditarEgreso::class)->name('editar-egreso')->middleware('can:admin.egresos');
     /* Ordenes */
-    Route::get('/ordenes', AdminOrdenes::class)->name('admin-ordenes')->middleware('can:admin.egresos');
+    Route::get('/ordenes', AdminOrdenes::class)->name('admin-ordenes')->middleware('can:admin.ordenes');
+    /* Aprobar Ordenes */
+    Route::get('/aprobar-ordenes', AdminAprobarOrdenes::class)->name('admin-aprobar-ordenes')->middleware('can:admin.aprobar.ordenes');
     /* Acceso a imagenes */
     Route::get('/storage/{modulo}/{filename}', function ($modulo, $filename) {
         $fullPath = storage_path("app/imagenes/{$modulo}/{$filename}");

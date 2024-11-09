@@ -20,8 +20,6 @@ class AppLayout extends Component
     {
         $sucursalId = Auth::user()->caja;
         $this->sucursal = SucursalesModel::find($sucursalId);
-        Log::debug("Soy la sucursal " . $this->sucursal);
-        Log::debug("Soy la sucursal " );
         return view('layouts.app'/* , ['sucursal' => $this->sucursal] */);
     }
 }

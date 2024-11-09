@@ -1,23 +1,28 @@
 <?php
 
-namespace App\Livewire\General\Caja;
+namespace App\Livewire\Administracion\AprobarOrdenes;
+
 
 use App\Models\OrdenesModel;
+use App\Models\PagosOrdenes;
 use App\Models\SucursalesModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
-use Livewire\Attributes\On;
-use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
+use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
 use RamonRietdijk\LivewireTables\Enums\Direction;
-use stdClass;
+use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
 
-class ListaOrdenes extends LivewireTable
+class ListaAprobarOrdenes extends LivewireTable
 {
     protected string $model = OrdenesModel::class;
 
-    protected $appends = ['tipo_orden'];
+    /** @return Builder<Model> */
+    protected function query(): Builder
+    {
+        return $this->model()->query()->where('forma_pago', '=', 'banco')->where('estado_orden', '=', 1);
+    }
 
     protected function columns(): array
     {
@@ -86,28 +91,6 @@ class ListaOrdenes extends LivewireTable
                 $query->where('id', 'LIKE', "%{$search}%");
             }),
 
-            Column::make(__('Tipo'), function ($value) {
-                $tipo = strtoupper(trim($value->tipo_orden));
-                $color = '';
-
-                // Asignar color según el tipo de orden
-                if ($tipo === 'EGRESO') {
-                    $color = 'red-600'; // Ejemplo para tipo Egreso
-                } elseif ($tipo === 'INGRESO') {
-                    $color = 'green-600'; // Ejemplo para tipo Ingreso
-                }
-
-                // Devuelve el HTML para mostrar
-                return "<div class='text-white p-1 bg-{$color} rounded px-2 text-center'>
-                {$tipo}
-                </div>";  // Devuelve el HTML formateado
-            })->asHtml()->sortable(function (Builder $builder, Direction $direction): void {
-                // Utiliza la columna original para el ordenamiento
-                $builder->orderBy('tipo_orden', $direction->value);
-            })->searchable(function (Builder $builder, $searchTerm) {
-                $builder->where('tipo_orden', 'LIKE', "%{$searchTerm}%");
-            }),
-
             Column::make(__('Sucursal'),  function ($value) {
                 $sucursal = SucursalesModel::find($value->id_sucursal);
                 return  strtoupper($sucursal->nombre_sucursal);
@@ -146,65 +129,6 @@ class ListaOrdenes extends LivewireTable
                          FROM JSON_TABLE(detalle, "$[*]" COLUMNS (value JSON PATH "$")) AS jt) AS total_cantidad')
                     ->from('ordenes') // Cambia 'ordenes' por el nombre real de tu tabla
                     ->orderBy('total_cantidad', $direction->value);
-            }),
-
-            Column::make(__('Estado envío'), function ($value) {
-                $estados = [
-                    0 => 'Por despachar',
-                    1 => 'Despachado',
-                    2 => 'Cargar comprobante',
-                    3 => 'Conciliado',
-                ];
-                return isset($estados[$value->estado_envio]) ? $estados[$value->estado_envio] : 'Por asignar';
-            })->searchable(function ($query, $search) {
-                $search = strtolower($search);
-
-                // Definir los estados posibles
-                $estados = [
-                    'Por despachar',
-                    'Despachado',
-                    'Cargar comprobante',
-                    'Conciliado',
-                    'Por asignar',
-                ];
-
-                // Construir la consulta
-                $query->where(function ($query) use ($search, $estados) {
-                    // Comparar los estados y permitir buscar por "Por asignar"
-                    foreach ($estados as $key => $estado) {
-                        if (stripos($estado, $search) !== false) {
-                            $query->orWhere('estado_envio', $key);
-                        }
-                    }
-
-                    // Para los casos en que el estado_envio está vacío
-                    if (empty($search) || stripos('Por asignar', $search) !== false) {
-                        $query->orWhere('estado_envio', '');
-                    }
-                });
-            })->sortable(function (Builder $builder, Direction $direction) {
-                // Ordenamiento por estado_envio
-                $builder->orderBy('estado_envio', $direction->value);
-            }),
-
-
-            Column::make(__('Estado pago'), function ($value) {
-                // Verifica si estado_pago está vacío
-                return !empty($value->estado_pago) ? ucfirst(strtolower($value->estado_pago)) : 'Por asignar';
-            })->searchable(function ($query, $search) {
-                // Búsqueda por estado_pago
-                $query->where(function ($query) use ($search) {
-                    // Busca el estado_pago o considera vacío como "Por asignar"
-                    $query->where('estado_pago', 'LIKE', "%{$search}%")
-                        ->orWhere(function ($query) use ($search) {
-                            // Considera los valores vacíos como "Por asignar"
-                            $query->where('estado_pago', '')
-                                ->whereRaw('LOWER(?) = LOWER("Por asignar")', [$search]);
-                        });
-                });
-            })->sortable(function (Builder $builder, Direction $direction) {
-                // Ordenamiento por estado_pago
-                $builder->orderBy('estado_pago', $direction->value);
             }),
 
             Column::make(__('Usuario'), function ($value) {
@@ -254,14 +178,56 @@ class ListaOrdenes extends LivewireTable
                     ) AS total_sum')
                         ->from('ordenes') // Cambia 'ordenes' por el nombre real de tu tabla
                         ->orderBy('total_sum', $direction->value);
-                })
+                }),
 
+            Column::make(__('Acciones'), function ($value) {
 
+                $archivo_orden = json_decode($value->adjuntos);
+
+                $archivo_orden = $archivo_orden[0];
+
+                $boton_aprobar = '<button id="btnAprobar_' . $archivo_orden->id . '" wire:click="validarOrden(' . $value->id . ')"
+                class="inline-flex justify-center p-2 text-green-600 rounded-full cursor-pointer hover:bg-green-100 dark:text-green-500 dark:hover:bg-gray-600">
+                    <i class="fa-solid fa-circle-check"></i>
+                </button>';
+
+                $boton_ver = '<button id="btnPreview_pago' . $archivo_orden->id . '"
+                            data-file-url="' . route('admin.storage', ['modulo' => 'ingresos', 'filename' => $archivo_orden->nombre]) . '"
+                            data-file-type="' . $archivo_orden->fileType . '" type="button"
+                            x-on:click="modalPreview(\'' . $archivo_orden->id . '\', \'pago\')"
+                            data-modal-target="modal-preview-soporte"
+                            data-modal-toggle="modal-preview-soporte"
+                            class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+                            <i class="fa-solid fa-eye"></i>
+                            <span class="sr-only">Ver</span>
+                        </button>';
+
+                return '<div class="d-flex">' . $boton_aprobar . $boton_ver . '</div>';
+            })->asHtml(),
         ];
     }
 
     protected function canSelect(): bool
     {
         return false;
+    }
+
+    public function validarOrden($id_orden)
+    {
+        $orden = OrdenesModel::find($id_orden);
+        $orden->estado_pago = 'validado';
+        $orden->estado_orden = '2';
+        $orden->save();
+
+        $pago = PagosOrdenes::where('orden', $orden->id)->first();
+        $pago->id_estado_pago = 2;
+        $pago->nombre_estado_pago = 'validado';
+        $pago->save();
+
+        $message = 'Orden Aprobada';
+        $icon = 'success';
+        $this->dispatch('mensajes', message: $message, icon: $icon, state: false);
+
+        $this->columns();
     }
 }
