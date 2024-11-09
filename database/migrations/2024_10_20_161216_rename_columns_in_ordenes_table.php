@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('ordenes', function (Blueprint $table) {
-            $table->renameColumn('status1', 'forma_pago');
-            $table->renameColumn('status2', 'estado_pago');
+            // Verificar si las columnas existen antes de renombrarlas
+            if (Schema::hasColumn('ordenes', 'status1')) {
+                $table->renameColumn('status1', 'forma_pago');
+            }
+            if (Schema::hasColumn('ordenes', 'status2')) {
+                $table->renameColumn('status2', 'estado_pago');
+            }
         });
     }
 
@@ -23,8 +28,14 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('ordenes', function (Blueprint $table) {
-            $table->renameColumn('status1', 'forma_pago');
-            $table->renameColumn('status2', 'estado_pago');
+            // Verificar si las columnas existen antes de renombrarlas
+            if (Schema::hasColumn('ordenes', 'forma_pago')) {
+                $table->renameColumn('forma_pago', 'status1');
+            }
+            if (Schema::hasColumn('ordenes', 'estado_pago')) {
+                $table->renameColumn('estado_pago', 'status2');
+            }
         });
     }
 };
+

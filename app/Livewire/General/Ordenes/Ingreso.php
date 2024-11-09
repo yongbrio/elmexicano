@@ -334,6 +334,7 @@ class Ingreso extends Component
                         // Producto ya existe, actualizar cantidad y total
                         $producto['cantidad_producto'] += $nuevoProducto['cantidad_producto'];
                         $producto['total'] = $producto['cantidad_producto'] * $producto['precio_unitario_con_iva'];
+                        $this->valor_total_orden = $producto['total'];
                         $producto['valor_comision'] = ($producto['total'] * $producto['comision']) / 100;
 
                         $this->producto->stock = ($this->producto->stock - $nuevoProducto['cantidad_producto']);
@@ -378,6 +379,7 @@ class Ingreso extends Component
                 $this->dispatch('mensajes', message: $message, icon: $icon, state: true);
                 $this->dispatch('recargarComponente');
                 $this->listaProductosAgregados[] = $nuevoProducto;
+                $this->valor_total_orden = $nuevoProducto['total'];
                 $this->orden->detalle = json_encode($this->listaProductosAgregados);
                 $this->orden->save();
             }
@@ -681,57 +683,67 @@ class Ingreso extends Component
 
     public function eliminarArchivo($id, $id_pago_orden)
     {
-        $archivos = $this->orden->adjuntos;
+        $registroPago = PagosOrdenes::find($id_pago_orden);
 
-        if (!empty($archivos)) {
+        $estado_pago = $registroPago->id_estado_pago;
 
-            $archivos = json_decode($archivos); // Decodificar JSON como objetos
+        if ($estado_pago != 2) {
 
-            foreach ($archivos as $key => $archivo) {
+            $archivos = $this->orden->adjuntos;
 
-                // Encontró el archivo con el id
-                if (strcmp(trim($archivo->id), trim($id)) === 0) {
+            if (!empty($archivos)) {
 
-                    // Eliminar archivo físicamente del sistema si es necesario
-                    $rutaArchivo = storage_path('app/imagenes/ingresos/' . $archivo->nombre);
+                $archivos = json_decode($archivos); // Decodificar JSON como objetos
 
-                    if (file_exists($rutaArchivo)) {
-                        unlink($rutaArchivo); // Elimina el archivo del sistema de archivos
+                foreach ($archivos as $key => $archivo) {
+
+                    // Encontró el archivo con el id
+                    if (strcmp(trim($archivo->id), trim($id)) === 0) {
+
+                        // Eliminar archivo físicamente del sistema si es necesario
+                        $rutaArchivo = storage_path('app/imagenes/ingresos/' . $archivo->nombre);
+
+                        if (file_exists($rutaArchivo)) {
+                            unlink($rutaArchivo); // Elimina el archivo del sistema de archivos
+                        }
+
+                        unset($archivos[$key]); // Elimina el archivo del objeto
+                        $icon = 'success';
+                        $this->dispatch('mensajes', message: "Pago eliminado", icon: $icon, state: false);
+                        break; // Detiene la búsqueda
                     }
-
-                    unset($archivos[$key]); // Elimina el archivo del objeto
-                    $icon = 'success';
-                    $this->dispatch('mensajes', message: "Pago eliminado", icon: $icon, state: false);
-                    break; // Detiene la búsqueda
                 }
+
+                // Reconvertir el objeto a JSON y guardar de nuevo en la base de datos
+                $this->orden->adjuntos = [];
+                /* dd(print_r($archivos, true)); */
+                $this->archivos_orden = [];
+                $this->orden->forma_pago = '';
+                $this->orden->estado_pago = '';
+                $this->orden->estado_orden = '';
+                $this->orden->save();
+
+                $this->estadoOrden = $this->darStatusOrden($this->orden->estado_orden);
+                $this->opcionesPagoActivado = false;
+
+                $registroPago = PagosOrdenes::find($id_pago_orden);
+
+                if ($registroPago) {
+                    $registroPago->delete();
+                }
+
+                $this->pagoOrdenes = PagosOrdenes::where('orden', $this->id)->first();
+
+                if (!$this->pagoOrdenes) {
+                    $this->opcionesPagoActivado = true;
+                    $this->forma_pago = "";
+                }
+
+                $this->asignarFormaPago($this->forma_pago);
             }
-
-            // Reconvertir el objeto a JSON y guardar de nuevo en la base de datos
-            $this->orden->adjuntos = [];
-            /* dd(print_r($archivos, true)); */
-            $this->archivos_orden = [];
-            $this->orden->forma_pago = '';
-            $this->orden->estado_pago = '';
-            $this->orden->estado_orden = '';
-            $this->orden->save();
-
-            $this->estadoOrden = $this->darStatusOrden($this->orden->estado_orden);
-            $this->opcionesPagoActivado = false;
-
-            $registroPago = PagosOrdenes::find($id_pago_orden);
-
-            if ($registroPago) {
-                $registroPago->delete();
-            }
-
-            $this->pagoOrdenes = PagosOrdenes::where('orden', $this->id)->first();
-
-            if (!$this->pagoOrdenes) {
-                $this->opcionesPagoActivado = true;
-                $this->forma_pago = "";
-            }
-
-            $this->asignarFormaPago($this->forma_pago);
+        } else if ($estado_pago == 2) {
+            $icon = 'warning';
+            $this->dispatch('mensajes', message: "No se puede eliminar el pago validado", icon: $icon, state: false);
         }
     }
 
@@ -819,10 +831,12 @@ class Ingreso extends Component
 
             $this->aplicar_pago = false;
 
-            $registroPago = PagosOrdenes::where('orden', $this->pagoOrdenes->orden)->first();
+            if ($this->pagoOrdenes && isset($this->pagoOrdenes->orden)) {
+                $registroPago = PagosOrdenes::where('orden', $this->pagoOrdenes->orden)->first();
 
-            if ($registroPago) {
-                $registroPago->delete();
+                if ($registroPago) {
+                    $registroPago->delete();
+                }
             }
 
             $this->orden->adjuntos = [];
