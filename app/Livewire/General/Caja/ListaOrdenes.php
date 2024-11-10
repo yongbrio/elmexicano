@@ -108,6 +108,33 @@ class ListaOrdenes extends LivewireTable
                 $builder->where('tipo_orden', 'LIKE', "%{$searchTerm}%");
             }),
 
+            Column::make(__('Forma pago'), function ($value) {
+                $tipo = strtoupper(trim($value->forma_pago));
+                $tipo = empty($tipo) ? 'SIN ASIGNAR' : $tipo;
+                $color = '';
+
+                // Asignar color según el tipo de orden
+                if ($tipo === 'CREDITO') {
+                    $color = 'yellow-400';
+                } else if ($tipo === 'EFECTIVO') {
+                    $color = 'purple-700';
+                } else if ($tipo === 'BANCO') {
+                    $color = 'blue-700';
+                } else {
+                    $color = 'gray-400';
+                }
+
+                // Devuelve el HTML para mostrar
+                return "<div class='text-white p-1 bg-{$color} rounded px-2 text-center'>
+                {$tipo}
+                </div>";  // Devuelve el HTML formateado
+            })->asHtml()->sortable(function (Builder $builder, Direction $direction): void {
+                // Utiliza la columna original para el ordenamiento
+                $builder->orderBy('forma_pago', $direction->value);
+            })->searchable(function (Builder $builder, $searchTerm) {
+                $builder->where('forma_pago', 'LIKE', "%{$searchTerm}%");
+            }),
+
             Column::make(__('Sucursal'),  function ($value) {
                 $sucursal = SucursalesModel::find($value->id_sucursal);
                 return  strtoupper($sucursal->nombre_sucursal);
