@@ -9,7 +9,7 @@
             model="numero_cuenta" placeholder="900000000" typeInput="number"></x-live-wire-input>
 
         <x-live-wire-input label="Banco" id="nombre_banco" icon="fa-solid fa-building-columns" model="nombre_banco"
-            placeholder="Bancolombia" typeInput="text"></x-live-wire-input>
+            placeholder="Nombre del banco" typeInput="text"></x-live-wire-input>
 
         <x-select2 label="Empresa" id="empresa" icon="fa-solid fa-comment" model="empresa"
             optionTextDefault="Seleccione Empresa"> </x-select2>

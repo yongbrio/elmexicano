@@ -31,10 +31,7 @@ class ListaClientesTable extends LivewireTable
          Column::make(__('Nombre Comercial'), 'nombre_comercial')->sortable()->searchable(),
          Column::make(__('Nombre Legal'), 'nombre_legal')->sortable()->searchable(),
          Column::make(__('NIT'), 'nit')->sortable()->searchable(),
-         Column::make(__('Sucursal'), function (mixed $value) {
-            $sucursal = SucursalesModel::find($value->sucursal);
-            return $sucursal->nombre_sucursal;
-         })->sortable()->searchable(),
+         Column::make(__('Sucursal'), 'sucursal')->sortable()->searchable(),
          Column::make(__('Barrio/Localidad'), 'barrio_localidad')->sortable()->searchable(),
          Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
          Column::make(

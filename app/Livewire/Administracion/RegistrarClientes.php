@@ -84,7 +84,7 @@ class RegistrarClientes extends Component
             'iddepartamento' => 'required',
             'idciudad' => 'required|string|max:100',
             'direccion' => 'required|string|max:255',
-            'sucursal' => 'required|string|max:100',
+            'sucursal' => 'required|string|max:255',
             'correo' => 'required|email|max:255',
             'nombreEncargado' => 'required|string|max:255',
             'descripcion' => 'required|string|max:1000',

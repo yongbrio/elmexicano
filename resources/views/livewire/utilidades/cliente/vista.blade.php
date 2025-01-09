@@ -19,17 +19,14 @@
             model="nombreComercial" disabled='disabled' placeholder="Nombre Comercial" typeInput="text">
         </x-live-wire-input>
     </div>
-
-
-
+    
     <div class="grid grid-cols-1 gap-4 mt-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
 
         <x-live-wire-input label="Nombre Legal" id="nombreLegal" icon="fa-solid fa-file-signature" model="nombreLegal"
             placeholder="Nombre Legal" typeInput="text" disabled='disabled'></x-live-wire-input>
 
-        <x-select2 label="Sucursal" id="sucursal" icon="fa-solid fa-ruler-horizontal" model="sucursal"
-            optionTextDefault="Seleccione la sucursal asociada" disabled='disabled'>
-        </x-select2>
+        <x-live-wire-input label="Sucursal" id="sucursal" icon="fa-solid fa-ruler-horizontal" model="sucursal"
+            placeholder="Nombre sucursal" typeInput="text" disabled='disabled'></x-live-wire-input>
 
     </div>
 

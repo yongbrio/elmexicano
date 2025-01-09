@@ -46,10 +46,11 @@ class EditarProveedor extends Component
             $this->nit = $proveedor->nit;
             $this->sucursal = $proveedor->sucursal;
             $this->direccion = $proveedor->direccion;
-            
+
             $nombre_municipio = MunicipiosModel::where('id', $proveedor->ciudad)->first();
             $nombre_departamento = DepartamentosModel::where('id', $proveedor->departamento)->first();
 
+            $this->idciudad = $proveedor->ciudad;
             $this->ciudad = $nombre_municipio->nombre_municipio;
             $this->departamento = $nombre_departamento->nombre_departamento;
             $this->correo = $proveedor->correo;
