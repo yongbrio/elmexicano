@@ -30,8 +30,14 @@
                                 Cliente No.
 
                                 <button type="button"
-                                    class="px-2 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{$datos->telefono}}</button>
+                                    class="px-2 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    data-cliente-telefono>{{$datos->telefono}}</button>
 
+                                <button type="button" data-modal-target="modal-gestion-cliente"
+                                    data-modal-toggle="modal-gestion-cliente"
+                                    class="px-2 py-1 text-xs font-medium text-white bg-purple-700 rounded-lg focus:outline-none hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+                                    <i class="fa-solid fa-user-pen"></i> Gestionar cliente
+                                </button>
 
                             </h5>
                         </div>
@@ -50,36 +56,44 @@
                     <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab"
                         :style="handleToggle()">
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Grupo:</strong>
-                            {{$datos->grupo}}
+                            <span data-cliente-grupo>{{$datos->grupo}}</span>
                         </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Nombre comercial:</strong>
-                            {{($datos->nombre_comercial)}}</p>
+                            <span data-cliente-nombre-comercial>{{($datos->nombre_comercial)}}</span>
+                        </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Nombre legal:</strong>
-                            {{$datos->nombre_legal}}</p>
+                            <span data-cliente-nombre-legal>{{$datos->nombre_legal}}</span>
+                        </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>NIT:</strong>
-                            {{$datos->nit}}</p>
+                            <span data-cliente-nit>{{$datos->nit}}</span>
+                        </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Sucursal:</strong>
-                            {{$datos->sucursal}}
+                            <span data-cliente-sucursal>{{$datos->sucursal}}</span>
                         </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Encargado:</strong>
-                            {{$datos->nombre_encargado}}
+                            <span data-cliente-encargado>{{$datos->nombre_encargado}}</span>
                         </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Correo:</strong>
-                            {{$datos->correo}}
+                            <span data-cliente-correo>{{$datos->correo}}</span>
                         </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Descripción:</strong>
-                            {{$datos->descripcion}}
+                            <span data-cliente-descripcion>{{$datos->descripcion}}</span>
                         </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Dirección:</strong>
-                            {{$datos->direccion}}</p>
+                            <span data-cliente-direccion>{{$datos->direccion}}</span>
+                        </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Barrio/Localidad:</strong>
-                            {{$datos->barrio_localidad}}</p>
+                            <span data-cliente-barrio> {{$datos->barrio_localidad}}</span>
+                        </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Ciudad:</strong>
-                            {{$ciudad->nombre_municipio}}</p>
+                            <span data-cliente-ciudad>{{$ciudad->nombre_municipio}}</span>
+                        </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Departamento:</strong>
-                            {{$departamento->nombre_departamento}}
+                            <span data-cliente-departamento>{{$departamento->nombre_departamento}}</span>
+                        </p>
                         <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Importancia:</strong>
-                            {{$datos->importancia}}
+                            <span data-cliente-importancia>{{$datos->importancia}}</span>
+                        </p>
 
                     </div>
                 </div>
@@ -1035,6 +1049,378 @@
         </div>
     </div>
 
+    <div id="modal-gestion-cliente" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" wire:ignore.self
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-4xl max-h-full p-4">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <!-- Modal header -->
+                <div
+                    class="flex items-center justify-between p-4 border-b border-gray-200 rounded-t md:p-5 dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Gestión de cliente
+                    </h3>
+                    <button type="button"
+                        class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="modal-gestion-cliente">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 space-y-4 md:p-5" wire:ignore.self>
+
+                    <div id="accordion-collapse" data-accordion="collapse" class="text-base" wire:ignore.self
+                        data-active-classes="bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-white">
+                        <h2 id="accordion-collapse-heading-1" wire:ignore.self>
+                            <button type="button"
+                                class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-b-0 border-gray-200 rtl:text-right rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-collapse-body-1" aria-expanded="true"
+                                aria-controls="accordion-collapse-body-1">
+                                <span>Cambiar datos del cliente</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-1" class="hidden"
+                            aria-labelledby="accordion-collapse-heading-1" wire:ignore.self>
+                            <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                                    role="alert">
+                                    <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        Actualice los datos del cliente para esta orden.
+                                    </div>
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 gap-4 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 p-3">
+                                    {{-- Formulario de edición de datos del cliente --}}
+                                    <x-live-wire-input label="Teléfono" id="telefono_edicion" icon="fa-solid fa-phone"
+                                        model="telefono_edicion" placeholder="3000000000" typeInput="number">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Grupo" id="grupo_edicion" icon="fa-solid fa-layer-group"
+                                        model="grupo_edicion" placeholder="Grupo" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Comercial" id="nombreComercial_edicion"
+                                        icon="fa-solid fa-industry" model="nombreComercial_edicion"
+                                        placeholder="Nombre Comercial" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Legal" id="nombreLegal_edicion"
+                                        icon="fa-solid fa-file-signature" model="nombreLegal_edicion"
+                                        placeholder="Nombre Legal" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="NIT" id="nit_edicion" icon="fa-solid fa-address-card"
+                                        model="nit_edicion" placeholder="900000000" typeInput="number">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Sucursal" id="sucursal_edicion"
+                                        icon="fa-solid fa-ruler-horizontal" model="sucursal_edicion"
+                                        placeholder="Nombre de sucursal" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Dirección" id="direccion_edicion" icon="fa-regular fa-map"
+                                        model="direccion_edicion" placeholder="XXXXXXXXXXXXX" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad_edicion"
+                                        icon="fa-solid fa-location-arrow" model="barrio_localidad_edicion"
+                                        placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
+
+                                    <div>
+                                        <x-live-wire-input label="Ciudad" id="ciudad_edicion"
+                                            icon="fa-solid fa-location-dot" model="ciudad_edicion" placeholder="Soacha"
+                                            typeInput="text" wire='buscarCiudad'>
+                                        </x-live-wire-input>
+
+                                        <x-live-wire-input label="" id="idciudad_edicion" icon=""
+                                            model="idciudad_edicion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+
+                                        @if ($listaMunicipios)
+                                        <ul
+                                            class="max-w-md p-2 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                                            @foreach ($listaMunicipios as $mun)
+                                            <li class="cursor-pointer" wire:click='setearNombreCiudad("{{$mun->id}}")'>
+                                                {{
+                                                $mun->nombre_municipio }}
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        <x-live-wire-input label="Departamento" id="departamento"
+                                            icon="fa-solid fa-map-location-dot" model="departamento_edicion"
+                                            placeholder="Cundinamarca" typeInput="text" disabled='disabled'>
+                                        </x-live-wire-input>
+                                        <x-live-wire-input label="" id="iddepartamento" icon=""
+                                            model="iddepartamento_edicion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+                                    </div>
+
+                                    <x-live-wire-input label="Correo" id="correo_edicion" icon="fa-solid fa-envelope"
+                                        model="correo_edicion" placeholder="correo@correo.com" typeInput="email">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre encargado" id="nombreEncargado_edicion"
+                                        icon="fa-solid fa-user" model="nombreEncargado_edicion"
+                                        placeholder="Nombre encargado" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Descripción" id="descripcion_edicion"
+                                        icon="fa-solid fa-comment" model="descripcion_edicion" placeholder="Descripción"
+                                        typeInput="text"></x-live-wire-input>
+
+                                    <x-select2 label="Factura con" id="empresaFactura" icon="fa-solid fa-comment"
+                                        model="empresaFactura_edicion" optionTextDefault="Seleccione factura">
+                                    </x-select2>
+
+                                    <x-select2 label="Importancia" id="importancia" icon="fa-solid fa-toggle-on"
+                                        model="importancia_edicion" optionTextDefault="Seleccione la importancia">
+                                    </x-select2>
+
+                                </div>
+                                <div class="flex justify-end mt-5">
+                                    <button wire:click="actualizarCliente" type="button"
+                                        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        <div wire:loading.remove wire:target="actualizarCliente">
+                                            <i class="fa-solid fa-floppy-disk"></i> Actualizar
+                                        </div>
+                                        <div wire:loading wire:target="actualizarCliente">
+                                            Cargando...
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 id="accordion-collapse-heading-2" wire:ignore.self>
+                            <button type="button"
+                                class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-b-0 border-gray-200 rtl:text-right focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-collapse-body-2" aria-expanded="false"
+                                aria-controls="accordion-collapse-body-2">
+                                <span>Cambiar cliente</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-2" class="hidden"
+                            aria-labelledby="accordion-collapse-heading-2" wire:ignore.self>
+                            <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                                    role="alert">
+                                    <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        Reemplace el cliente de esta orden.
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <x-live-wire-input label="Cliente" id="buscar_cliente"
+                                        icon="fa-solid fa-location-dot" model="buscar_cliente"
+                                        placeholder="Buscar Cliente" typeInput="text" wire='buscarCliente'>
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="" id="id_cliente" icon="" model="id_cliente"
+                                        placeholder="" typeInput="hidden">
+                                    </x-live-wire-input>
+
+                                    @if ($listaClientes)
+                                    <ul
+                                        class="max-w-md p-2 space-y-1 text-sm text-gray-500 list-disc list-inside dark:text-gray-400">
+                                        @foreach ($listaClientes as $cliente)
+                                        <li class="cursor-pointer" wire:click='setearNombreCliente("{{$cliente->id}}")'>
+                                            {{ $cliente->nombre_legal.' - '. $cliente->nit . ' - '.$cliente->telefono }}
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                    <div class="flex justify-end mt-5">
+                                        <button wire:click="cambiarClienteOrden" type="button"
+                                            class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                            <div wire:loading.remove wire:target="cambiarClienteOrden">
+                                                <i class="fa-solid fa-repeat"></i> Cambiar cliente
+                                            </div>
+                                            <div wire:loading wire:target="cambiarClienteOrden">
+                                                Cargando...
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 id="accordion-collapse-heading-3" wire:ignore.self>
+                            <button type="button"
+                                class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-gray-200 rtl:text-right focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-collapse-body-3" aria-expanded="false"
+                                aria-controls="accordion-collapse-body-3">
+                                <span>Crear cliente</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-3" class="hidden"
+                            aria-labelledby="accordion-collapse-heading-3" wire:ignore.self>
+                            <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                                    role="alert">
+                                    <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        Cree un nuevo cliente y asocielo a esta orden.
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="grid grid-cols-1 gap-4 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 p-3">
+                                    {{-- Formulario de creación de datos del cliente --}}
+                                    <x-live-wire-input label="Teléfono" id="telefono_creacion" icon="fa-solid fa-phone"
+                                        model="telefono_creacion" placeholder="3000000000" typeInput="number">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Grupo" id="grupo_creacion" icon="fa-solid fa-layer-group"
+                                        model="grupo_creacion" placeholder="Grupo" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Comercial" id="nombreComercial__creacion"
+                                        icon="fa-solid fa-industry" model="nombreComercial_creacion"
+                                        placeholder="Nombre Comercial" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Legal" id="nombreLegal_creacion"
+                                        icon="fa-solid fa-file-signature" model="nombreLegal_creacion"
+                                        placeholder="Nombre Legal" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="NIT" id="nit_creacion" icon="fa-solid fa-address-card"
+                                        model="nit_creacion" placeholder="900000000" typeInput="number">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Sucursal" id="sucursal_creacion"
+                                        icon="fa-solid fa-ruler-horizontal" model="sucursal_creacion"
+                                        placeholder="Nombre de sucursal" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Dirección" id="direccion_creacion"
+                                        icon="fa-regular fa-map" model="direccion_creacion" placeholder="XXXXXXXXXXXXX"
+                                        typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad_creacion"
+                                        icon="fa-solid fa-location-arrow" model="barrio_localidad_creacion"
+                                        placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
+
+                                    <div>
+                                        <x-live-wire-input label="Ciudad" id="ciudad_creacion"
+                                            icon="fa-solid fa-location-dot" model="ciudad_creacion" placeholder="Soacha"
+                                            typeInput="text" wire='buscarCiudadCreacion'>
+                                        </x-live-wire-input>
+
+                                        <x-live-wire-input label="" id="idciudad_creacion" icon=""
+                                            model="idciudad_creacion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+
+                                        @if ($listaMunicipios)
+                                        <ul
+                                            class="max-w-md p-2 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                                            @foreach ($listaMunicipios as $mun)
+                                            <li class="cursor-pointer"
+                                                wire:click='setearNombreCiudadCreacion("{{$mun->id}}")'>
+                                                {{
+                                                $mun->nombre_municipio }}
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        <x-live-wire-input label="Departamento" id="departamento"
+                                            icon="fa-solid fa-map-location-dot" model="departamento_creacion"
+                                            placeholder="Cundinamarca" typeInput="text" disabled='disabled'>
+                                        </x-live-wire-input>
+                                        <x-live-wire-input label="" id="iddepartamento_creacion" icon=""
+                                            model="iddepartamento_creacion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+                                    </div>
+
+                                    <x-live-wire-input label="Correo" id="correo_creacion" icon="fa-solid fa-envelope"
+                                        model="correo_creacion" placeholder="correo@correo.com" typeInput="email">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre encargado" id="nombreEncargado_creacion"
+                                        icon="fa-solid fa-user" model="nombreEncargado_creacion"
+                                        placeholder="Nombre encargado" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Descripción" id="descripcion_creacion"
+                                        icon="fa-solid fa-comment" model="descripcion_creacion"
+                                        placeholder="Descripción" typeInput="text"></x-live-wire-input>
+
+                                    <x-select2 label="Factura con" id="empresaFactura" icon="fa-solid fa-comment"
+                                        model="empresaFactura_creacion" optionTextDefault="Seleccione factura">
+                                    </x-select2>
+
+                                    <x-select2 label="Importancia" id="importancia" icon="fa-solid fa-toggle-on"
+                                        model="importancia_creacion" optionTextDefault="Seleccione la importancia">
+                                    </x-select2>
+
+                                </div>
+
+                                <div class="flex justify-end mt-5">
+                                    <button wire:click="crearCliente" type="button"
+                                        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        <div wire:loading.remove wire:target="crearCliente">
+                                            <i class="fa-solid fa-user-plus"></i> Registrar cliente
+                                        </div>
+                                        <div wire:loading wire:target="crearCliente">
+                                            Cargando...
+                                        </div>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- Modal footer -->
+                <div
+                    class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b md:p-5 dark:border-gray-600">
+                    <button data-modal-hide="modal-gestion-cliente" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener("alpine:init", () => {
             Alpine.store("accordion", {
@@ -1259,6 +1645,86 @@
                 modal.hide();
             }
         });
+
+        $wire.on('datos-actualizados', function(event) {
+        const datos = event[0].datos;
+        const ciudad = event[0].ciudad;
+        const departamento = event[0].departamento;
+        
+        // Actualizar elementos usando el DOM tradicional
+        document.querySelector('[data-cliente-grupo]').textContent = datos.grupo;
+        document.querySelector('[data-cliente-nombre-comercial]').textContent = datos.nombre_comercial;
+        document.querySelector('[data-cliente-nombre-legal]').textContent = datos.nombre_legal;
+        document.querySelector('[data-cliente-nit]').textContent = datos.nit;
+        document.querySelector('[data-cliente-sucursal]').textContent = datos.sucursal;
+        document.querySelector('[data-cliente-encargado]').textContent = datos.nombre_encargado;
+        document.querySelector('[data-cliente-correo]').textContent = datos.correo;
+        document.querySelector('[data-cliente-descripcion]').textContent = datos.descripcion;
+        document.querySelector('[data-cliente-direccion]').textContent = datos.direccion;
+        document.querySelector('[data-cliente-barrio]').textContent = datos.barrio_localidad;
+        document.querySelector('[data-cliente-ciudad]').textContent = ciudad;
+        document.querySelector('[data-cliente-departamento]').textContent = departamento;
+        document.querySelector('[data-cliente-importancia]').textContent = datos.importancia;
+        document.querySelector('[data-cliente-telefono]').textContent = datos.telefono;
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+            });
+            Toast.fire({
+            icon: "success",
+            title: "Datos actualizados"
+            });
+
+    });
+
+
+    $wire.on('limpiar-campos-creacion', function(){
+        // Obtener todos los elementos con atributo wire:model
+    const camposWire = document.querySelectorAll('[wire\\:model]');
+    
+    // Iterar sobre cada elemento encontrado
+    camposWire.forEach(campo => {
+        // Obtener el nombre del modelo de Livewire
+        const modelName = campo.getAttribute('wire:model');
+        
+        // Verificar si es uno de los campos que queremos limpiar
+        if (modelName && modelName.includes('_creacion')) {
+            console.log("Hola soy el modelName => ", modelName);
+            // Además de establecer value a vacío, también actualiza el atributo value
+            campo.value = '';
+            campo.setAttribute('value', '');
+            
+            // Para elementos select, forzar la selección del primer elemento
+            if (campo.tagName === 'SELECT') {
+                campo.selectedIndex = 0;
+            }
+            
+            // Disparar evento input para que Livewire detecte el cambio
+            campo.dispatchEvent(new Event('input', { bubbles: true }));
+            
+            // También actualizar la propiedad en Livewire si es posible
+            try {
+                if (window.Livewire) {
+                    const wireEl = campo.closest('[wire\\:id]');
+                    if (wireEl) {
+                        const wireId = wireEl.getAttribute('wire:id');
+                        window.Livewire.find(wireId).set(modelName, '');
+                    }
+                }
+            } catch (error) {
+                console.error('Error al actualizar Livewire:', error);
+            }
+        }
+    });
+    });
 
     </script>
     @endscript

@@ -42,6 +42,7 @@ class RegistrarCategorias extends Component
             $message = "La categoría ha sido creada con éxito";
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
         } else {
+
         }
     }
 
@@ -56,6 +57,7 @@ class RegistrarCategorias extends Component
             'estado.required' => 'No asignó un estado.',
         ]);
     }
+    
     #[On('resetInputs')]
     public function resetInputs()
     {

@@ -21,6 +21,7 @@ class ProveedoresModel extends Model
         'direccion',
         'ciudad',
         'departamento',
+        'barrio_localidad',
         'correo',
         'nombre_encargado',
         'descripcion',

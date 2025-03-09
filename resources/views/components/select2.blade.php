@@ -6,7 +6,8 @@
             class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-lg dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
             <i class="{{ $icon }}"></i>
         </span>
-        <select id="{{ $id }}" {{ $model ? 'wire:model=' .$model : '' }} {{ $wire ? 'wire:' .$wire : '' }} {{$disabled ? $disabled: ''}}
+        <select id="{{ $id }}" {{ $model ? 'wire:model=' .$model : '' }} {{ $wire ? 'wire:' .$wire : '' }} {{$disabled ?
+            $disabled: '' }}
             class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option selected value="">{{$optionTextDefault}}</option>
             @if ($id == 'estado')
@@ -25,7 +26,7 @@
             @endforeach
             @elseif ($id == 'tipo')
             @foreach ( $tipo_afectacion_impuesto as $tipo_impuesto )
-            <option value="{{$tipo_impuesto->id}}">{{$tipo_impuesto->codigo ." - ".$tipo_impuesto->descripcion }}
+            <option value="{{$tipo_impuesto->id}}">{{$tipo_impuesto->descripcion }}
             </option>
             @endforeach
             @elseif ($id == 'importancia')
@@ -57,6 +58,22 @@
             @elseif ($id == 'tipo_egreso')
             <option value="1">Insumo</option>
             <option value="2">Regular</option>
+            @elseif ($id == 'giro_sucursal')
+            @foreach ($giro_sucursales as $giro_sucursal)
+            <option value="{{$giro_sucursal->id}}">{{$giro_sucursal->descripcion}}</option>
+            @endforeach
+            @elseif ($id == 'tipo_sucursal')
+            @foreach ($tipo_sucursales as $tipo_sucursal)
+            <option value="{{$tipo_sucursal->id}}">{{$tipo_sucursal->descripcion}}</option>
+            @endforeach
+            @elseif ($id == 'lista_categorias_1')
+            @foreach ($lista_categorias_1 as $categoria)
+            <option value="{{$categoria->id}}">{{$categoria->nombre_categoria}}</option>
+            @endforeach
+            @elseif ($id == 'lista_categorias_2')
+            @foreach ($lista_categorias_2 as $categoria)
+            <option value="{{$categoria->id}}">{{$categoria->nombre_categoria}}</option>
+            @endforeach
             @else
             @foreach ( $empresas as $empresa )
             <option value="{{$empresa->id}}">{{$empresa->nombre_comercial}}</option>

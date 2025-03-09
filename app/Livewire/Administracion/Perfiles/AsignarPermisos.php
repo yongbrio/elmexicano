@@ -46,6 +46,7 @@ class AsignarPermisos extends Component
             ['nombre_modulo' => 'Admin Inventario', 'id' => 'admin_inventario' . $this->role_id, 'name_permission' => 'admin.inventario', 'activate' => $this->validarSiPermisoExiste("admin.inventario")],
             ['nombre_modulo' => 'Categoría Productos', 'id' => 'admin_categoria_productos' . $this->role_id, 'name_permission' => 'admin.categoria.productos', 'activate' => $this->validarSiPermisoExiste("admin.categoria.productos")],
             ['nombre_modulo' => 'Admin Egresos', 'id' => 'admin_egresos' . $this->role_id, 'name_permission' => 'admin.egresos', 'activate' => $this->validarSiPermisoExiste("admin.egresos")],
+            ['nombre_modulo' => 'Categorías Egresos', 'id' => 'admin_categorias_egresos' . $this->role_id, 'name_permission' => 'admin.categorias.egresos', 'activate' => $this->validarSiPermisoExiste("admin.categorias.egresos")],
             ['nombre_modulo' => 'Admin Ordenes', 'id' => 'admin_ordenes' . $this->role_id, 'name_permission' => 'admin.ordenes', 'activate' => $this->validarSiPermisoExiste("admin.ordenes")],
             ['nombre_modulo' => 'Admin Aprobar Ordenes', 'id' => 'admin_aprobar_ordenes' . $this->role_id, 'name_permission' => 'admin.aprobar.ordenes', 'activate' => $this->validarSiPermisoExiste("admin.aprobar.ordenes")],
 

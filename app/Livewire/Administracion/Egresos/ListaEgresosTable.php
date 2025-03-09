@@ -19,7 +19,7 @@ class ListaEgresosTable extends LivewireTable
             Column::make(__('Acciones'), function (mixed $value, EgresosModel $model): string {
                 return '<button type="button" wire:click="editarEgreso(' . $value->id . ')" class="px-3 py-2 mb-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>';
             })->asHtml(),
-            Column::make(__('Código de egreso'), 'codigo_egreso')->sortable()->searchable(),
+            Column::make(__('Código de egreso'), 'id')->sortable()->searchable(),
             Column::make(__('Categoría 1'), 'categoria_1')->sortable()->searchable(),
             Column::make(__('Categoría 2'), 'categoria_2')->sortable()->searchable(),
             Column::make(__('Tipo de egreso'), function (mixed $value) {
@@ -37,8 +37,12 @@ class ListaEgresosTable extends LivewireTable
             Column::make(__('Descripción de Egreso'), 'descripcion_egreso')->sortable()->searchable(),
             Column::make(__('Código de producto'), 'codigo_producto')->sortable()->searchable(),
             Column::make(__('Unidad de medida'), function (mixed $value) {
-                $unidad_medida = UnidadesMedidaModel::find($value->unidad_medida);
-                return $unidad_medida->nombre_unidad_medida;
+                if ($value->unidad_medida > 0) {
+                    $unidad_medida = UnidadesMedidaModel::find($value->unidad_medida);
+                    return $unidad_medida->nombre_unidad_medida;
+                } else {
+                    return "N/A";
+                }
             })->sortable()->searchable(),
             Column::make(__('Estado'), function (mixed $value) {
                 $activado = "";

@@ -18,7 +18,10 @@ class EditarEgreso extends Component
     public $codigo_producto;
     public $unidad_medida;
     public $estado;
-
+    public $flujo;
+    public $listaProductos;
+    public $codigo_producto_busqueda;
+    public $lista_categorias_asociadas;
 
     public function mount($id)
     {
@@ -27,8 +30,7 @@ class EditarEgreso extends Component
         $egreso = EgresosModel::find($this->id);
 
         if ($egreso) {
-
-            $this->codigo_egreso = $egreso->codigo_egreso;
+            $this->codigo_egreso = $egreso->id;
             $this->categoria_1 = $egreso->categoria_1;
             $this->categoria_2 = $egreso->categoria_2;
             $this->tipo_egreso = $egreso->tipo_egreso;
@@ -55,8 +57,6 @@ class EditarEgreso extends Component
         $egreso = EgresosModel::find($this->id);
 
         if ($egreso) {
-
-            $egreso->codigo_egreso = $this->codigo_egreso;
             $egreso->categoria_1 = $this->categoria_1;
             $egreso->categoria_2 = $this->categoria_2;
             $egreso->tipo_egreso = $this->tipo_egreso;
@@ -80,8 +80,7 @@ class EditarEgreso extends Component
 
     public function validacionCampos()
     {
-        return  $this->validate([
-            'codigo_egreso' => 'required|integer',
+        return $this->validate([
             'categoria_1' => 'required|max:255',
             'categoria_2' => 'required|max:255',
             'tipo_egreso' => 'required',
@@ -90,8 +89,6 @@ class EditarEgreso extends Component
             'unidad_medida' => 'required',
             'estado' => 'required'
         ], [
-            'codigo_egreso.required' => 'El código del egreso es obligatorio',
-            'codigo_egreso.integer' => 'El código del egreso debe ser númerico',
             'categoria_1.required' => 'La categoría 1 es obligatoria',
             'categoria_2.required' => 'La categoría 2 es obligatoria',
             'tipo_egreso.required' => 'El tipo de egreso es obligatorio',

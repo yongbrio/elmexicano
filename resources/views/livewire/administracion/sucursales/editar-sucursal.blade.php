@@ -11,11 +11,41 @@
         <x-live-wire-input label="Dirección" id="direccion" icon="fa-regular fa-map" model="direccion"
             placeholder="XXXXXXXXXXXXX" typeInput="text"></x-live-wire-input>
 
-        <x-live-wire-input label="Ciudad" id="ciudad" icon="fa-solid fa-location-dot" model="ciudad"
-            placeholder="Soacha" typeInput="text"></x-live-wire-input>
 
-        <x-live-wire-input label="Departamento" id="departamento" icon="fa-solid fa-map-location-dot"
-            model="departamento" placeholder="Cundinamarca" typeInput="text"></x-live-wire-input>
+        <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad" icon="fa-solid fa-location-arrow"
+            model="barrio_localidad" placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
+
+        <div>
+            <x-live-wire-input label="Ciudad" id="ciudad" icon="fa-solid fa-location-dot" model="ciudad"
+                placeholder="Soacha" typeInput="text" wire='buscarCiudad'></x-live-wire-input>
+
+            <x-live-wire-input label="" id="idciudad" icon="" model="idciudad" placeholder="" typeInput="hidden">
+            </x-live-wire-input>
+
+            @if ($listaMunicipios)
+            <ul class="max-w-md p-2 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                @foreach ($listaMunicipios as $mun)
+                <li class="cursor-pointer" wire:click='setearNombreCiudad("{{$mun->id}}")'>{{ $mun->nombre_municipio }}
+                </li>
+                @endforeach
+            </ul>
+            @endif
+        </div>
+
+        <div>
+            <x-live-wire-input label="Departamento" id="departamento" icon="fa-solid fa-map-location-dot"
+                model="departamento" placeholder="Cundinamarca" typeInput="text" disabled='disabled'>
+            </x-live-wire-input>
+            <x-live-wire-input label="" id="iddepartamento" icon="" model="iddepartamento" placeholder=""
+                typeInput="hidden">
+            </x-live-wire-input>
+        </div>
+
+        <x-select2 label="Giro de sucursal" id="giro_sucursal" icon="fa-solid fa-store" model="giro_sucursal"
+            optionTextDefault="Seleccione un giro de sucursal"> </x-select2>
+
+        <x-select2 label="Tipo de sucursal" id="tipo_sucursal" icon="fa-solid fa-shop" model="tipo_sucursal"
+            optionTextDefault="Seleccione un tipo de sucursal"> </x-select2>
 
         <x-select2 label="Estado" id="estado" icon="fa-solid fa-toggle-on" model="estado"
             optionTextDefault="Seleccione un estado"> </x-select2>

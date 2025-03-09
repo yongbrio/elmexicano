@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Administracion\Sucursales;
 
+use App\Models\DepartamentosModel;
+use App\Models\MunicipiosModel;
 use App\Models\SucursalesModel;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
@@ -20,8 +22,41 @@ class ListaSucursalesTable extends LivewireTable
             Column::make(__('Identificador'), 'identificador')->sortable()->searchable(),
             Column::make(__('Nombre Sucursal'), 'nombre_sucursal')->sortable()->searchable(),
             Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
-            Column::make(__('Ciudad'), 'ciudad')->sortable()->searchable(),
-            Column::make(__('Departamento'), 'departamento')->sortable()->searchable(),
+            Column::make(__('Barrio/Localidad'), 'barrio_localidad')->sortable()->searchable(),
+            Column::make(
+                __('Ciudad'),
+                function (mixed $value) {
+                    $nombreCiudad = MunicipiosModel::where('id', $value->ciudad)->first();
+                    if ($nombreCiudad) {
+                        return $nombreCiudad->nombre_municipio;
+                    } else {
+                        return '';
+                    }
+                }
+            )->sortable()->searchable(),
+
+            Column::make(
+                __('Departamento'),
+                function (mixed $value) {
+                    $nombreDpto = DepartamentosModel::where('id', $value->departamento)->first();
+                    if ($nombreDpto) {
+                        return $nombreDpto->nombre_departamento;
+                    } else {
+                        return '';
+                    }
+                }
+            )->sortable()->searchable(),
+
+            Column::make(__('Giro sucursal'), 'giroSucursal.descripcion')
+                ->qualifyUsingAlias()
+                ->sortable()
+                ->searchable(),
+
+            Column::make(__('Tipo sucursal'), 'tipoSucursal.descripcion')
+                ->qualifyUsingAlias()
+                ->sortable()
+                ->searchable(),
+
             Column::make(__('Estado'), function (mixed $value) {
                 $activado = "";
                 if ($value->estado == 1) {

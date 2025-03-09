@@ -2,14 +2,16 @@
 
 namespace App\Livewire\Administracion\Egresos;
 
+use App\Models\CategoriasEgresosAsociadasModel;
 use App\Models\EgresosModel;
+use App\Models\InventarioModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class RegistrarEgreso extends Component
 {
-    public $codigo_egreso;
     public $categoria_1;
     public $categoria_2;
     public $tipo_egreso;
@@ -17,6 +19,18 @@ class RegistrarEgreso extends Component
     public $codigo_producto;
     public $unidad_medida;
     public $estado;
+    public $codigo_egreso;
+    public $flujo;
+    public $listaProductos;
+    public $codigo_producto_busqueda;
+    public $lista_categorias_asociadas;
+
+    public function mount()
+    {
+        // Obtener el próximo valor autoincrementable
+        $this->codigo_egreso = $this->getNextAutoIncrementValue();
+        $this->flujo = 0;
+    }
 
     public function render()
     {
@@ -25,16 +39,24 @@ class RegistrarEgreso extends Component
 
     public function registrarEgreso()
     {
-        $this->validacionCampos();
+
+        if ($this->flujo == 2) {
+            //REGULAR
+            $this->codigo_producto = '';
+            $this->unidad_medida = 0;
+            $this->validacionCamposFlujo();
+        } else if ($this->flujo == 1) {
+            //INSUMO
+            $this->validacionCampos();
+        }
 
         $egreso = EgresosModel::create([
-            'codigo_egreso' => $this->codigo_egreso,
+            'tipo_egreso' => $this->tipo_egreso,
             'categoria_1' => $this->categoria_1,
             'categoria_2' => $this->categoria_2,
-            'tipo_egreso' => $this->tipo_egreso,
             'descripcion_egreso' => $this->descripcion_egreso,
-            'codigo_producto' => $this->codigo_producto,
-            'unidad_medida' => $this->unidad_medida,
+            'codigo_producto' => $this->codigo_producto ? $this->codigo_producto : '',
+            'unidad_medida' => $this->unidad_medida ? $this->unidad_medida : 0,
             'estado' => $this->estado,
             'registrado_por' => Auth::user()->id,
         ]);
@@ -51,24 +73,35 @@ class RegistrarEgreso extends Component
     public function validacionCampos()
     {
         return  $this->validate([
-            'codigo_egreso' => 'required|integer',
             'categoria_1' => 'required|max:255',
             'categoria_2' => 'required|max:255',
             'tipo_egreso' => 'required',
+            'codigo_producto' => 'required',
             'descripcion_egreso' => 'required',
-            'codigo_producto' => 'required|integer',
             'unidad_medida' => 'required',
             'estado' => 'required|string'
         ], [
-            'codigo_egreso.required' => 'El código del egreso es obligatorio',
-            'codigo_egreso.integer' => 'El código del egreso debe ser númerico',
             'categoria_1.required' => 'La categoría 1 es obligatoria',
             'categoria_2.required' => 'La categoría 2 es obligatoria',
             'tipo_egreso.required' => 'El tipo de egreso es obligatorio',
+            'codigo_producto.required' => 'El código del producto es obligatorio',
             'descripcion_egreso.required' => 'La descripción del egreso es obligatoria',
-            'codigo_producto.required' => 'El código del prodcuto es obligatorio',
-            'codigo_producto.integer' => 'El código del prodcuto debe ser númerico',
-            'unidad_medida' => 'La unidad de medida es obligatoria',
+            'unidad_medida.required' => 'La unidad de medida es obligatoria',
+            'estado.required' => 'No asignó un estado.',
+        ]);
+    }
+
+    public function validacionCamposFlujo()
+    {
+        return  $this->validate([
+            'categoria_1' => 'required|max:255',
+            'categoria_2' => 'required|max:255',
+            'descripcion_egreso' => 'required',
+            'estado' => 'required|string'
+        ], [
+            'categoria_1.required' => 'La categoría 1 es obligatoria',
+            'categoria_2.required' => 'La categoría 2 es obligatoria',
+            'descripcion_egreso.required' => 'La descripción del egreso es obligatoria',
             'estado.required' => 'No asignó un estado.',
         ]);
     }
@@ -76,6 +109,69 @@ class RegistrarEgreso extends Component
     public function cancelarRegistrarEgreso()
     {
         return redirect()->route('admin-egresos');
+    }
+
+    public function getNextAutoIncrementValue(): int
+    {
+        // Obtener el nombre de la base de datos actual
+        $databaseName = DB::getDatabaseName();
+        $table = "egresos";
+        // Consulta para obtener el valor de autoincremento actual
+        $result = DB::select("
+            SELECT AUTO_INCREMENT
+            FROM information_schema.TABLES
+            WHERE TABLE_SCHEMA = ?
+            AND TABLE_NAME = ?
+        ", [$databaseName, $table]);
+
+        // Retornar el valor de AUTO_INCREMENT
+        return $result[0]->AUTO_INCREMENT;
+    }
+
+    public function seleccionarFlujo()
+    {
+        if ($this->tipo_egreso == 1) {
+            //INSUMO
+            $this->flujo = 1;
+        } else if ($this->tipo_egreso == 2) {
+            //REGULAR
+            $this->flujo = 2;
+        } else {
+            //SIN SELECCIÓN
+            $this->flujo = 0;
+        }
+    }
+
+    public function setearNombreProducto($nombre_producto)
+    {
+        $this->codigo_producto = $nombre_producto;
+        $this->codigo_producto_busqueda = $nombre_producto;
+    }
+
+    public function buscarProducto()
+    {
+        $this->codigo_producto = null;
+
+        if (!empty($this->codigo_producto_busqueda)) {
+            $this->listaProductos = InventarioModel::whereIn('tipo', ['1', '2'])
+                ->where('codigo_producto', 'LIKE', '%' . $this->codigo_producto_busqueda . '%')
+                ->groupBy('codigo_producto', 'descripcion')
+                ->select('codigo_producto', 'descripcion')
+                ->get();
+        } else {
+            $this->listaProductos = '';
+        }
+    }
+
+    public function traerCategoriasAsociadas()
+    {
+        if ($this->categoria_1) {
+            $this->lista_categorias_asociadas = CategoriasEgresosAsociadasModel::with('categoria2') // Carga la relación
+                ->where('id_categoria_1', $this->categoria_1)
+                ->get();
+        } else {
+            $this->lista_categorias_asociadas = null;
+        }
     }
 
     #[On('redirigir')]

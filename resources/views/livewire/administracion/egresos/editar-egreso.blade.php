@@ -4,7 +4,7 @@
     <div class="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 
         <x-live-wire-input label="Código del egreso" id="codigo_egreso" icon="fa-solid fa-address-card"
-            model="codigo_egreso" placeholder="1234" typeInput="number"></x-live-wire-input>
+            model="codigo_egreso" placeholder="1234" typeInput="number" disabled="disabled"></x-live-wire-input>
 
         <x-live-wire-input label="Categoría 1" id="categoria_1" icon="fa-solid fa-file-signature" model="categoria_1"
             placeholder="Categoría 1" typeInput="text"></x-live-wire-input>

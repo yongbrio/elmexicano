@@ -53,6 +53,7 @@ class RegistrarProveedores extends Component
             'descripcion' => $this->descripcion,
             'descripcion' => $this->descripcion,
             'barrio_localidad' => $this->barrio_localidad,
+            'estado' => $this->estado,
             'registrado_por' => Auth::user()->id,
         ]);
 

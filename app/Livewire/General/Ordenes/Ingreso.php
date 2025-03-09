@@ -2,6 +2,7 @@
 
 namespace App\Livewire\General\Ordenes;
 
+use App\Models\ClientesModel;
 use App\Models\CuentasBancariasModel;
 use App\Models\DepartamentosModel;
 use App\Models\EmpresasModel;
@@ -108,6 +109,94 @@ class Ingreso extends Component
 
     public $adjuntos_envios;
 
+    /* Variables para la edición de datos del cliente */
+
+    public $telefono_edicion;
+
+    public $grupo_edicion;
+
+    public $nombreLegal_edicion;
+
+    public $nombreComercial_edicion;
+
+    public $nit_edicion;
+
+    public $sucursal_edicion;
+
+    public $direccion_edicion;
+
+    public $barrio_localidad_edicion;
+
+    public $ciudad_edicion;
+
+    public $idciudad_edicion;
+
+    public $departamento_edicion;
+
+    public $iddepartamento_edicion;
+
+    public $correo_edicion;
+
+    public $nombreEncargado_edicion;
+
+    public $descripcion_edicion;
+
+    public $empresaFactura_edicion;
+
+    public $importancia_edicion;
+
+    /* Fin de variables para la edición de datos del cliente */
+
+    /* Inicio de variables para la creación de un nuevo cliente */
+
+    public $telefono_creacion;
+
+    public $grupo_creacion;
+
+    public $nombreLegal_creacion;
+
+    public $nombreComercial_creacion;
+
+    public $nit_creacion;
+
+    public $sucursal_creacion;
+
+    public $direccion_creacion;
+
+    public $barrio_localidad_creacion;
+
+    public $ciudad_creacion;
+
+    public $idciudad_creacion;
+
+    public $departamento_creacion;
+
+    public $iddepartamento_creacion;
+
+    public $correo_creacion;
+
+    public $nombreEncargado_creacion;
+
+    public $descripcion_creacion;
+
+    public $empresaFactura_creacion;
+
+    public $importancia_creacion;
+
+    /* Fin de variables para la creación de un nuevo cliente */
+
+    public $listaMunicipios;
+
+    /* Inicio de variables para cambiar el cliente de la orden. */
+
+    public $id_cliente;
+
+    public $listaClientes;
+
+    public $buscar_cliente;
+
+    /* Fin de variables para cambiar el cliente de la orden. */
+
     public function mount(int $id)
     {
         $this->id = $id;
@@ -152,6 +241,10 @@ class Ingreso extends Component
 
             $this->datos = json_decode($this->orden->datos);
 
+            $this->ciudad = MunicipiosModel::where('id', $this->datos->ciudad)->first();
+
+            $this->departamento = DepartamentosModel::where('id', $this->datos->departamento)->first();
+
             $this->datos_cuentas_banco = CuentasBancariasModel::where('empresa', $this->datos->empresa_factura)->where('estado', 1)->get();
 
             $usuario = User::find($this->orden->registrado_por);
@@ -159,10 +252,6 @@ class Ingreso extends Component
             $this->nombre_registrado_por = $usuario->name . " " . $usuario->apellidos;
 
             $this->historialComentarios = json_decode($this->orden->comentarios);
-
-            $this->ciudad = MunicipiosModel::where('id', $this->datos->ciudad)->first();
-
-            $this->departamento = DepartamentosModel::where('id', $this->datos->departamento)->first();
 
             $date = new DateTime($this->datos->created_at);
 
@@ -196,6 +285,29 @@ class Ingreso extends Component
                 // Inicializa la variable en vacío si los datos no son válidos o están vacíos
                 $this->listaProductosAgregados = [];
             }
+
+            /* Seteo de datos para edición */
+
+            $this->telefono_edicion = $this->datos->telefono;
+            $this->nombreComercial_edicion = $this->datos->nombre_comercial;
+            $this->grupo_edicion = $this->datos->grupo;
+            $this->nombreLegal_edicion = $this->datos->nombre_legal;
+            $this->nit_edicion = $this->datos->nit;
+            $this->sucursal_edicion = $this->datos->sucursal;
+            $this->direccion_edicion = $this->datos->direccion;
+            $this->barrio_localidad_edicion = $this->datos->barrio_localidad;
+            $this->ciudad_edicion = $this->ciudad->nombre_municipio;
+            $this->departamento_edicion = $this->departamento->nombre_departamento;
+            $this->idciudad_edicion = $this->datos->ciudad;
+            $this->iddepartamento_edicion = $this->datos->departamento;
+            $this->correo_edicion = $this->datos->correo;
+            $this->nombreEncargado_edicion = $this->datos->nombre_encargado;
+            $this->empresaFactura_edicion = $this->datos->empresa_factura;
+            $this->descripcion_edicion = $this->datos->descripcion;
+            $this->importancia_edicion = $this->datos->importancia;
+
+
+            /* Fin de seteo de datos para edición */
         } else {
             // La orden no existe, lanza una excepción o redirige a otra página
             abort(404, 'Orden no encontrada');
@@ -1007,6 +1119,313 @@ class Ingreso extends Component
         $this->orden->save();
         $icon = 'success';
         $this->dispatch('mensajes', message: "Orden conciliada", icon: $icon, state: false);
+    }
+
+    public function buscarCiudad()
+    {
+        if (!empty(trim($this->ciudad_edicion))) {
+
+            $this->listaMunicipios = MunicipiosModel::where('nombre_municipio', 'like', '%' . $this->ciudad_edicion . '%')
+                ->orderBy('nombre_municipio')
+                ->take(5)
+                ->get();
+
+            $this->idciudad_edicion = null;
+            $this->departamento_edicion = null;
+            $this->iddepartamento_edicion = null;
+        } else {
+
+            $this->listaMunicipios = null;
+        }
+    }
+
+    public function setearNombreCiudad($id)
+    {
+        $this->listaMunicipios = null;
+
+        $nombreCiudad = MunicipiosModel::find($id);
+
+        if ($nombreCiudad) {
+            $this->ciudad_edicion = $nombreCiudad->nombre_municipio;
+            $this->idciudad_edicion = $id;
+            $departamento = DepartamentosModel::where('codigo_dane', $nombreCiudad->codigo_departamento)->first();
+            $this->departamento_edicion = $departamento->nombre_departamento;
+            $this->iddepartamento_edicion = $departamento->id;
+        }
+    }
+
+    public function actualizarCliente()
+    {
+        // Actualizar los datos
+        $this->datos->telefono = $this->telefono_edicion;
+        $this->datos->nombre_comercial = $this->nombreComercial_edicion;
+        $this->datos->grupo = $this->grupo_edicion;
+        $this->datos->nombre_legal = $this->nombreLegal_edicion;
+        $this->datos->nit = $this->nit_edicion;
+        $this->datos->sucursal = $this->sucursal_edicion;
+        $this->datos->direccion = $this->direccion_edicion;
+        $this->datos->barrio_localidad = $this->barrio_localidad_edicion;
+        $this->datos->ciudad = $this->idciudad_edicion;
+        $this->datos->departamento = $this->iddepartamento_edicion;
+        $this->datos->correo = $this->correo_edicion;
+        $this->datos->nombre_encargado = $this->nombreEncargado_edicion;
+        $this->datos->empresa_factura = $this->empresaFactura_edicion;
+        $this->datos->descripcion = $this->descripcion_edicion;
+        $this->datos->importancia = $this->importancia_edicion;
+
+        $this->ciudad = MunicipiosModel::where('id', $this->datos->ciudad)->first();
+        $this->departamento = DepartamentosModel::where('id', $this->datos->departamento)->first();
+
+        $this->datos = json_encode($this->datos);
+        $this->orden->datos = $this->datos;
+        $this->orden->save();
+
+        $this->datos = json_decode($this->orden->datos);
+
+        $this->dispatch('datos-actualizados', [
+            'datos' => $this->datos,
+            'ciudad' => $this->ciudad->nombre_municipio,
+            'departamento' => $this->departamento->nombre_departamento
+        ]);
+    }
+
+    public function buscarCliente()
+    {
+        if (!empty(trim($this->buscar_cliente))) {
+
+            $this->listaClientes = ClientesModel::where(function ($query) {
+                $query->where('nombre_comercial', 'like', '%' . $this->buscar_cliente . '%')
+                    ->orWhere('nombre_legal', 'like', '%' . $this->buscar_cliente . '%')
+                    ->orWhere('nit', 'like', '%' . $this->buscar_cliente . '%')
+                    ->orWhere('telefono', 'like', '%' . $this->buscar_cliente . '%');
+            })
+                /* ->where('sucursal', $this->sucursal_origen) */
+                ->where('estado', 1)
+                ->orderBy('nombre_legal')
+                ->take(5)
+                ->get();
+
+            $this->id_cliente = null;
+        } else {
+            $this->listaClientes = null;
+            $this->id_cliente = null;
+        }
+    }
+
+    public function setearNombreCliente($id)
+    {
+
+        $this->listaClientes = null;
+
+        $cliente = ClientesModel::find($id);
+
+        if ($cliente) {
+            $this->buscar_cliente = $cliente->nombre_legal;
+            $this->id_cliente = $cliente->id;
+        }
+    }
+
+    public function cambiarClienteOrden()
+    {
+        $cliente = ClientesModel::find($this->id_cliente);
+
+        if ($cliente) {
+
+            $this->orden->datos = $cliente;
+            $this->orden->save();
+
+            $this->datos = json_decode($this->orden->datos);
+            // Actualizar los datos
+            $this->telefono_edicion = $this->datos->telefono;
+            $this->nombreComercial_edicion = $this->datos->nombre_comercial;
+            $this->grupo_edicion = $this->datos->grupo;
+            $this->nombreLegal_edicion = $this->datos->nombre_legal;
+            $this->nit_edicion = $this->datos->nit;
+            $this->sucursal_edicion = $this->datos->sucursal;
+            $this->direccion_edicion = $this->datos->direccion;
+            $this->barrio_localidad_edicion = $this->datos->barrio_localidad;
+            $this->idciudad_edicion = $this->datos->ciudad;
+            $this->iddepartamento_edicion = $this->datos->departamento;
+            $this->correo_edicion = $this->datos->correo;
+            $this->nombreEncargado_edicion = $this->datos->nombre_encargado;
+            $this->empresaFactura_edicion = $this->datos->empresa_factura;
+            $this->descripcion_edicion = $this->datos->descripcion;
+            $this->importancia_edicion = $this->datos->importancia;
+
+            $this->ciudad = MunicipiosModel::where('id', $this->datos->ciudad)->first();
+            $this->departamento = DepartamentosModel::where('id', $this->datos->departamento)->first();
+
+            /*             $this->datos = json_encode($this->datos);
+            $this->orden->datos = $this->datos;
+            $this->orden->save();
+
+            $this->datos = json_decode($this->orden->datos); */
+            $this->reinicializarDatosCreacionCliente();
+
+            $this->dispatch('datos-actualizados', [
+                'datos' => $this->datos,
+                'ciudad' => $this->ciudad->nombre_municipio,
+                'departamento' => $this->departamento->nombre_departamento
+            ]);
+        }
+    }
+
+    public function buscarCiudadCreacion()
+    {
+        if (!empty(trim($this->ciudad_creacion))) {
+
+            $this->listaMunicipios = MunicipiosModel::where('nombre_municipio', 'like', '%' . $this->ciudad_creacion . '%')
+                ->orderBy('nombre_municipio')
+                ->take(5)
+                ->get();
+
+            $this->idciudad_creacion = null;
+            $this->departamento_creacion = null;
+            $this->iddepartamento_creacion = null;
+        } else {
+
+            $this->listaMunicipios = null;
+        }
+    }
+
+    public function setearNombreCiudadCreacion($id)
+    {
+        $this->listaMunicipios = null;
+
+        $nombreCiudad = MunicipiosModel::find($id);
+
+        if ($nombreCiudad) {
+            $this->ciudad_creacion = $nombreCiudad->nombre_municipio;
+            $this->idciudad_creacion = $id;
+            $departamento = DepartamentosModel::where('codigo_dane', $nombreCiudad->codigo_departamento)->first();
+            $this->departamento_creacion = $departamento->nombre_departamento;
+            $this->iddepartamento_creacion = $departamento->id;
+        }
+    }
+
+
+    public function validacionCamposCreacionCliente()
+    {
+        return  $this->validate([
+            'nombreComercial_creacion' => 'required|string|max:255',
+            'nombreLegal_creacion' => 'required|string|max:255',
+            'grupo_creacion' => 'required|string|max:255',
+            'telefono_creacion' => 'required|integer',
+            'nit_creacion' => 'required|string|max:20|unique:clientes,nit',  // Asumiendo que es una tabla de clientes
+            'iddepartamento_creacion' => 'required',
+            'idciudad_creacion' => 'required|string|max:100',
+            'direccion_creacion' => 'required|string|max:255',
+            'sucursal_creacion' => 'required|string|max:255',
+            'correo_creacion' => 'required|email|max:255',
+            'nombreEncargado_creacion' => 'required|string|max:255',
+            'descripcion_creacion' => 'required|string|max:1000',
+            'barrio_localidad_creacion' => 'required|string|max:255',
+            'empresaFactura_creacion' => 'required|string|max:255',
+            'importancia_creacion' => 'required|string',
+        ], [
+            'nombreLegal_creacion.required' => 'El nombre legal es obligatorio.',
+            'nombreComercial_creacion.required' => 'El nombre comercial es obligatorio.',
+            'grupo_creacion.required' => 'El grupo es obligatorio.',
+            'telefono_creacion.required' => 'El teléfono es obligatorio.',
+            'telefono_creacion.integer' => 'El teléfono debe ser númerico.',
+            'nit_creacion.required' => 'El NIT es obligatorio.',
+            'nit_creacion.unique' => 'El NIT ya está registrado.',
+            'iddepartamento_creacion.required' => 'El departamento es obligatorio.',
+            'idciudad_creacion.required' => 'La ciudad es obligatoria.',
+            'correo_creacion.required' => 'El correo electrónico es obligatorio.',
+            'correo_creacion.email' => 'El correo debe ser una dirección de email válida.',
+            'direccion_creacion.required' => 'La dirección es obligatoria.',
+            'sucursal_creacion.required' => 'La sucursal es obligatoria.',
+            'nombreEncargado_creacion.required' => 'El nombre del encargado es obligatorio.',
+            'descripcion_creacion.required' => 'La descripción es obligatoria.',
+            'empresaFactura_creacion.required' => 'No seleccionó con que empresa factura.',
+            'importancia_creacion.required' => 'La importancia es obligatoria.',
+            'barrio_localidad_creacion.required' => 'El barrio o localidad es obligatorio.',
+        ]);
+    }
+
+    public function crearCliente()
+    {
+        $this->validacionCamposCreacionCliente();
+
+        $cliente = ClientesModel::create([
+            'nombre_comercial' => $this->nombreComercial_creacion,
+            'nombre_legal' => $this->nombreLegal_creacion,
+            'grupo' => $this->grupo_creacion,
+            'telefono' => $this->telefono_creacion,
+            'nit' => $this->nit_creacion,
+            'sucursal' => $this->sucursal_creacion,
+            'barrio_localidad' => $this->barrio_localidad_creacion,
+            'direccion' => $this->direccion_creacion,
+            'ciudad' => $this->idciudad_creacion,
+            'departamento' => $this->iddepartamento_creacion,
+            'correo' => $this->correo_creacion,
+            'nombre_encargado' => $this->nombreEncargado_creacion,
+            'descripcion' => $this->descripcion_creacion,
+            'empresa_factura' => $this->empresaFactura_creacion,
+            'importancia' => $this->importancia_creacion,
+            'estado' => 1,
+            'registrado_por' => Auth::user()->id,
+        ]);
+
+        if ($cliente) {
+
+            $this->orden->datos = $cliente;
+            $this->orden->save();
+
+            $this->datos = json_decode($this->orden->datos);
+
+            $this->ciudad = MunicipiosModel::where('id', $this->datos->ciudad)->first();
+            $this->departamento = DepartamentosModel::where('id', $this->datos->departamento)->first();
+
+            // Actualizar los datos
+            $this->telefono_edicion = $this->datos->telefono;
+            $this->nombreComercial_edicion = $this->datos->nombre_comercial;
+            $this->grupo_edicion = $this->datos->grupo;
+            $this->nombreLegal_edicion = $this->datos->nombre_legal;
+            $this->nit_edicion = $this->datos->nit;
+            $this->sucursal_edicion = $this->datos->sucursal;
+            $this->direccion_edicion = $this->datos->direccion;
+            $this->barrio_localidad_edicion = $this->datos->barrio_localidad;
+            $this->idciudad_edicion = $this->datos->ciudad;
+            $this->ciudad_edicion = $this->ciudad->nombre_municipio;
+            $this->iddepartamento_edicion = $this->datos->departamento;
+            $this->departamento_edicion = $this->departamento->nombre_departamento;
+            $this->correo_edicion = $this->datos->correo;
+            $this->nombreEncargado_edicion = $this->datos->nombre_encargado;
+            $this->empresaFactura_edicion = $this->datos->empresa_factura;
+            $this->descripcion_edicion = $this->datos->descripcion;
+            $this->importancia_edicion = $this->datos->importancia;
+
+            $this->dispatch('datos-actualizados', [
+                'datos' => $this->datos,
+                'ciudad' => $this->ciudad->nombre_municipio,
+                'departamento' => $this->departamento->nombre_departamento
+            ]);
+
+            $this->dispatch('limpiar-campos-creacion');
+        }
+    }
+
+    public function reinicializarDatosCreacionCliente()
+    {
+        $this->telefono_creacion = null;
+        $this->grupo_creacion = null;
+        $this->nombreLegal_creacion = null;
+        $this->nombreComercial_creacion = null;
+        $this->nit_creacion = null;
+        $this->sucursal_creacion = null;
+        $this->direccion_creacion = null;
+        $this->barrio_localidad_creacion = null;
+        $this->ciudad_creacion = null;
+        $this->idciudad_creacion = null;
+        $this->departamento_creacion = null;
+        $this->iddepartamento_creacion = null;
+        $this->correo_creacion = null;
+        $this->nombreEncargado_creacion = null;
+        $this->descripcion_creacion = null;
+        $this->empresaFactura_creacion = null;
+        $this->importancia_creacion = null;
     }
 
     public function render()

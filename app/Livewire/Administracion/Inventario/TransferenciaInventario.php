@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Administracion\Inventario;
 
+use App\Exports\HistorialTransferenciaInventarioExport;
 use App\Models\HistorialTransferenciasModel;
 use App\Models\InventarioModel;
 use App\Models\SucursalesModel;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransferenciaInventario extends Component
 {
@@ -21,6 +23,8 @@ class TransferenciaInventario extends Component
     public $stock_transferencia;
     public $listaTransferencias = [];
     public $codigo_producto;
+    public $start_date;
+    public $end_date;
 
 
     public function render()
@@ -234,15 +238,33 @@ class TransferenciaInventario extends Component
             $this->stock_disponible_origen = null;
             $this->stock_transferencia = null;
 
+            //Recargar la lista de inventario
+            $this->dispatch('recargarComponente');
+
             $message = "El inventario se ha transferido";
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
             unset($this->listaTransferencias[$id]);
-
-            //Recargar la lista de inventario
-            $this->dispatch('recargarComponente');
         } else {
             $message = "Ocurrió un problema. vuelva a intentarlo";
             $this->dispatch('estadoActualizacion', title: "¡Error!", icon: 'error', message: $message);
         }
+    }
+
+    public function generarExcelHistorial()
+    {
+        // Validar que el usuario ingrese un rango de fechas válido
+        $this->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ], [
+            'start_date.required' => 'La fecha de inicio es obligatoria.',
+            'start_date.date' => 'La fecha de inicio debe ser una fecha válida.',
+            'end_date.required' => 'La fecha de finalización es obligatoria.',
+            'end_date.date' => 'La fecha de finalización debe ser una fecha válida.',
+            'end_date.after_or_equal' => 'La fecha de finalización debe ser igual o posterior a la fecha de inicio.',
+        ]);
+
+        // Descargar el archivo Excel con los datos filtrados
+        return Excel::download(new HistorialTransferenciaInventarioExport($this->start_date, $this->end_date), 'historial_tranferencias.xlsx');
     }
 }

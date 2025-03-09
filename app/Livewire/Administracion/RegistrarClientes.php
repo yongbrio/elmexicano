@@ -66,7 +66,6 @@ class RegistrarClientes extends Component
         ]);
 
         if ($cliente) {
-
             $message = "El cliente ha sido creado con éxito";
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
         } else {

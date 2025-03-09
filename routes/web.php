@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Livewire\Administracion\AdminClientes;
 use App\Livewire\Administracion\AprobarOrdenes\AdminAprobarOrdenes;
 use App\Livewire\Administracion\Categorias\AdminCategorias;
+use App\Livewire\Administracion\CategoriasEgresos\AdminCategoriasEgresos;
 use App\Livewire\Administracion\CuentasBancarias\AdminCuentasBancarias;
 use App\Livewire\Administracion\CuentasBancarias\EditarCuentaBancaria;
 use App\Livewire\Administracion\EditarCliente;
@@ -90,6 +91,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     /* Log de registros */
     Route::get('/log', Log::class)->name('admin-log')->middleware('can:seguridad.log');
+    /* Categorías de egresos */
+    Route::get('/categorias-egresos', AdminCategoriasEgresos::class)->name('admin-categorias-egresos')->middleware('can:admin.categorias.egresos');
 });
 //Grupo general
 Route::prefix('general')->middleware(['auth'])->group(function () {

@@ -20,11 +20,11 @@
         <x-live-wire-input label="Sucursal" id="sucursal" icon="fa-solid fa-ruler-horizontal" model="sucursal"
             placeholder="Nombre de sucursal" typeInput="text"></x-live-wire-input>
 
-        <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad" icon="fa-solid fa-location-arrow"
-            model="barrio_localidad" placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
-
         <x-live-wire-input label="Dirección" id="direccion" icon="fa-regular fa-map" model="direccion"
             placeholder="XXXXXXXXXXXXX" typeInput="text"></x-live-wire-input>
+
+        <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad" icon="fa-solid fa-location-arrow"
+            model="barrio_localidad" placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
 
         <div>
             <x-live-wire-input label="Ciudad" id="ciudad" icon="fa-solid fa-location-dot" model="ciudad"
