@@ -140,5 +140,13 @@ class RegistrarCategoriasEgresos extends Component
             'estado' => 1,
             'registrado_por' => Auth::user()->id,
         ]);
+
+        if ($asociacion) {
+            $message = "Las categorías se han asociado correctamente";
+            $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
+            $this->recargarCategoria1();
+            $this->recargarCategoria2();
+            $this->dispatch('recargarComponente');
+        }
     }
 }
