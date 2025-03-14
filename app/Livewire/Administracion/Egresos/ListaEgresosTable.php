@@ -20,8 +20,8 @@ class ListaEgresosTable extends LivewireTable
                 return '<button type="button" wire:click="editarEgreso(' . $value->id . ')" class="px-3 py-2 mb-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>';
             })->asHtml(),
             Column::make(__('Código de egreso'), 'id')->sortable()->searchable(),
-            Column::make(__('Categoría 1'), 'categoria_1')->sortable()->searchable(),
-            Column::make(__('Categoría 2'), 'categoria_2')->sortable()->searchable(),
+            Column::make(__('Categoría 1'), 'categoria1.nombre_categoria')->sortable()->searchable(),
+            Column::make(__('Categoría 2'), 'categoria2.nombre_categoria')->sortable()->searchable(),
             Column::make(__('Tipo de egreso'), function (mixed $value) {
 
                 $tipo_egreso = "";

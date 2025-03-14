@@ -22,4 +22,14 @@ class EgresosModel extends Model
         'estado',
         'registrado_por'
     ];
+
+    public function categoria1()
+    {
+        return $this->belongsTo(CategoriasEgresos1Model::class, 'categoria_1', 'id');
+    }
+
+    public function categoria2()
+    {
+        return $this->belongsTo(CategoriasEgresos2Model::class, 'categoria_2', 'id');
+    }
 }
