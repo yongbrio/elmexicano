@@ -1156,6 +1156,8 @@ class Ingreso extends Component
 
     public function actualizarCliente()
     {
+        $this->validacionCamposActualizacionCliente();
+
         // Actualizar los datos
         $this->datos->telefono = $this->telefono_edicion;
         $this->datos->nombre_comercial = $this->nombreComercial_edicion;
@@ -1181,6 +1183,13 @@ class Ingreso extends Component
         $this->orden->save();
 
         $this->datos = json_decode($this->orden->datos);
+
+        $cliente = ClientesModel::find($this->datos->id);
+
+        if ($cliente) {
+            // Actualizar los datos del cliente
+            $cliente->update((array) $this->datos);
+        }
 
         $this->dispatch('datos-actualizados', [
             'datos' => $this->datos,
@@ -1303,6 +1312,45 @@ class Ingreso extends Component
         }
     }
 
+    public function validacionCamposActualizacionCliente()
+    {
+        return  $this->validate([
+            'nombreComercial_edicion' => 'required|string|max:255',
+            'nombreLegal_edicion' => 'required|string|max:255',
+            'grupo_edicion' => 'required|string|max:255',
+            'telefono_edicion' => 'required|integer|unique:clientes,telefono,' . $this->datos->id,
+            'nit_edicion' => 'required|string|max:20',
+            'iddepartamento_edicion' => 'required',
+            'idciudad_edicion' => 'required|string|max:100',
+            'direccion_edicion' => 'required|string|max:255',
+            'sucursal_edicion' => 'required|string|max:255',
+            'correo_edicion' => 'required|email|max:255',
+            'nombreEncargado_edicion' => 'required|string|max:255',
+            'descripcion_edicion' => 'required|string|max:1000',
+            'barrio_localidad_edicion' => 'required|string|max:255',
+            'empresaFactura_edicion' => 'required|string|max:255',
+            'importancia_edicion' => 'required|string',
+        ], [
+            'nombreLegal_edicion.required' => 'El nombre legal es obligatorio.',
+            'nombreComercial_edicion.required' => 'El nombre comercial es obligatorio.',
+            'grupo_edicion.required' => 'El grupo es obligatorio.',
+            'telefono_edicion.required' => 'El teléfono es obligatorio.',
+            'telefono_edicion.integer' => 'El teléfono debe ser númerico.',
+            'nit_edicion.required' => 'El NIT es obligatorio.',
+            'telefono_edicion.unique' => 'El teléfono ya está registrado.',
+            'iddepartamento_edicion.required' => 'El departamento es obligatorio.',
+            'idciudad_edicion.required' => 'La ciudad es obligatoria.',
+            'correo_edicion.required' => 'El correo electrónico es obligatorio.',
+            'correo_edicion.email' => 'El correo debe ser una dirección de email válida.',
+            'direccion_edicion.required' => 'La dirección es obligatoria.',
+            'sucursal_edicion.required' => 'La sucursal es obligatoria.',
+            'nombreEncargado_edicion.required' => 'El nombre del encargado es obligatorio.',
+            'descripcion_edicion.required' => 'La descripción es obligatoria.',
+            'empresaFactura_edicion.required' => 'No seleccionó con que empresa factura.',
+            'importancia_edicion.required' => 'La importancia es obligatoria.',
+            'barrio_localidad_edicion.required' => 'El barrio o localidad es obligatorio.',
+        ]);
+    }
 
     public function validacionCamposCreacionCliente()
     {
@@ -1310,8 +1358,8 @@ class Ingreso extends Component
             'nombreComercial_creacion' => 'required|string|max:255',
             'nombreLegal_creacion' => 'required|string|max:255',
             'grupo_creacion' => 'required|string|max:255',
-            'telefono_creacion' => 'required|integer',
-            'nit_creacion' => 'required|string|max:20|unique:clientes,nit',  // Asumiendo que es una tabla de clientes
+            'telefono_creacion' => 'required|integer|unique:clientes,telefono',
+            'nit_creacion' => 'required|string|max:20',
             'iddepartamento_creacion' => 'required',
             'idciudad_creacion' => 'required|string|max:100',
             'direccion_creacion' => 'required|string|max:255',
@@ -1329,7 +1377,7 @@ class Ingreso extends Component
             'telefono_creacion.required' => 'El teléfono es obligatorio.',
             'telefono_creacion.integer' => 'El teléfono debe ser númerico.',
             'nit_creacion.required' => 'El NIT es obligatorio.',
-            'nit_creacion.unique' => 'El NIT ya está registrado.',
+            'telefono_creacion.unique' => 'El número de celular ya está registrado.',
             'iddepartamento_creacion.required' => 'El departamento es obligatorio.',
             'idciudad_creacion.required' => 'La ciudad es obligatoria.',
             'correo_creacion.required' => 'El correo electrónico es obligatorio.',

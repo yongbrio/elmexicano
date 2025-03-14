@@ -1108,7 +1108,8 @@
                                     class="grid grid-cols-1 gap-4 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 p-3">
                                     {{-- Formulario de edición de datos del cliente --}}
                                     <x-live-wire-input label="Teléfono" id="telefono_edicion" icon="fa-solid fa-phone"
-                                        model="telefono_edicion" placeholder="3000000000" typeInput="number">
+                                        model="telefono_edicion" placeholder="3000000000" typeInput="number"
+                                        disabled="disabled">
                                     </x-live-wire-input>
 
                                     <x-live-wire-input label="Grupo" id="grupo_edicion" icon="fa-solid fa-layer-group"
