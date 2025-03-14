@@ -86,14 +86,18 @@
 
             <div>
                 <x-input-label for="nombre_contacto_emergencia" :value="__('Nombre contacto emergencia')" />
-                <x-text-input id="nombre_contacto_emergencia" name="nombre_contacto_emergencia" type="text" class="block w-full mt-1"
-                    :value="old('nombre_contacto_emergencia', $user->nombre_contacto_emergencia)" disabled autocomplete="nombre_contacto_emergencia" />
+                <x-text-input id="nombre_contacto_emergencia" name="nombre_contacto_emergencia" type="text"
+                    class="block w-full mt-1"
+                    :value="old('nombre_contacto_emergencia', $user->nombre_contacto_emergencia)" disabled
+                    autocomplete="nombre_contacto_emergencia" />
             </div>
-            
+
             <div>
-                <x-input-label for="numero_contacto_emergencia" :value="__('Nombre contacto emergencia')" />
-                <x-text-input id="numero_contacto_emergencia" name="numero_contacto_emergencia" type="text" class="block w-full mt-1"
-                    :value="old('numero_contacto_emergencia', $user->numero_contacto_emergencia)" disabled autocomplete="numero_contacto_emergencia" />
+                <x-input-label for="numero_contacto_emergencia" :value="__('Número contacto emergencia')" />
+                <x-text-input id="numero_contacto_emergencia" name="numero_contacto_emergencia" type="text"
+                    class="block w-full mt-1"
+                    :value="old('numero_contacto_emergencia', $user->numero_contacto_emergencia)" disabled
+                    autocomplete="numero_contacto_emergencia" />
             </div>
 
             <div>

@@ -100,13 +100,13 @@
         <x-live-wire-input label="Referencia 2" id="referencia_2" icon="fa-solid fa-house-user" model="referencia_2"
             placeholder="Nombre-Teléfono-Dirección" typeInput="text"></x-live-wire-input>
 
-        <x-live-wire-input label="Contacto emergencia" id="numero_contacto_emergencia" icon="fa-solid fa-phone"
-            model="numero_contacto_emergencia" placeholder="Número contacto emergencia" typeInput="text">
+        <x-live-wire-input label="Nombre contacto emergencia" id="nombre_contacto_emergencia" icon="fa-solid fa-user"
+            model="nombre_contacto_emergencia" placeholder="Nombre contacto emergencia" typeInput="text">
         </x-live-wire-input>
 
-        <x-live-wire-input label="Nombre contacto emergencia" id="nombre_contacto_emergencia"
-            icon="fa-solid fa-user" model="nombre_contacto_emergencia" placeholder="Nombre contacto emergencia"
-            typeInput="text"></x-live-wire-input>
+        <x-live-wire-input label="Número contacto emergencia" id="numero_contacto_emergencia" icon="fa-solid fa-phone"
+            model="numero_contacto_emergencia" placeholder="Número contacto emergencia" typeInput="text">
+        </x-live-wire-input>
 
         <x-live-wire-input label="Usuario del Sistema" id="username" icon="fa-solid fa-circle-user" model="username"
             placeholder="Ingrese el usuario del sistema" typeInput="text" modelblur="validarUserName">
