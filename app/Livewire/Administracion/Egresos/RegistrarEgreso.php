@@ -153,7 +153,7 @@ class RegistrarEgreso extends Component
         $this->codigo_producto = null;
 
         if (!empty($this->codigo_producto_busqueda)) {
-            $this->listaProductos = InventarioModel::whereIn('tipo', ['1', '2'])
+            $this->listaProductos = InventarioModel::whereIn('tipo_producto', ['1', '2'])
                 ->where('codigo_producto', 'LIKE', '%' . $this->codigo_producto_busqueda . '%')
                 ->groupBy('codigo_producto', 'descripcion')
                 ->select('codigo_producto', 'descripcion')
