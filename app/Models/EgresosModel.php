@@ -32,4 +32,9 @@ class EgresosModel extends Model
     {
         return $this->belongsTo(CategoriasEgresos2Model::class, 'categoria_2', 'id');
     }
+
+    public function codigoProducto()
+    {
+        return $this->belongsTo(InventarioModel::class, 'codigo_producto', 'id');
+    }
 }

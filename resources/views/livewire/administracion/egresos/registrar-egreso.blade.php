@@ -49,7 +49,7 @@
                 <ul class="p-2 ml-[35px] -mt-[8px] space-y-1 text-sm text-gray-900 list-inside list-none">
                     @foreach ($listaProductos as $producto)
                     <li class="p-1 border-2 border-gray-300 cursor-pointer dark:text-gray-400 hover:bg-sky-600 hover:text-white"
-                        wire:click="setearNombreProducto('{{ $producto->codigo_producto }} - {{ $producto->descripcion }}')">
+                        wire:click="setearNombreProducto('{{ $producto->id }}','{{ $producto->codigo_producto }} - {{ $producto->descripcion }}')">
                         {{ $producto->codigo_producto.' - '. $producto->descripcion }}
                     </li>
                     @endforeach

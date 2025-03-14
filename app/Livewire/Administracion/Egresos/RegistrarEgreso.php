@@ -142,10 +142,11 @@ class RegistrarEgreso extends Component
         }
     }
 
-    public function setearNombreProducto($nombre_producto)
+    public function setearNombreProducto($id_producto, $nombre_producto)
     {
-        $this->codigo_producto = $nombre_producto;
+        $this->codigo_producto = $id_producto;
         $this->codigo_producto_busqueda = $nombre_producto;
+        $this->listaProductos = '';
     }
 
     public function buscarProducto()
@@ -155,8 +156,8 @@ class RegistrarEgreso extends Component
         if (!empty($this->codigo_producto_busqueda)) {
             $this->listaProductos = InventarioModel::whereIn('tipo_producto', ['1', '2'])
                 ->where('codigo_producto', 'LIKE', '%' . $this->codigo_producto_busqueda . '%')
-                ->groupBy('codigo_producto', 'descripcion')
-                ->select('codigo_producto', 'descripcion')
+                ->select('id', 'codigo_producto', 'descripcion')
+                ->distinct()
                 ->get();
         } else {
             $this->listaProductos = '';

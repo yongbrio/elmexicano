@@ -35,7 +35,9 @@ class ListaEgresosTable extends LivewireTable
                 return $tipo_egreso;
             })->sortable()->searchable(),
             Column::make(__('Descripción de Egreso'), 'descripcion_egreso')->sortable()->searchable(),
-            Column::make(__('Código de producto'), 'codigo_producto')->sortable()->searchable(),
+            Column::make(__('Código y Nombre'), function (mixed $value) {
+                return $value->codigoProducto ? $value->codigoProducto->codigo_producto . ' - ' . $value->codigoProducto->descripcion : "N/A";
+            })->sortable()->searchable(),
             Column::make(__('Unidad de medida'), function (mixed $value) {
                 if ($value->unidad_medida > 0) {
                     $unidad_medida = UnidadesMedidaModel::find($value->unidad_medida);
