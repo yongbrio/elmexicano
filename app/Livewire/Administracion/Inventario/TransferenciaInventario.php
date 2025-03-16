@@ -209,12 +209,12 @@ class TransferenciaInventario extends Component
         $estado_origen = $producto_origen->save();
 
         //Actualización del producto de la sucursal destino
-        $producto_destino = InventarioModel::where('codigo_producto', $transferencia['codigo_producto_origen'])->where('sucursal', $transferencia['id_sucursal_destino'])->first();
+        /*         $producto_destino = InventarioModel::where('codigo_producto', $transferencia['codigo_producto_origen'])->where('sucursal', $transferencia['id_sucursal_destino'])->first();
         $nuevoStock = $producto_destino->stock + $transferencia['cantidad'];
         $producto_destino->stock = $nuevoStock;
-        $estado_destino = $producto_destino->save();
+        $estado_destino = $producto_destino->save(); */
 
-        if ($estado_origen && $estado_destino) {
+        if ($estado_origen) {
 
             //Se registra la transferencia en el historial
             $historial = HistorialTransferenciasModel::create([
@@ -223,27 +223,29 @@ class TransferenciaInventario extends Component
                 'nombre_producto' =>  $transferencia['producto_nombre'],
                 'codigo_producto' => $transferencia['codigo_producto_origen'],
                 'cantidad_transferida' => $transferencia['cantidad'],
+                'transferencia_recibida' => 0,
                 'id_sucursal_destino' => $transferencia['id_sucursal_destino'],
                 'nombre_sucursal_destino' => $transferencia['destino'],
                 'registrado_por' => Auth::user()->id
             ]);
 
-            $this->listaProductos = null;
-            $this->sucursal_origen = null;
-            $this->sucursal_destino = null;
-            $this->producto_origen = null;
-            $this->producto_origen_nombre = null;
-            $this->id_producto_origen = null;
-            $this->codigo_producto = null;
-            $this->stock_disponible_origen = null;
-            $this->stock_transferencia = null;
+            if ($historial) {
 
-            //Recargar la lista de inventario
-            $this->dispatch('recargarComponente');
-
-            $message = "El inventario se ha transferido";
-            $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
-            unset($this->listaTransferencias[$id]);
+                $this->listaProductos = null;
+                $this->sucursal_origen = null;
+                $this->sucursal_destino = null;
+                $this->producto_origen = null;
+                $this->producto_origen_nombre = null;
+                $this->id_producto_origen = null;
+                $this->codigo_producto = null;
+                $this->stock_disponible_origen = null;
+                $this->stock_transferencia = null;
+                //Recargar la lista de inventario
+                $this->dispatch('recargarComponente');
+                $message = "El inventario se ha transferido";
+                $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
+                unset($this->listaTransferencias[$id]);
+            }
         } else {
             $message = "Ocurrió un problema. vuelva a intentarlo";
             $this->dispatch('estadoActualizacion', title: "¡Error!", icon: 'error', message: $message);
