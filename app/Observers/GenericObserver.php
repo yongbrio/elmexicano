@@ -2,14 +2,18 @@
 
 namespace App\Observers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\LogModel;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class GenericObserver
 {
     public function created(Model $model)
     {
+        if (!Auth::check()) {
+            return; // No hay usuario autenticado, no hacemos nada
+        }
+
         LogModel::create([
             'id_usuario' => Auth::user()->id,
             'nombre_usuario' => Auth::user()->username,
@@ -24,8 +28,13 @@ class GenericObserver
 
     public function updated(Model $model)
     {
+        if (!Auth::check()) {
+            return;
+        }
+
         $oldValues = $model->getOriginal();
         $newValues = $model->getChanges();
+
         LogModel::create([
             'id_usuario' => Auth::user()->id,
             'nombre_usuario' => Auth::user()->username,
@@ -33,13 +42,17 @@ class GenericObserver
             'action' => 'Actualización',
             'model' => get_class($model),
             'model_id' => $model->id,
-            'old_values' => json_encode($oldValues), // Valores anteriores
-            'new_values' => json_encode($newValues),  // Valores actuales
+            'old_values' => json_encode($oldValues),
+            'new_values' => json_encode($newValues),
         ]);
     }
 
     public function deleted(Model $model)
     {
+        if (!Auth::check()) {
+            return;
+        }
+
         LogModel::create([
             'id_usuario' => Auth::user()->id,
             'nombre_usuario' => Auth::user()->username,
@@ -49,7 +62,6 @@ class GenericObserver
             'model_id' => $model->id,
             'old_values' => '',
             'new_values' => json_encode($model->getAttributes()),
-
         ]);
     }
 }
