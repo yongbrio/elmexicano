@@ -71,6 +71,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Jorge Armando',
                 'apellidos' => 'Osorio Bolivar',
+                'password' => Hash::make('12345678'),
                 'cedula' => '1024587680',
                 'fecha_nacimiento' => '1998-02-04',
                 'direccion' => 'Cra 17 B Este #60 a - 72',
@@ -84,6 +85,8 @@ class UserSeeder extends Seeder
                 'pension' => 'Protección',
                 'banco' => 'Banco Davivienda',
                 'numero_cuenta' => '900015741',
+                'numero_contacto_emergencia' => '300000121',
+                'nombre_contacto_emergencia' => 'Pepe',
                 'cargo' => 'Ingeniero FullStack',
                 'perfil' => '1',
                 'caja' => '1',
@@ -97,7 +100,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Yonatan',
                 'apellidos' => 'Ornelas',
-                /* 'password' => Hash::make('posAdminMaix80'), */
+                'password' => Hash::make('12345678'),
                 'cedula' => '1111111111',
                 'fecha_nacimiento' => '1990-03-08',
                 'direccion' => 'dirección',
@@ -110,7 +113,9 @@ class UserSeeder extends Seeder
                 'pension' => 'Protección',
                 'banco' => 'Banco Davivienda',
                 'numero_cuenta' => '900015741',
-                'cargo' => 'cargo',
+                'numero_contacto_emergencia' => '3034567887',
+                'nombre_contacto_emergencia' => 'Juan',
+                'cargo' => 'Director',
                 'perfil' => '1',
                 'caja' => '1',
                 'estado' => '1'
