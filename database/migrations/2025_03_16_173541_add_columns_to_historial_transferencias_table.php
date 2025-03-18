@@ -15,6 +15,9 @@ return new class extends Migration
             if (!Schema::hasColumn('historial_transferencias', 'transferencia_recibida')) {
                 $table->integer('transferencia_recibida')->after('cantidad_transferida');
             }
+            if (!Schema::hasColumn('historial_transferencias', 'usuario_aprobacion')) {
+                $table->integer('usuario_aprobacion')->after('transferencia_recibida');
+            }
         });
     }
 
@@ -26,6 +29,9 @@ return new class extends Migration
         Schema::table('historial_transferencias', function (Blueprint $table) {
             if (Schema::hasColumn('historial_transferencias', 'transferencia_recibida')) {
                 $table->dropColumn('transferencia_recibida');  //Eliminar la columna si existe
+            }
+            if (Schema::hasColumn('historial_transferencias', 'transfeusuario_aprobacionrencia_recibida')) {
+                $table->dropColumn('usuario_aprobacion');  //Eliminar la columna si existe
             }
         });
     }

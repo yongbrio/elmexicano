@@ -17,6 +17,8 @@ class HistorialTransferenciasModel extends Model
         'nombre_producto',
         'codigo_producto',
         'cantidad_transferida',
+        'transferencia_recibida',
+        'usuario_aprobacion',
         'id_sucursal_destino',
         'nombre_sucursal_destino',
         'registrado_por'

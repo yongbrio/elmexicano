@@ -21,11 +21,16 @@ class TransferenciaInventario extends Component
     public $id_producto_origen;
     public $stock_disponible_origen;
     public $stock_transferencia;
-    public $listaTransferencias = [];
+    public $listaTransferencias;
     public $codigo_producto;
     public $start_date;
     public $end_date;
 
+
+    public function mount()
+    {
+        $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+    }
 
     public function render()
     {
@@ -129,22 +134,14 @@ class TransferenciaInventario extends Component
         $this->validacionCampos();
 
         $validarProducto = InventarioModel::where('codigo_producto', $this->codigo_producto)->where('sucursal', $this->sucursal_destino)->exists();
-
         $origen = $this->sucursal_origen;
         $producto = $this->codigo_producto;
         $destino = $this->sucursal_destino;
-
-        // Filtra las transferencias existentes para encontrar coincidencias, excluyendo el índice actual
-        $exists = array_filter($this->listaTransferencias, function ($existingTransferencia) use ($origen, $producto, $destino) {
-            return
-                $existingTransferencia['id_sucursal_origen'] === $origen &&
-                $existingTransferencia['codigo_producto_origen'] === $producto &&
-                $existingTransferencia['id_sucursal_destino'] === $destino;
-        }, ARRAY_FILTER_USE_BOTH);
+        //Verificamos si existe una transferencia por aprobar con el mismo origen, codigo de producto y destino
+        $exists = HistorialTransferenciasModel::where('id_sucursal_origen', '=', $origen)->where('codigo_producto', '=', $producto)->where('id_sucursal_destino', '=', $destino)->where('transferencia_recibida', '=', 0)->exists();
 
         if (empty($exists)) {
             if ($validarProducto) {
-
                 if ($this->stock_transferencia > $this->stock_disponible_origen) {
                     $message = "El stock a transferir no puede ser mayor al disponible";
                     $elementId = 'stock_transferencia';
@@ -155,31 +152,40 @@ class TransferenciaInventario extends Component
                     $sucursal_nombre_origen = SucursalesModel::where('id', $this->sucursal_origen)->first();
                     $sucursal_nombre_destino = SucursalesModel::where('id', $this->sucursal_destino)->first();
 
-                    $this->listaTransferencias[] = [
-                        'id_producto_origen' => $this->id_producto_origen,
-                        'codigo_producto_origen' => $this->codigo_producto,
+                    $historial = HistorialTransferenciasModel::create([
                         'id_sucursal_origen' => $this->sucursal_origen,
-                        'origen' => $sucursal_nombre_origen->nombre_sucursal,
-                        'producto' => $this->producto_origen,
-                        'producto_nombre' => $this->producto_origen_nombre,
-                        'stock_origen' => $this->stock_disponible_origen,
-                        'cantidad' => $this->stock_transferencia,
+                        'nombre_sucursal_origen' => $sucursal_nombre_origen->nombre_sucursal,
+                        'nombre_producto' => $this->producto_origen_nombre,
+                        'codigo_producto' => $producto,
+                        'cantidad_transferida' => $this->stock_transferencia,
+                        'transferencia_recibida' => 0,
+                        'usuario_aprobacion' => 0,
                         'id_sucursal_destino' => $this->sucursal_destino,
-                        'destino' => $sucursal_nombre_destino->nombre_sucursal
-                    ];
+                        'nombre_sucursal_destino' => $sucursal_nombre_destino->nombre_sucursal,
+                        'registrado_por' => Auth::user()->id,
+                    ]);
 
-                    $this->listaProductos = null;
-                    $this->sucursal_origen = null;
-                    $this->sucursal_destino = null;
-                    $this->producto_origen = null;
-                    $this->producto_origen_nombre = null;
-                    $this->id_producto_origen = null;
-                    $this->codigo_producto = null;
-                    $this->stock_disponible_origen = null;
-                    $this->stock_transferencia = null;
+                    if ($historial) {
 
-                    $message = "¡Se ha agregado la transferencia!";
-                    $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
+                        //Descontamos el stock del producto del inventario
+                        $inventario_prod = InventarioModel::where('id', $this->id_producto_origen)->first();
+                        $inventario_prod->stock = $inventario_prod->stock - $this->stock_transferencia;
+                        $inventario_prod->save();
+
+                        $this->listaProductos = null;
+                        $this->sucursal_origen = null;
+                        $this->sucursal_destino = null;
+                        $this->producto_origen = null;
+                        $this->producto_origen_nombre = null;
+                        $this->id_producto_origen = null;
+                        $this->codigo_producto = null;
+                        $this->stock_disponible_origen = null;
+                        $this->stock_transferencia = null;
+
+                        $message = "¡Se ha agregado la transferencia!";
+                        $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
+                        $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+                    }
                 }
             } else {
 
@@ -194,58 +200,70 @@ class TransferenciaInventario extends Component
 
     public function eliminarTransferencia($id)
     {
-        unset($this->listaTransferencias[$id]);
+
+        $historial = HistorialTransferenciasModel::where('id', $id)->first();
+
+        if ($historial) {
+            //Actualizamos el stock del inventario origen
+            $inventario = InventarioModel::where('codigo_producto', $historial->codigo_producto)->where('sucursal', $historial->id_sucursal_origen)->first();
+
+            $inventario->stock = $inventario->stock + $historial->cantidad_transferida;
+            $inventario->save();
+            //Actualizamos el estado de la transferencia como rechazado
+            $historial->transferencia_recibida = 2;
+            $historial->usuario_aprobacion = Auth::user()->id;
+            $historial->save();
+
+            $this->listaProductos = null;
+            $this->sucursal_origen = null;
+            $this->sucursal_destino = null;
+            $this->producto_origen = null;
+            $this->producto_origen_nombre = null;
+            $this->id_producto_origen = null;
+            $this->codigo_producto = null;
+            $this->stock_disponible_origen = null;
+            $this->stock_transferencia = null;
+            //Recargar la lista de inventario
+            $this->dispatch('recargarComponente');
+            $message = "Ha rechazado la transferencia del inventario";
+            $this->dispatch('estadoActualizacion', title: "Rechazado", icon: 'success', message: $message);
+            //Actualizamos la lista con los registros
+            $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+        }
     }
 
     public function crearTransferencia($id)
     {
-        //Array con la información a transferir
-        $transferencia = $this->listaTransferencias[$id];
+        //Consultamos el registro
+        $transferencia = HistorialTransferenciasModel::where('id', $id)->first();
 
-        //Actualización del producto de la sucursal origen
-        $nuevoStock = $transferencia['stock_origen'] - $transferencia['cantidad'];
-        $producto_origen = InventarioModel::find($transferencia['id_producto_origen']);
-        $producto_origen->stock = $nuevoStock;
-        $estado_origen = $producto_origen->save();
+        if ($transferencia) {
 
-        //Actualización del producto de la sucursal destino
-        /*         $producto_destino = InventarioModel::where('codigo_producto', $transferencia['codigo_producto_origen'])->where('sucursal', $transferencia['id_sucursal_destino'])->first();
-        $nuevoStock = $producto_destino->stock + $transferencia['cantidad'];
-        $producto_destino->stock = $nuevoStock;
-        $estado_destino = $producto_destino->save(); */
+            //Actualización del producto de la sucursal destino
+            $producto_destino = InventarioModel::where('codigo_producto', $transferencia->codigo_producto)->where('sucursal', $transferencia->id_sucursal_destino)->first();
+            $nuevoStock = $producto_destino->stock + $transferencia->cantidad_transferida;
+            $producto_destino->stock = $nuevoStock;
+            $producto_destino->save();
+            //La transferencia ha sido aceptada
+            $transferencia->transferencia_recibida = 1;
+            $transferencia->usuario_aprobacion = Auth::user()->id;
+            $transferencia->save();
 
-        if ($estado_origen) {
-
-            //Se registra la transferencia en el historial
-            $historial = HistorialTransferenciasModel::create([
-                'id_sucursal_origen' => $transferencia['id_sucursal_origen'],
-                'nombre_sucursal_origen' =>  $transferencia['origen'],
-                'nombre_producto' =>  $transferencia['producto_nombre'],
-                'codigo_producto' => $transferencia['codigo_producto_origen'],
-                'cantidad_transferida' => $transferencia['cantidad'],
-                'transferencia_recibida' => 0,
-                'id_sucursal_destino' => $transferencia['id_sucursal_destino'],
-                'nombre_sucursal_destino' => $transferencia['destino'],
-                'registrado_por' => Auth::user()->id
-            ]);
-
-            if ($historial) {
-
-                $this->listaProductos = null;
-                $this->sucursal_origen = null;
-                $this->sucursal_destino = null;
-                $this->producto_origen = null;
-                $this->producto_origen_nombre = null;
-                $this->id_producto_origen = null;
-                $this->codigo_producto = null;
-                $this->stock_disponible_origen = null;
-                $this->stock_transferencia = null;
-                //Recargar la lista de inventario
-                $this->dispatch('recargarComponente');
-                $message = "El inventario se ha transferido";
-                $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
-                unset($this->listaTransferencias[$id]);
-            }
+            $this->listaProductos = null;
+            $this->sucursal_origen = null;
+            $this->sucursal_destino = null;
+            $this->producto_origen = null;
+            $this->producto_origen_nombre = null;
+            $this->id_producto_origen = null;
+            $this->codigo_producto = null;
+            $this->stock_disponible_origen = null;
+            $this->stock_transferencia = null;
+            //Recargar la lista de inventario
+            $this->dispatch('recargarComponente');
+            $message = "El inventario se ha transferido";
+            $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
+            //Actualizamos la lista con los registros
+            $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
         } else {
             $message = "Ocurrió un problema. vuelva a intentarlo";
             $this->dispatch('estadoActualizacion', title: "¡Error!", icon: 'error', message: $message);

@@ -37,12 +37,13 @@
             aria-labelledby="transferencia-inventario-tab">
             <livewire:administracion.inventario.transferencia-inventario>
         </div>
+
     </div>
 
     @script
-        <script>
-            $wire.on('recargarComponente');
-        </script>
+    <script>
+        $wire.on('recargarComponente');
+    </script>
     @endscript
 
 </div>

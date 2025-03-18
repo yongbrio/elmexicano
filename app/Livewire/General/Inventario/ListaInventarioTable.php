@@ -9,6 +9,7 @@ use App\Models\TipoAfectacionImpuestoModel;
 use App\Models\TipoProductoModel;
 use App\Models\UnidadesMedidaModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
@@ -20,7 +21,11 @@ class ListaInventarioTable extends LivewireTable
     /** @return Builder<Model> */
     protected function query(): Builder
     {
-        return $this->model()->query()->where('estado', '=', 1);
+        if (Auth::user()->perfil == 1) {
+            return $this->model()->query()->where('estado', '=', 1);
+        } else {
+            return $this->model()->query()->where('estado', '=', 1)->where('sucursal', '=', Auth::user()->caja);
+        }
     }
 
     protected function columns(): array

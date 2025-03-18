@@ -37,9 +37,10 @@ class HistorialTransferenciaInventarioExport implements FromQuery, WithHeadings,
             'Fecha',
             'ID sucursal origen',
             'Nombre sucursal origen',
-            'Nombre producto',
             'Código de producto',
+            'Nombre producto',
             'Cantidad transferida',
+            'Estado de transferencia',
             'ID sucursal destino',
             'Nombre sucursal destino',
             'ID usuario registro',
@@ -50,14 +51,23 @@ class HistorialTransferenciaInventarioExport implements FromQuery, WithHeadings,
     // Formatear datos en cada fila
     public function map($registro): array
     {
+        $estado_aprobacion = "Pendiente";
+
+        if ($registro->transferencia_recibida == 1) {
+            $estado_aprobacion = "Aprobado";
+        } else if ($registro->transferencia_recibida == 2) {
+            $estado_aprobacion = "Rechazado";
+        }
+
         return [
             $registro->id,
             $registro->created_at->format('d/m/Y'),
             $registro->id_sucursal_origen,
             $registro->nombre_sucursal_origen,
-            $registro->nombre_producto,
             $registro->codigo_producto,
+            $registro->nombre_producto,
             $registro->cantidad_transferida,
+            $estado_aprobacion,
             $registro->id_sucursal_destino,
             $registro->nombre_sucursal_destino,
             $registro->registrado_por,

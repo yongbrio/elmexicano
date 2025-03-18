@@ -5,9 +5,11 @@ namespace App\Livewire\Administracion\Inventario;
 use App\Models\HistorialTransferenciasModel;
 use App\Models\SucursalesModel;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
+use RamonRietdijk\LivewireTables\Enums\Direction;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
 
 class ListaTransferenciasInventarioTable extends LivewireTable
@@ -25,6 +27,39 @@ class ListaTransferenciasInventarioTable extends LivewireTable
             Column::make(__('Sucursal Origen'), 'nombre_sucursal_origen')->sortable()->searchable(),
 
             Column::make(__('Cantidad transferida'), 'cantidad_transferida')->sortable()->searchable(),
+
+            Column::make(__('Estado de transferencia'), function ($value) {
+
+                $estado = "Pendiente";
+                $color = 'yellow-400';
+
+                if ($value->transferencia_recibida == 1) {
+                    $estado = "Recibido";
+                    $color = 'green-600';
+                } else if ($value->transferencia_recibida == 2) {
+                    $estado = "Rechazado";
+                    $color = 'red-600';
+                }
+
+                // Devuelve el HTML para mostrar
+                return "<div class='text-white p-1 bg-{$color} rounded px-2 text-center'>
+                {$estado}
+                </div>";  // Devuelve el HTML formateado
+
+
+            })->asHtml()->sortable(function (Builder $builder, Direction $direction): void {
+                // Utiliza la columna original para el ordenamiento
+                $builder->orderBy('transferencia_recibida', $direction->value);
+            })->searchable(function (Builder $builder, $searchTerm) {
+                $builder->where('transferencia_recibida', 'LIKE', "%{$searchTerm}%");
+            }),
+
+            Column::make(__('Usuario aprobación'), function ($value) {
+                $usuario = User::find($value->usuario_aprobacion);
+                return $usuario ? $usuario->name . " " . $usuario->apellidos : "Usuario no encontrado";
+            })->sortable()->searchable(),
+
+            Column::make(__('Fecha de aprobacion'), 'created_at')->sortable()->searchable(),
 
             Column::make(__('Sucursal Destino'), 'nombre_sucursal_destino')->sortable()->searchable(),
 

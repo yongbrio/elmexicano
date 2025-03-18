@@ -109,32 +109,34 @@
                 </thead>
                 <tbody>
                     @isset( $listaTransferencias )
-                    @foreach ( $listaTransferencias as $index => $transferencia)
+                    @foreach ( $listaTransferencias as $transferencia)
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ $transferencia['origen'] }}
+                            {{ $transferencia->nombre_sucursal_origen }}
                         </th>
                         <td class="px-6 py-4">
-                            {{ $transferencia['producto'] }}
+                            {{ $transferencia->codigo_producto." - ". $transferencia->nombre_producto }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $transferencia['cantidad'] }}
+                            {{ $transferencia->cantidad_transferida }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $transferencia['destino'] }}
+                            {{ $transferencia->nombre_sucursal_destino }}
                         </td>
                         <td class="px-6 py-4">
-                            <button type="button" wire:click='crearTransferencia({{$index}})'
+
+                            <button type="button" wire:click='crearTransferencia({{$transferencia->id}})'
                                 class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                 <i class="fa-regular fa-circle-check"></i>
                             </button>
 
-                            <button type="button" wire:click='eliminarTransferencia({{$index}})'
+                            <button type="button" wire:click='eliminarTransferencia({{$transferencia->id}})'
                                 class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
+
                         </td>
                     </tr>
                     @endforeach

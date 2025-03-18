@@ -37,6 +37,8 @@ class User extends Authenticatable
         'banco',
         'numero_cuenta',
         'cargo',
+        'numero_contacto_emergencia',
+        'nombre_contacto_emergencia',
         'password',
         'perfil',
         'caja',
