@@ -10,6 +10,7 @@ use App\Models\TipoProductoModel;
 use App\Models\UnidadesMedidaModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
@@ -84,6 +85,12 @@ class ListaInventarioTable extends LivewireTable
                 return $estado;
             }),
         ];
+    }
+
+    #[On('recargarComponente')]
+    public function recargarComponente()
+    {
+        $this->columns();
     }
 
     protected function canSelect(): bool

@@ -25,11 +25,24 @@ class TransferenciaInventario extends Component
     public $codigo_producto;
     public $start_date;
     public $end_date;
-
+    public $disabled;
 
     public function mount()
     {
-        $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+        $this->darListaTransferencias();
+    }
+
+    private function darListaTransferencias()
+    {
+        if (Auth::user()->perfil == 1) {
+            $this->disabled = '';
+            $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+        } else {
+            $this->disabled = 'disabled';
+            $this->sucursal_origen = Auth::user()->caja;
+            $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->where('id_sucursal_destino', '=', Auth::user()->caja)
+                ->orWhere('transferencia_recibida', '=', 0)->where('id_sucursal_origen', '=', Auth::user()->caja)->get();
+        }
     }
 
     public function render()
@@ -181,10 +194,11 @@ class TransferenciaInventario extends Component
                         $this->codigo_producto = null;
                         $this->stock_disponible_origen = null;
                         $this->stock_transferencia = null;
-
                         $message = "¡Se ha agregado la transferencia!";
                         $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
-                        $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+                        //Recargar la lista de inventario
+                        $this->dispatch('recargarComponente');
+                        $this->darListaTransferencias();
                     }
                 }
             } else {
@@ -228,7 +242,7 @@ class TransferenciaInventario extends Component
             $message = "Ha rechazado la transferencia del inventario";
             $this->dispatch('estadoActualizacion', title: "Rechazado", icon: 'success', message: $message);
             //Actualizamos la lista con los registros
-            $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+            $this->darListaTransferencias();
         }
     }
 
@@ -263,7 +277,7 @@ class TransferenciaInventario extends Component
             $message = "El inventario se ha transferido";
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
             //Actualizamos la lista con los registros
-            $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
+            $this->darListaTransferencias();
         } else {
             $message = "Ocurrió un problema. vuelva a intentarlo";
             $this->dispatch('estadoActualizacion', title: "¡Error!", icon: 'error', message: $message);

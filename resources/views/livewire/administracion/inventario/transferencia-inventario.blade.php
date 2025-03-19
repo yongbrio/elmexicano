@@ -15,7 +15,7 @@
             <div>
                 <x-select2 label="Sucursal Origen" id="sucursal_origen" icon="fa-solid fa-ruler-horizontal"
                     model="sucursal_origen" optionTextDefault="Seleccione la sucursal de origen"
-                    wire="change=cambiarSucursal">
+                    wire="change=cambiarSucursal" disabled="{{ $disabled }}">
                 </x-select2>
             </div>
 
@@ -134,7 +134,7 @@
 
                             <button type="button" wire:click='eliminarTransferencia({{$transferencia->id}})'
                                 class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                <i class="fa-solid fa-trash"></i>
+                                <i class="fa-solid fa-circle-xmark"></i>
                             </button>
 
                         </td>
@@ -152,7 +152,6 @@
             </table>
         </div>
     </div>
-
 
     <!-- Extra Large Modal -->
     <div id="extralarge-modal" tabindex="-1" wire:ignore.self

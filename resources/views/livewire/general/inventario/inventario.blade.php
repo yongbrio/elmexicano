@@ -19,6 +19,7 @@
     </div>
 
     <div id="tab-inventario">
+
         <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-inventario" role="tabpanel"
             aria-labelledby="lista-inventario-tab">
             <livewire:general.inventario.lista-inventario-table />

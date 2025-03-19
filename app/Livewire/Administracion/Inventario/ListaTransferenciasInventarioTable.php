@@ -6,6 +6,7 @@ use App\Models\HistorialTransferenciasModel;
 use App\Models\SucursalesModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
@@ -16,6 +17,16 @@ class ListaTransferenciasInventarioTable extends LivewireTable
 {
     protected string $model = HistorialTransferenciasModel::class;
 
+    /** @return Builder<Model> */
+    protected function query(): Builder
+    {
+        if (Auth::user()->perfil == 1) {
+            return $this->model()->query();
+        } else {
+            return $this->model()->query()->where('id_sucursal_destino', '=', Auth::user()->caja)
+                ->orWhere('id_sucursal_origen', '=', Auth::user()->caja);
+        }
+    }
 
     protected function columns(): array
     {
@@ -56,7 +67,7 @@ class ListaTransferenciasInventarioTable extends LivewireTable
 
             Column::make(__('Usuario aprobación'), function ($value) {
                 $usuario = User::find($value->usuario_aprobacion);
-                return $usuario ? $usuario->name . " " . $usuario->apellidos : "Usuario no encontrado";
+                return $usuario ? $usuario->name . " " . $usuario->apellidos : "Sin asignar";
             })->sortable()->searchable(),
 
             Column::make(__('Fecha de aprobacion'), 'created_at')->sortable()->searchable(),
