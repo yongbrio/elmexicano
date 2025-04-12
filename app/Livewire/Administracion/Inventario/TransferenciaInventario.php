@@ -32,7 +32,8 @@ class TransferenciaInventario extends Component
         $this->darListaTransferencias();
     }
 
-    private function darListaTransferencias()
+    #[On('actualizarTransferencias')]
+    public function darListaTransferencias()
     {
         if (Auth::user()->perfil == 1) {
             $this->disabled = '';
@@ -208,78 +209,6 @@ class TransferenciaInventario extends Component
             }
         } else {
             $message = "Ya se encuentra una transferencia similar en estado pendiente para ser aprobada";
-            $this->dispatch('estadoActualizacion', title: "¡Error!", icon: 'error', message: $message);
-        }
-    }
-
-    public function eliminarTransferencia($id)
-    {
-
-        $historial = HistorialTransferenciasModel::where('id', $id)->first();
-
-        if ($historial) {
-            //Actualizamos el stock del inventario origen
-            $inventario = InventarioModel::where('codigo_producto', $historial->codigo_producto)->where('sucursal', $historial->id_sucursal_origen)->first();
-
-            $inventario->stock = $inventario->stock + $historial->cantidad_transferida;
-            $inventario->save();
-            //Actualizamos el estado de la transferencia como rechazado
-            $historial->transferencia_recibida = 2;
-            $historial->usuario_aprobacion = Auth::user()->id;
-            $historial->save();
-
-            $this->listaProductos = null;
-            $this->sucursal_origen = null;
-            $this->sucursal_destino = null;
-            $this->producto_origen = null;
-            $this->producto_origen_nombre = null;
-            $this->id_producto_origen = null;
-            $this->codigo_producto = null;
-            $this->stock_disponible_origen = null;
-            $this->stock_transferencia = null;
-            //Recargar la lista de inventario
-            $this->dispatch('recargarComponente');
-            $message = "Ha rechazado la transferencia del inventario";
-            $this->dispatch('estadoActualizacion', title: "Rechazado", icon: 'success', message: $message);
-            //Actualizamos la lista con los registros
-            $this->darListaTransferencias();
-        }
-    }
-
-    public function crearTransferencia($id)
-    {
-        //Consultamos el registro
-        $transferencia = HistorialTransferenciasModel::where('id', $id)->first();
-
-        if ($transferencia) {
-
-            //Actualización del producto de la sucursal destino
-            $producto_destino = InventarioModel::where('codigo_producto', $transferencia->codigo_producto)->where('sucursal', $transferencia->id_sucursal_destino)->first();
-            $nuevoStock = $producto_destino->stock + $transferencia->cantidad_transferida;
-            $producto_destino->stock = $nuevoStock;
-            $producto_destino->save();
-            //La transferencia ha sido aceptada
-            $transferencia->transferencia_recibida = 1;
-            $transferencia->usuario_aprobacion = Auth::user()->id;
-            $transferencia->save();
-
-            $this->listaProductos = null;
-            $this->sucursal_origen = null;
-            $this->sucursal_destino = null;
-            $this->producto_origen = null;
-            $this->producto_origen_nombre = null;
-            $this->id_producto_origen = null;
-            $this->codigo_producto = null;
-            $this->stock_disponible_origen = null;
-            $this->stock_transferencia = null;
-            //Recargar la lista de inventario
-            $this->dispatch('recargarComponente');
-            $message = "El inventario se ha transferido";
-            $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
-            //Actualizamos la lista con los registros
-            $this->darListaTransferencias();
-        } else {
-            $message = "Ocurrió un problema. vuelva a intentarlo";
             $this->dispatch('estadoActualizacion', title: "¡Error!", icon: 'error', message: $message);
         }
     }

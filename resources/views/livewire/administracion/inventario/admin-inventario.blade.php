@@ -22,8 +22,33 @@
                     role="tab" aria-controls="transferencia-inventario" aria-selected="false">Transferencia de
                     inventario</button>
             </li>
+            <li class="me-2" role="presentation">
+                <button
+                    class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    id="lista-transferencias-enviadas-inventario-tab"
+                    data-tabs-target="#lista-transferencias-enviadas-inventario" type="button" role="tab"
+                    aria-controls="lista-transferencias-enviadas-inventario" aria-selected="false">Transferencias por
+                    enviar</button>
+            </li>
+            <li class="me-2" role="presentation">
+                <button
+                    class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    id="lista-transferencias-transito-inventario-tab"
+                    data-tabs-target="#lista-transferencias-transito-inventario" type="button" role="tab"
+                    aria-controls="lista-transferencias-transito-inventario" aria-selected="false">Transferencias en
+                    tránsito</button>
+            </li>
+            <li class="me-2" role="presentation">
+                <button
+                    class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    id="lista-transferencias-confirmadas-inventario-tab"
+                    data-tabs-target="#lista-transferencias-confirmadas-inventario" type="button" role="tab"
+                    aria-controls="lista-transferencias-confirmadas-inventario" aria-selected="false">Transferencias
+                    confirmadas</button>
+            </li>
         </ul>
     </div>
+
     <div id="tab-inventario">
         <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-inventario" role="tabpanel"
             aria-labelledby="lista-inventario-tab">
@@ -37,6 +62,18 @@
             aria-labelledby="transferencia-inventario-tab">
             <livewire:administracion.inventario.transferencia-inventario>
         </div>
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-transferencias-enviadas-inventario"
+            role="tabpanel" aria-labelledby="lista-transferencias-enviadas-inventario-tab">
+            <livewire:administracion.inventario.lista-transferencias-inventario :estado="'0'" />
+        </div>
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-transferencias-transito-inventario"
+            role="tabpanel" aria-labelledby="lista-transferencias-transito-inventario-tab">
+            <livewire:administracion.inventario.lista-transferencias-inventario :estado="'1'" />
+        </div>
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-transferencias-confirmadas-inventario"
+            role="tabpanel" aria-labelledby="lista-transferencias-confirmadas-inventario-tab">
+            <livewire:administracion.inventario.lista-transferencias-inventario :estado="'2'" />
+        </div>
 
     </div>
 
@@ -45,5 +82,19 @@
         $wire.on('recargarComponente');
     </script>
     @endscript
+
+    <script>
+        $wire.on('estadoActualizacion_tabla', (e) => {
+                Swal.fire({
+                    title: e.title,
+                    text: e.message,
+                    icon: e.icon,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Ok"
+                }).then((result) => {
+                    /* $wire.dispatch('redirigir'); */
+                });
+            });
+    </script>
 
 </div>
