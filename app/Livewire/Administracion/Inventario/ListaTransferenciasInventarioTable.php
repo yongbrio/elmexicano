@@ -21,10 +21,10 @@ class ListaTransferenciasInventarioTable extends LivewireTable
     protected function query(): Builder
     {
         if (Auth::user()->perfil == 1) {
-            return $this->model()->query();
+            return $this->model()->query()->where('transferencia_recibida', '<>', 0);
         } else {
-            return $this->model()->query()->where('id_sucursal_destino', '=', Auth::user()->caja)
-                ->orWhere('id_sucursal_origen', '=', Auth::user()->caja);
+            return $this->model()->query()->where('id_sucursal_destino', '=', Auth::user()->caja)->where('transferencia_recibida', '<>', 0)
+                ->orWhere('id_sucursal_origen', '=', Auth::user()->caja)->where('transferencia_recibida', '<>', 0);
         }
     }
 
@@ -39,15 +39,38 @@ class ListaTransferenciasInventarioTable extends LivewireTable
 
             Column::make(__('Cantidad transferida'), 'cantidad_transferida')->sortable()->searchable(),
 
+            Column::make(__('Movimiento'), function ($value) {
+
+                $estado = "Entrada";
+                $color = 'green-600';
+
+                if ($value->id_sucursal_origen == Auth::user()->caja) {
+                    $estado = "Salida";
+                    $color = 'red-600';
+                }
+
+                // Devuelve el HTML para mostrar
+                return "<div class='text-white p-1 bg-{$color} rounded px-2 text-center'>
+                {$estado}
+                </div>";  // Devuelve el HTML formateado
+
+
+            })->asHtml()->sortable(function (Builder $builder, Direction $direction): void {
+                // Utiliza la columna original para el ordenamiento
+                $builder->orderBy('transferencia_recibida', $direction->value);
+            })->searchable(function (Builder $builder, $searchTerm) {
+                $builder->where('transferencia_recibida', 'LIKE', "%{$searchTerm}%");
+            }),
+
             Column::make(__('Estado de transferencia'), function ($value) {
 
-                $estado = "Pendiente";
+                $estado = "En tránsito";
                 $color = 'yellow-400';
 
-                if ($value->transferencia_recibida == 1) {
-                    $estado = "Recibido";
+                if ($value->transferencia_recibida == 2) {
+                    $estado = "Recibida";
                     $color = 'green-600';
-                } else if ($value->transferencia_recibida == 2) {
+                } else if ($value->transferencia_recibida == 3) {
                     $estado = "Rechazado";
                     $color = 'red-600';
                 }

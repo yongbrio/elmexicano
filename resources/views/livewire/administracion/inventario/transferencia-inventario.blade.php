@@ -70,6 +70,11 @@
             </div>
         </div>
     </div>
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+    <div>
+        <h4 class="pb-6 text-xl font-semibold">Transferencias por enviar</h4>
+        <livewire:administracion.inventario.lista-transferencias-inventario :estado="'0'" />
+    </div>
 
     <!-- Extra Large Modal -->
     <div id="extralarge-modal" tabindex="-1" wire:ignore.self
@@ -180,8 +185,7 @@
             });
 
             $wire.dispatch('recargarComponente');
-
+            
     </script>
     @endscript
-
 </div>

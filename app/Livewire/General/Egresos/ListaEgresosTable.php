@@ -20,15 +20,15 @@ class ListaEgresosTable extends LivewireTable
     /** @return Builder<Model> */
     protected function query(): Builder
     {
-        return $this->model()->query()->where('estado', '=', 1);
+        return $this->model()->query()->where('egresos.estado', '=', 1);
     }
+
     protected function columns(): array
     {
         return [
-
-            Column::make(__('Código de egreso'), 'codigo_egreso')->sortable()->searchable(),
-            Column::make(__('Categoría 1'), 'categoria_1')->sortable()->searchable(),
-            Column::make(__('Categoría 2'), 'categoria_2')->sortable()->searchable(),
+            Column::make(__('Código de egreso'), 'id')->sortable()->searchable(),
+            Column::make(__('Categoría 1'), 'categoria1.nombre_categoria')->sortable()->searchable(),
+            Column::make(__('Categoría 2'), 'categoria2.nombre_categoria')->sortable()->searchable(),
             Column::make(__('Tipo de egreso'), function (mixed $value) {
 
                 $tipo_egreso = "";
@@ -42,23 +42,17 @@ class ListaEgresosTable extends LivewireTable
                 return $tipo_egreso;
             })->sortable()->searchable(),
             Column::make(__('Descripción de Egreso'), 'descripcion_egreso')->sortable()->searchable(),
-            Column::make(__('Código de producto'), 'codigo_producto')->sortable()->searchable(),
-            Column::make(__('Unidad de medida'), function (mixed $value) {
-                $unidad_medida = UnidadesMedidaModel::find($value->unidad_medida);
-                return $unidad_medida->nombre_unidad_medida;
+            Column::make(__('Código y Nombre'), function (mixed $value) {
+                return $value->codigoProducto ? $value->codigoProducto->codigo_producto . ' - ' . $value->codigoProducto->descripcion : "N/A";
             })->sortable()->searchable(),
-            Column::make(__('Estado'), function (mixed $value, EgresosModel $model): string {
-
-                $estado = "";
-
-                if ($value->estado == 1) {
-                    $estado = "Activo";
+            Column::make(__('Unidad de medida'), function (mixed $value) {
+                if ($value->unidad_medida > 0) {
+                    $unidad_medida = UnidadesMedidaModel::find($value->unidad_medida);
+                    return $unidad_medida->nombre_unidad_medida;
                 } else {
-                    $estado = "Inactivo";
+                    return "N/A";
                 }
-
-                return $estado;
-            }),
+            })->sortable()->searchable(),
         ];
     }
 
