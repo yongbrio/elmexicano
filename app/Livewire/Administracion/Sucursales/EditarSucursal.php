@@ -99,13 +99,13 @@ class EditarSucursal extends Component
                 }),
             ],
             'nombre_sucursal' => 'required|string|max:255',
-            'giro_sucursal' => 'required|string',
-            'tipo_sucursal' => 'required|string',
-            'barrio_localidad' => 'required|string|max:255',
-            'departamento' => 'required|string|max:100',
-            'ciudad' => 'required|string|max:100',
-            'direccion' => 'required|string|max:255',
-            'estado' => 'required|integer'
+            'giro_sucursal' => 'required',
+            'tipo_sucursal' => 'required',
+            'barrio_localidad' => 'required',
+            'departamento' => 'required',
+            'ciudad' => 'required',
+            'direccion' => 'required',
+            'estado' => 'required'
         ], [
             'identificador.required' => 'El identificador es obligatorio.',
             'identificador.unique' => 'El identificador ya existe.',

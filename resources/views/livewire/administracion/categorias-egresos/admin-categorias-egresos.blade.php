@@ -6,7 +6,7 @@
             <li class="me-2" role="presentation">
                 <button class="inline-block p-4 border-b-2 rounded-t-lg" id="lista-egresos-tab"
                     data-tabs-target="#lista-egresos" type="button" role="tab" aria-controls="lista-egresos"
-                    aria-selected="false">Listado de categorías</button>
+                    aria-selected="true">Listado de categorías</button>
             </li>
             <li class="me-2" role="presentation">
                 <button
@@ -17,7 +17,7 @@
         </ul>
     </div>
     <div id="tab-egresos">
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-egresos" role="tabpanel"
+        <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-egresos" role="tabpanel"
             aria-labelledby="lista-egresos-tab">
             <livewire:administracion.categorias-egresos.lista-categorias-asociadas>
         </div>
@@ -26,4 +26,44 @@
             <livewire:administracion.categorias-egresos.registrar-categorias-egresos>
         </div>
     </div>
+
+    @script
+    <script>
+        $wire.on('eliminarCategoria', (e) => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción eliminará la categoría asociada. ¡No se puede deshacer!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+             if (result.isConfirmed) {
+                $wire.dispatch('eliminarCategoriaAsociada', {
+                    id: e.id
+                });
+            } 
+        });
+    });
+
+    $wire.on('estadoActualizacionCategoriaAsociada', (e) => {
+          Swal.fire({
+              title: e.title,
+              text: e.message,
+              icon: e.icon,
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "Ok"
+          }).then((result) => {
+              if (result.isConfirmed) {
+                if(e.icon == "success"){
+                    $wire.dispatch('recargarComponenteListaCategoriasAsociadas');
+                } 
+              }
+          });
+      });
+      
+    </script>
+    @endscript
 </div>

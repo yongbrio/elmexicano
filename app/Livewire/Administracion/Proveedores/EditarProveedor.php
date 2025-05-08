@@ -51,6 +51,7 @@ class EditarProveedor extends Component
             $nombre_departamento = DepartamentosModel::where('id', $proveedor->departamento)->first();
 
             $this->idciudad = $proveedor->ciudad;
+            $this->iddepartamento = $proveedor->departamento;
             $this->ciudad = $nombre_municipio->nombre_municipio;
             $this->departamento = $nombre_departamento->nombre_departamento;
             $this->correo = $proveedor->correo;

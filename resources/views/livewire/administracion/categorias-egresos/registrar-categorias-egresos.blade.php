@@ -136,6 +136,45 @@
 
     @script
     <script>
+        $wire.on('eliminarCategoriaAsociada1', (e) => {
+            Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción eliminará la categoría asociada. ¡No se puede deshacer!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+             if (result.isConfirmed) {
+            $wire.dispatch('eliminarCategoria1', {
+                id: e.id
+                });
+            }
+        });
+
+        });
+
+        $wire.on('eliminarCategoriaAsociada2', (e) => {
+            Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción eliminará la categoría asociada. ¡No se puede deshacer!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $wire.dispatch('eliminarCategoria2', {
+                    id: e.id
+                });
+            }
+        });
+        });
+
         $wire.on('estadoActualizacion', (e) => {
                 Swal.fire({
                     title: e.title,
@@ -143,6 +182,13 @@
                     icon: e.icon,
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "Ok"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if(e.icon == "success"){
+                            $wire.dispatch('recargarComponenteListaCategoriasEgresos1');
+                            $wire.dispatch('recargarComponenteListaCategoriasEgresos2');
+                        }
+                    }
                 });
             });
     </script>

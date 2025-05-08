@@ -15,7 +15,7 @@ class ListaCategoriasAsociadas extends LivewireTable
     {
         return [
             Column::make(__('Acciones'), function (mixed $value): string {
-                return '<button data-modal-target="modal-editar-categoria" data-modal-toggle="modal-editar-categoria" type="button"  wire:click="traerCategoria(' . $value->id . ')" class="px-3 py-2 mb-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>';
+                return '<button type="button" wire:click="eliminarCategoria(' . $value->id . ')" class="px-3 py-2 mb-2 text-sm font-medium text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 me-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"><i class="fa-solid fa-trash-can"></i></button>';
             })->asHtml(),
 
             Column::make(__('Nombre categoría 1'), 'categoria1.nombre_categoria')
@@ -47,6 +47,11 @@ class ListaCategoriasAsociadas extends LivewireTable
         return false;
     }
 
+    public function eliminarCategoria($id)
+    {
+        $this->dispatch('eliminarCategoria', id: $id);
+    }
+
     public function cambiarEstado($id, $estado)
     {
         if ($estado == 0) {
@@ -60,8 +65,8 @@ class ListaCategoriasAsociadas extends LivewireTable
         $categoria->save();
     }
 
-    #[On('recargarComponente')]
-    public function recargarComponente()
+    #[On('recargarComponenteListaCategoriasAsociadas')]
+    public function recargarComponenteListaCategoriasAsociadas()
     {
         $this->columns();
     }

@@ -5,6 +5,7 @@ namespace App\Livewire\Administracion\CategoriasEgresos;
 use App\Models\CategoriasEgresos1Model;
 use App\Models\CategoriasEgresos2Model;
 use App\Models\CategoriasEgresosAsociadasModel;
+use App\Models\EgresosModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -109,8 +110,8 @@ class RegistrarCategoriasEgresos extends Component
     {
         // Validar que los campos sean obligatorios y numéricos
         $datos = $this->validate([
-            'lista_categorias_1' => 'required|integer',
-            'lista_categorias_2' => 'required|integer',
+            'lista_categorias_1' => 'required',
+            'lista_categorias_2' => 'required',
         ], [
             'lista_categorias_1.required' => 'La primera categoría es obligatoria.',
             'lista_categorias_2.required' => 'La segunda categoría es obligatoria.',
@@ -146,7 +147,47 @@ class RegistrarCategoriasEgresos extends Component
             $this->dispatch('estadoActualizacion', title: "Creado", icon: 'success', message: $message);
             $this->recargarCategoria1();
             $this->recargarCategoria2();
-            $this->dispatch('recargarComponente');
+            $this->dispatch('recargarComponenteListaCategoriasAsociadas');
+        }
+    }
+
+    #[On('eliminarCategoria1')]
+    public function eliminarCategoriaAsociada1($id)
+    {
+        $egreso = EgresosModel::where('categoria_1', $id)->first();
+        $categoria_asociada = CategoriasEgresosAsociadasModel::where('id_categoria_1', $id)->first();
+
+        if ($egreso) {
+            $message = "La categoría 1 está asociada a un egreso. No se puede eliminar.";
+            $this->dispatch('estadoActualizacion', title: "Error", icon: 'error', message: $message);
+        } else if ($categoria_asociada) {
+            $message = "La categoría 1 está asociada con una categoría 2. No se puede eliminar. Intente el,iminar la asociación.";
+            $this->dispatch('estadoActualizacion', title: "Error", icon: 'error', message: $message);
+        } else {
+            $categoria = CategoriasEgresos1Model::find($id);
+            $categoria->delete();
+            $message = "La categoría 1 ha sido eliminada con éxito.";
+            $this->dispatch('estadoActualizacion', title: "Eliminado", icon: 'success', message: $message);
+        }
+    }
+
+    #[On('eliminarCategoria2')]
+    public function eliminarCategoriaAsociada2($id)
+    {
+        $egreso = EgresosModel::where('categoria_2', $id)->first();
+        $categoria_asociada = CategoriasEgresosAsociadasModel::where('id_categoria_2', $id)->first();
+
+        if ($egreso) {
+            $message = "La categoría 2 está asociada a un egreso. No se puede eliminar.";
+            $this->dispatch('estadoActualizacion', title: "Error", icon: 'error', message: $message);
+        } else if ($categoria_asociada) {
+            $message = "La categoría 2 está asociada con una categoría 1. No se puede eliminar. Intente el,iminar la asociación.";
+            $this->dispatch('estadoActualizacion', title: "Error", icon: 'error', message: $message);
+        } else {
+            $categoria = CategoriasEgresos2Model::find($id);
+            $categoria->delete();
+            $message = "La categoría 2 ha sido eliminada con éxito.";
+            $this->dispatch('estadoActualizacion', title: "Eliminado", icon: 'success', message: $message);
         }
     }
 }

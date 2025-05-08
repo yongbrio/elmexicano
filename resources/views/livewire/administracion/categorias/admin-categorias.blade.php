@@ -14,7 +14,6 @@
         </div>
     </div>
 
-
     <!-- Editar Categoría modal -->
     <div wire:ignore.self id="modal-editar-categoria" tabindex="-1" aria-hidden="true"
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -53,7 +52,8 @@
                 <!-- Modal footer -->
                 <div class="flex justify-end p-4 mt-5 border-t border-gray-200 rounded-b md:p-5 dark:border-gray-600">
 
-                    <button wire:click='cerrarModalEditarCategoria' data-modal-hide="modal-editar-categoria" type="button" id="close-modal-editar"
+                    <button wire:click='cerrarModalEditarCategoria' data-modal-hide="modal-editar-categoria"
+                        type="button" id="close-modal-editar"
                         class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"><i
                             class="fa-solid fa-ban"></i> Cancelar
                     </button>
@@ -83,7 +83,7 @@
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         Agregar Categoría
                     </h3>
-                    <button type="button" 
+                    <button type="button"
                         class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
                         data-modal-hide="modal-agregar-categoria">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -103,16 +103,16 @@
         </div>
     </div>
     <!-- Fin Agregar Categoría modal -->
+
     @script
     <script>
         $wire.on('traerCategoria', (e) => {
             $wire.dispatch('setearCategoria',{
                 id:e.id
             });
-    });
+        });
 
         $wire.on('estadoActualizacionCategoria', (e) => {
-            console.log("Escuchado");
               Swal.fire({
                   title: e.title,
                   text: e.message,
@@ -123,10 +123,11 @@
                   if (result.isConfirmed) {
                       const closeModalButton = document.getElementById('close-modal-editar');
                       closeModalButton.click();
+                      $wire.dispatch('recargarComponente');
                   }
               });
           });
-
+          
     </script>
     @endscript
 

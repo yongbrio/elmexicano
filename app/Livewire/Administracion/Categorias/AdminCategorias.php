@@ -68,6 +68,7 @@ class AdminCategorias extends Component
         $this->nombre_categoria_edit = NULL;
         $this->estado_edit = NULL;
         $this->categoria =  NULL;
+        $this->reset(['nombre_categoria_edit', 'estado_edit']);
     }
 
     public function validacionCampos()

@@ -55,7 +55,7 @@ class RegistrarEgreso extends Component
             'categoria_1' => $this->categoria_1,
             'categoria_2' => $this->categoria_2,
             'descripcion_egreso' => $this->descripcion_egreso,
-            'codigo_producto' => $this->codigo_producto ? $this->codigo_producto : '',
+            'codigo_producto' => $this->codigo_producto ? $this->codigo_producto : NULL,
             'unidad_medida' => $this->unidad_medida ? $this->unidad_medida : 0,
             'estado' => $this->estado,
             'registrado_por' => Auth::user()->id,
