@@ -97,13 +97,13 @@ class RegistrarCategoriasEgresos extends Component
     #[On('recargarCategoria1')]
     public function recargarCategoria1()
     {
-        $this->lista_categorias_1 = CategoriasEgresos1Model::where('estado', 1)->orderBy('nombre_categoria', 'asc')->get();
+        $this->lista_categorias_1 = "";
     }
 
     #[On('recargarCategoria2')]
     public function recargarCategoria2()
     {
-        $this->lista_categorias_2 = CategoriasEgresos2Model::where('estado', 1)->orderBy('nombre_categoria', 'asc')->get();
+        $this->lista_categorias_2 = "";
     }
 
     public function validarAsociacionCategorias()
