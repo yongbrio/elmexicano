@@ -187,7 +187,7 @@ class ListaTransferenciasInventario extends LivewireTable
             $message = "Ha rechazado la transferencia del inventario";
             $estado_mensaje = "Rechazado";
             if ($estado == 0) {
-                $message = "Ha cancelado la transferencia del inventario";
+                $message = "Ha cancelado la transferencia del inventario, el inventario ha sido devuelto a su sucursal";
                 $estado_mensaje = "Cancelado";
             }
             $this->dispatch('estadoActualizacion_tabla', title: $estado_mensaje, icon: 'error', message: $message);
@@ -220,11 +220,11 @@ class ListaTransferenciasInventario extends LivewireTable
             $transferencia->transferencia_recibida = $estado_transferencia;
             $transferencia->usuario_aprobacion = Auth::user()->id;
             $transferencia->save();
-            $estado_mensaje = "Creado";
+            $estado_mensaje = "En tránsito";
             $message = "El inventario se ha transferido y está en transito";
             if ($estado_transferencia == 2) {
                 $estado_mensaje = "Aceptado";
-                $message = "El inventario se ha aceptado y ya se encuentra disponible";
+                $message = "El inventario se ha aceptado y ya se encuentra disponible en su sucursal";
             }
             $this->dispatch('estadoActualizacion_tabla', title: $estado_mensaje, icon: 'success', message: $message);
             //Recargar la lista de inventario
