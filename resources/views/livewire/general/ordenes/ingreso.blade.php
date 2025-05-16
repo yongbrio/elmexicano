@@ -751,7 +751,7 @@
                     @if($misma_sucursal)
 
                     <div class="overflow-y-auto max-h-[312px] p-3">
-                        <livewire:general.ordenes.lista-inventario>
+                        <livewire:general.ordenes.lista-inventario :id_sucursal="$id_sucursal">
                     </div>
 
                     @else
@@ -1094,7 +1094,7 @@
                             <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
                                 <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
                                     role="alert">
-                                    <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                                    <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                         <path
                                             d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
@@ -1105,7 +1105,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="grid grid-cols-1 gap-4 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 p-3">
+                                    class="grid grid-cols-1 gap-4 p-3 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
                                     {{-- Formulario de edición de datos del cliente --}}
                                     <x-live-wire-input label="Teléfono" id="telefono_edicion" icon="fa-solid fa-phone"
                                         model="telefono_edicion" placeholder="3000000000" typeInput="number"
@@ -1227,7 +1227,7 @@
                             <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
                                 <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
                                     role="alert">
-                                    <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                                    <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                         <path
                                             d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
@@ -1289,7 +1289,7 @@
                             <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
                                 <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
                                     role="alert">
-                                    <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                                    <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                         <path
                                             d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
@@ -1301,7 +1301,7 @@
                                 </div>
 
                                 <div
-                                    class="grid grid-cols-1 gap-4 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 p-3">
+                                    class="grid grid-cols-1 gap-4 p-3 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
                                     {{-- Formulario de creación de datos del cliente --}}
                                     <x-live-wire-input label="Teléfono" id="telefono_creacion" icon="fa-solid fa-phone"
                                         model="telefono_creacion" placeholder="3000000000" typeInput="number">

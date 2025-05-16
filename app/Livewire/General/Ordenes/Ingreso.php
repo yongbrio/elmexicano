@@ -43,6 +43,8 @@ class Ingreso extends Component
 
     public $nombre_sucursal;
 
+    public $id_sucursal;
+
     public $stock_transferencia;
 
     public $comision;
@@ -262,6 +264,8 @@ class Ingreso extends Component
             $sucursal = SucursalesModel::find($this->orden->id_sucursal);
 
             $this->nombre_sucursal = $sucursal->nombre_sucursal;
+
+            $this->id_sucursal = $sucursal->id;
 
             $this->empresa_factura = EmpresasModel::find($this->datos->empresa_factura);
 
