@@ -65,22 +65,57 @@
 
     </div>
 
-    @script
     <script>
-        $wire.dispatch('recargarComponente');
-        $wire.on('estadoActualizacion_tabla', (e) => {
+        document.addEventListener('livewire:initialized', () => {
+            // Listen for estadoActualizacion event
+            Livewire.on('estadoActualizacion_tabla', (data) => {
                 Swal.fire({
-                    title: e.title,
-                    text: e.message,
-                    icon: e.icon,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "Ok"
-                }).then((result) => {
-                    /* $wire.dispatch('redirigir'); */
+                    title: data.title,
+                    text: data.message,
+                    icon: data.icon,
+                    confirmButtonText: 'Ok'
                 });
             });
+        
+        });
     </script>
-    @endscript
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('[data-tabs-target]');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Crear nueva URL sin ningún parámetro
+                const url = new URL(window.location.origin + window.location.pathname);
+                window.history.replaceState({}, '', url);
+            });
+        });
+    });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('extralarge-modal');
+
+        // Escuchar el evento de cierre del modal de Flowbite
+        modal.addEventListener('hidden.tw.modal', function () {
+            const url = new URL(window.location.origin + window.location.pathname);
+            window.history.replaceState({}, '', url);
+        });
+
+        // También aplicar cuando se hace clic en cualquier botón que cierra el modal manualmente
+        const botonesCerrar = modal.querySelectorAll('[data-modal-hide="extralarge-modal"]');
+        botonesCerrar.forEach(boton => {
+            boton.addEventListener('click', function () {
+                const url = new URL(window.location.origin + window.location.pathname);
+                window.history.replaceState({}, '', url);
+            });
+        });
+    });
+    </script>
+
+
 
 
 </div>

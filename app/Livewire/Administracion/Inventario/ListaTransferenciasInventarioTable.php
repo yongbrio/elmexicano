@@ -73,6 +73,9 @@ class ListaTransferenciasInventarioTable extends LivewireTable
                 } else if ($value->transferencia_recibida == 3) {
                     $estado = "Rechazado";
                     $color = 'red-600';
+                } else if ($value->transferencia_recibida == 4) {
+                    $estado = "Cancelado por el usuario";
+                    $color = 'blue-600';
                 }
 
                 // Devuelve el HTML para mostrar

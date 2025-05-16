@@ -60,6 +60,8 @@ class HistorialTransferenciaInventarioExport implements FromQuery, WithHeadings,
             $estado_aprobacion = "Recibida";
         } else if ($registro->transferencia_recibida == 3) {
             $estado_aprobacion = "Rechazado";
+        } else if ($registro->transferencia_recibida == 4) {
+            $estado_aprobacion = "Cancelado por el usuario";
         }
 
         $movimiento = "Entrada";

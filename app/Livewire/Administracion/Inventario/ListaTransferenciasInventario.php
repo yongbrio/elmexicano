@@ -7,6 +7,7 @@ use App\Models\InventarioModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use RamonRietdijk\LivewireTables\Columns\Column;
@@ -122,7 +123,7 @@ class ListaTransferenciasInventario extends LivewireTable
                     </button>";
 
                 $botonRechazar = "
-                    <button wire:click=\"eliminarTransferencia({$value->id})\" 
+                    <button wire:click=\"eliminarTransferencia({$value->id},{$this->estado})\" 
                             class='px-2 py-1 font-bold text-white bg-red-600 rounded hover:bg-red-700' 
                             title='$texto_boton2'>
                         $icono_boton2
@@ -139,7 +140,7 @@ class ListaTransferenciasInventario extends LivewireTable
                         $botones = "<div class='flex gap-2'>{$botonAceptar}{$botonRechazar}</div>";
                     } else if ($value->id_sucursal_origen == Auth::user()->caja) {
                         $botonRechazar = "
-                        <button wire:click=\"eliminarTransferencia({$value->id})\" 
+                        <button wire:click=\"eliminarTransferencia({$value->id},{$this->estado})\" 
                                 class='px-2 py-1 font-bold text-white bg-red-600 rounded hover:bg-red-700' 
                                 title='Cancelar transferencia'>
                             {$icono_boton2}
@@ -161,7 +162,7 @@ class ListaTransferenciasInventario extends LivewireTable
         return false;
     }
 
-    public function eliminarTransferencia($id)
+    public function eliminarTransferencia($id, $estado)
     {
 
         $historial = HistorialTransferenciasModel::where('id', $id)->first();
@@ -174,13 +175,22 @@ class ListaTransferenciasInventario extends LivewireTable
             $inventario->save();
             //Actualizamos el estado de la transferencia como rechazado
             $historial->transferencia_recibida = 3;
+            if ($estado == 0) {
+                //Cancelado por el usuario
+                $historial->transferencia_recibida = 4;
+            }
             $historial->usuario_aprobacion = Auth::user()->id;
             $historial->save();
 
             //Recargar la lista de inventario
             $this->dispatch('recargarComponente');
             $message = "Ha rechazado la transferencia del inventario";
-            $this->dispatch('estadoActualizacion', title: "Rechazado", icon: 'success', message: $message);
+            $estado_mensaje = "Rechazado";
+            if ($estado == 0) {
+                $message = "Ha cancelado la transferencia del inventario";
+                $estado_mensaje = "Cancelado";
+            }
+            $this->dispatch('estadoActualizacion_tabla', title: $estado_mensaje, icon: 'error', message: $message);
             //Actualizamos la lista con los registros
             $this->dispatch('actualizarTransferencias');
         }
@@ -210,11 +220,15 @@ class ListaTransferenciasInventario extends LivewireTable
             $transferencia->transferencia_recibida = $estado_transferencia;
             $transferencia->usuario_aprobacion = Auth::user()->id;
             $transferencia->save();
-
+            $estado_mensaje = "Creado";
+            $message = "El inventario se ha transferido y está en transito";
+            if ($estado_transferencia == 2) {
+                $estado_mensaje = "Aceptado";
+                $message = "El inventario se ha aceptado y ya se encuentra disponible";
+            }
+            $this->dispatch('estadoActualizacion_tabla', title: $estado_mensaje, icon: 'success', message: $message);
             //Recargar la lista de inventario
             $this->dispatch('recargarComponente');
-            $message = "El inventario se ha transferido";
-            $this->dispatch('estadoActualizacion_tabla', title: "Creado", icon: 'success', message: $message);
             //Actualizamos la lista con los registros
             $this->dispatch('actualizarTransferencias');
         } else {

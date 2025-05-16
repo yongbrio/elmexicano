@@ -77,7 +77,7 @@
     </div>
 
     <!-- Extra Large Modal -->
-    <div id="extralarge-modal" tabindex="-1" wire:ignore.self
+    <div id="extralarge-modal" tabindex="-1" wire:ignore.self data-modal-backdrop="static"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-h-full max-w-7xl">
             <!-- Modal content -->
@@ -183,6 +183,18 @@
                     /* $wire.dispatch('redirigir'); */
                 });
             });
+
+/*             $wire.on('estadoActualizacion_tabla', (e) => {
+                Swal.fire({
+                    title: e.title,
+                    text: e.message,
+                    icon: e.icon,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Ok"
+                }).then((result) => {
+                   
+                });
+            }); */
 
             $wire.dispatch('recargarComponente');
             
