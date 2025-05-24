@@ -17,6 +17,8 @@ use App\Livewire\Administracion\Inventario\EditarInventario;
 use App\Livewire\Administracion\Log\Log;
 use App\Livewire\Administracion\Ordenes\AdminOrdenes;
 use App\Livewire\Administracion\Perfiles\AdminPerfiles;
+use App\Livewire\Administracion\Productos\AdminProductos;
+use App\Livewire\Administracion\Productos\EditarProducto;
 use App\Livewire\Administracion\Proveedores\AdminProveedores;
 use App\Livewire\Administracion\Proveedores\EditarProveedor;
 use App\Livewire\Administracion\Sucursales\AdminSucursales;
@@ -68,6 +70,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     /* Inventario */
     Route::get('/inventario', AdminInventario::class)->name('admin-inventario')->middleware('can:admin.inventario');
     Route::get('/inventario/{id}', EditarInventario::class)->name('editar-inventario')->middleware('can:admin.inventario');
+    /* Productos */
+    Route::get('/productos', AdminProductos::class)->name('admin-productos')->middleware('can:admin.productos');
+    Route::get('/productos/{id}', EditarProducto::class)->name('editar-producto')->middleware('can:admin.productos');
     /* Usuarios */
     Route::get('/usuarios', AdminUsuarios::class)->name('admin-usuarios')->middleware('can:seguridad.usuarios');
     Route::get('/usuarios/{id}', EditarUsuario::class)->name('editar-usuario')->middleware('can:seguridad.usuarios');

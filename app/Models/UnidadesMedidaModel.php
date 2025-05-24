@@ -14,4 +14,9 @@ class UnidadesMedidaModel extends Model
     protected $filable = [
         'nombre_unidad_medida'
     ];
+
+    public function productos()
+    {
+        return $this->hasMany(ProductosModel::class, 'unidad_medida');
+    }
 }

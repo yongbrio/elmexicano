@@ -44,6 +44,7 @@ class AsignarPermisos extends Component
             ['nombre_modulo' => 'Sucursales', 'id' => 'admin_sucursales' . $this->role_id, 'name_permission' => 'admin.sucursales', 'activate' => $this->validarSiPermisoExiste("admin.sucursales")],
             ['nombre_modulo' => 'Cuentas Bancarias', 'id' => 'cuentas_bancarias' . $this->role_id, 'name_permission' => 'admin.cuentas_bancarias', 'activate' => $this->validarSiPermisoExiste("admin.cuentas_bancarias")],
             ['nombre_modulo' => 'Admin Inventario', 'id' => 'admin_inventario' . $this->role_id, 'name_permission' => 'admin.inventario', 'activate' => $this->validarSiPermisoExiste("admin.inventario")],
+            ['nombre_modulo' => 'Admin Productos', 'id' => 'admin_productos' . $this->role_id, 'name_permission' => 'admin.productos', 'activate' => $this->validarSiPermisoExiste("admin.productos")],
             ['nombre_modulo' => 'Categoría Productos', 'id' => 'admin_categoria_productos' . $this->role_id, 'name_permission' => 'admin.categoria.productos', 'activate' => $this->validarSiPermisoExiste("admin.categoria.productos")],
             ['nombre_modulo' => 'Admin Egresos', 'id' => 'admin_egresos' . $this->role_id, 'name_permission' => 'admin.egresos', 'activate' => $this->validarSiPermisoExiste("admin.egresos")],
             ['nombre_modulo' => 'Categorías Egresos', 'id' => 'admin_categorias_egresos' . $this->role_id, 'name_permission' => 'admin.categorias.egresos', 'activate' => $this->validarSiPermisoExiste("admin.categorias.egresos")],
