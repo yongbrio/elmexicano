@@ -69,8 +69,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function productosRegistrados()
+    public function sucursal()
     {
-        return $this->hasMany(ProductosModel::class, 'registrado_por');
+        return $this->belongsTo(SucursalesModel::class, 'caja');
     }
 }

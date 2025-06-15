@@ -2,6 +2,7 @@
 
 namespace App\Livewire\General\Ordenes;
 
+use DateTime;
 use App\Models\ClientesModel;
 use App\Models\CuentasBancariasModel;
 use App\Models\DepartamentosModel;
@@ -12,7 +13,6 @@ use App\Models\OrdenesModel;
 use App\Models\PagosOrdenes;
 use App\Models\SucursalesModel;
 use App\Models\User;
-use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
@@ -30,6 +30,8 @@ class Ingreso extends Component
     public $numero_orden;
 
     public $producto;
+
+    public $inventario;
 
     public $precio_unitario_con_iva;
 
@@ -403,15 +405,16 @@ class Ingreso extends Component
         $this->comision = null;
         $this->stock_transferencia = null;
 
-        $producto = InventarioModel::find($id);
+        $inventario = InventarioModel::find($id);
+        $this->inventario = $inventario;
 
-        if ($producto) {
+        if ($inventario) {
 
-            $this->producto = $producto;
-            $this->precio_unitario_con_iva = $producto->precio_unitario_con_iva;
-            $this->precio_unitario_sin_iva = $producto->precio_unitario_sin_iva;
-            $this->stock_disponible = $producto->stock;
-            $this->comision = $producto->comision;
+            $this->producto = $inventario->producto;
+            $this->precio_unitario_con_iva = $inventario->producto->precio_unitario_con_iva;
+            $this->precio_unitario_sin_iva = $inventario->producto->precio_unitario_sin_iva;
+            $this->stock_disponible = $inventario->stock;
+            $this->comision = $inventario->comisiona ? $inventario->producto->comision : 0;
         }
     }
 
@@ -421,16 +424,19 @@ class Ingreso extends Component
 
             $imagen = $this->producto->imagen;
 
+            $comision = $this->inventario->comisiona ? $this->producto->comision : 0;
+
             $nuevoProducto = [
-                'id_producto' => $this->producto->id,
+                'id_inventario' => $this->inventario->id,
+                'id_producto' => $this->inventario->producto_id,
                 'imagen' => $imagen,
-                'id_sucursal' => $this->producto->sucursal,
+                'id_sucursal' => $this->inventario->sucursal_id,
                 'codigo_producto' => $this->producto->codigo_producto,
                 'cantidad_producto' => $this->stock_transferencia,
                 'precio_unitario_con_iva' => $this->producto->precio_unitario_con_iva,
                 'precio_unitario_sin_iva' => $this->producto->precio_unitario_sin_iva,
-                'comision' => $this->producto->comision,
-                'valor_comision' => (($this->stock_transferencia * $this->producto->precio_unitario_con_iva) * $this->producto->comision) / 100,
+                'comision' => $comision,
+                'valor_comision' => (($this->stock_transferencia * $this->producto->precio_unitario_con_iva) * $comision) / 100,
                 'descripcion' => $this->producto->descripcion,
                 'total' => $this->stock_transferencia * $this->producto->precio_unitario_con_iva,
             ];
@@ -439,7 +445,7 @@ class Ingreso extends Component
 
             // Iterar sobre la lista de productos agregados
             foreach ($this->listaProductosAgregados as &$producto) {
-                if ($producto['id_producto'] === $nuevoProducto['id_producto']) {
+                if ($producto['id_inventario'] === $nuevoProducto['id_inventario']) {
                     if (($nuevoProducto['cantidad_producto']) > $this->stock_disponible) {
                         $message = "La cantidad total ingresada supera la cantidad disponible en stock";
                         $elementId = 'stock_transferencia';
@@ -453,14 +459,14 @@ class Ingreso extends Component
                         $this->valor_total_orden = $producto['total'];
                         $producto['valor_comision'] = ($producto['total'] * $producto['comision']) / 100;
 
-                        $this->producto->stock = ($this->producto->stock - $nuevoProducto['cantidad_producto']);
-                        $this->producto->save();
+                        $this->inventario->stock = ($this->inventario->stock - $nuevoProducto['cantidad_producto']);
+                        $this->inventario->save();
 
                         /* $this->orden->detalle = json_encode($this->listaProductosAgregados); */
                         $detalle = json_decode(json_encode($this->listaProductosAgregados));
 
                         foreach ($detalle as $key => $val) {
-                            if ($val->id_producto === $producto['id_producto']) {
+                            if ($val->id_producto === $producto['id_inventario']) {
                                 $val->cantidad_producto = $producto['cantidad_producto'];
                                 $val->total = $producto['total'];
                                 $this->valor_total_orden = $val->total;
@@ -486,9 +492,9 @@ class Ingreso extends Component
             // Si no se encontró el producto, agregarlo a la lista
             if (!$existe) {
 
-                $this->producto->stock = ($this->producto->stock - $nuevoProducto['cantidad_producto']);
-                $this->producto->save();
-                $this->agregar($this->producto->id);
+                $this->inventario->stock = ($this->inventario->stock - $nuevoProducto['cantidad_producto']);
+                $this->inventario->save();
+                $this->agregar($this->inventario->id);
 
                 $message = 'El producto se agregó a la lista';
                 $icon = 'success';
@@ -505,7 +511,7 @@ class Ingreso extends Component
     public function modificarCantidadProducto(&$productos, $id_producto, $nueva_cantidad)
     {
         foreach ($productos as &$producto) {
-            if ($producto['id_producto'] == $id_producto) {
+            if ($producto['id_inventario'] == $id_producto) {
                 $producto['cantidad_producto'] = $nueva_cantidad;
                 return true; // Producto encontrado y cantidad modificada
             }
@@ -517,7 +523,7 @@ class Ingreso extends Component
     {    // Encuentra el producto que se va a eliminar para obtener su cantidad
         $cantidadProducto = 0;
         $this->listaProductosAgregados = array_filter($this->listaProductosAgregados, function ($producto) use ($id, &$cantidadProducto) {
-            if ($producto['id_producto'] === $id) {
+            if ($producto['id_inventario'] === $id) {
                 $cantidadProducto = $producto['cantidad_producto']; // Obtén la cantidad del producto
                 $this->valor_total_orden = $this->valor_total_orden - $producto['total'];
                 return false; // Elimina el producto del array
@@ -537,7 +543,7 @@ class Ingreso extends Component
     {
         // Recorre los productos para disminuir en 1 la cantidad del producto con el ID especificado
         foreach ($this->listaProductosAgregados as &$producto) {
-            if ($producto['id_producto'] === $id) {
+            if ($producto['id_inventario'] === $id) {
                 // Si la cantidad es mayor a 1, solo restamos 1
                 if ($producto['cantidad_producto'] > 1) {
                     $producto['cantidad_producto']--;
@@ -547,7 +553,7 @@ class Ingreso extends Component
                 } else {
                     // Si la cantidad es 1, lo eliminamos de la lista
                     $this->listaProductosAgregados = array_filter($this->listaProductosAgregados, function ($prod) use ($id) {
-                        return $prod['id_producto'] !== $id;
+                        return $prod['id_inventario'] !== $id;
                     });
                 }
                 break;
@@ -566,8 +572,9 @@ class Ingreso extends Component
     {
         // Recorre la lista de productos para encontrar el producto con el ID especificado
         foreach ($this->listaProductosAgregados as &$producto) {
-            if ($producto['id_producto'] === $id) {
+            if ($producto['id_inventario'] === $id) {
                 // Aumenta la cantidad del producto en 1
+
                 $producto['cantidad_producto']++;
                 $producto['total'] = $producto['total'] + $producto['precio_unitario_con_iva'];
                 $this->valor_total_orden = $this->valor_total_orden + $producto['precio_unitario_con_iva'];
@@ -587,7 +594,8 @@ class Ingreso extends Component
     private function actualizarInventario($id, $cantidadProducto)
     {
         $inventario = InventarioModel::find($id);
-
+        Log::info($inventario);
+        Log::info($id);
         if ($inventario) {
 
             $inventario->stock = $inventario->stock + $cantidadProducto;

@@ -1,70 +1,335 @@
 <div>
-    <div class="mt-5 text-lg">
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    <div class="grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-1">
         <div>
+            <i class="text-red-600 fa-solid fa-cart-shopping"></i> Orden Egreso No. <span
+                class="font-semibold">{{$orden->id}}</span>
+        </div>
+        <hr class="h-[2px] my-2 bg-red-600 border-0">
+        {{-- Nuevoooo --}}
+        <div
+            class="grid grid-cols-1 gap-4 text-sm normal-case sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[35%,65%] mx-4">
 
-            <div>
-                <i class="text-red-600 fa-solid fa-cart-shopping"></i> Orden Egreso No. <span
-                    class="font-semibold">{{$orden->id}}</span>
-                @if ($misma_sucursal)
-                <button type="button"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><i
-                        class="fa-solid fa-print"></i></button>
-                @endif
-            </div>
+            {{-- accordion --}}
+            <div wire:ignore.self class="" x-data="{ accordion: Alpine.store('accordion') }">
+                <div x-data="accordion(1)" x-init="init()" @destroy.window="destroy()" wire:ignore
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
 
-            <hr class="h-[2px] my-4 bg-red-600 border-0">
+                    <div class="flex mb-1">
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-red-600 fa-solid fa-users-line"></i>
+                            </span>
+                            <h5
+                                class="content-center font-semibold tracking-tight text-gray-900 capitalize dark:text-white">
+                                Proveedor No.
 
-            <div class="mb-5 text-sm">
-                DETALLE DE EGRESO
-            </div>
-            <div class="pl-4 mb-5">
-                <ol
-                    class="relative py-2 font-semibold text-gray-900 border-gray-200 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
-                    <li class="mb-5 ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-red-900">
-                            <i class="text-red-600 fa-solid fa-users-line"></i>
-                        </span>
-                        <h3 class="text-sm leading-tight mb-0.5"><span
-                                class="bg-red-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{$datos->nit}}</span>-
-                            {{strtoupper($datos->nombre_comercial)}}</h3>
-                        <p class="text-xs">{{strtoupper($datos->nombre_legal)}} (0)</p>
-                    </li>
-                    <li class="mb-5 ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
-                            <i class="text-red-600 fa-solid fa-paper-plane"></i>
-                        </span>
-                        <h3 class="text-sm leading-tight"><span class="font-semibold">{{$nombre_sucursal}}</span> -
-                            {{strtoupper($datos->barrio_localidad)}} <span
-                                class="italic">({{strtoupper($ciudad->nombre_municipio)." -
-                                ".strtoupper($departamento->nombre_departamento)}})</span> </h3>
-                        <p class="text-xs">{{strtoupper($datos->direccion)}}</p>
-                    </li>
-                    <li class="mb-8 ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
-                            <i class="text-red-600 fa-solid fa-gears"></i>
-                        </span>
-                        <h3 class="pt-2 text-sm leading-tight"><span class="text-semibold">{{$fecha}}</span> /
-                            {{strtoupper($nombre_sucursal)}} / {{strtoupper($nombre_registrado_por)}} / EFECTIVO -
-                            CONCILIADO </h3>
-                        {{-- <p class="text-sm">Step details here</p> --}}
-                    </li>
-                    <li class="mb-5 ms-6">
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
-                            <i class="text-red-600 fa-solid fa-comment"></i>
-                        </span>
-                        {{-- <h3 class="font-medium leading-tight">
-                        </h3> --}}
-                        <div class="flex pr-5" x-data="{ isDisabled: true }" x-on:click.away="isDisabled = true"
+                                <button type="button"
+                                    class="px-2 py-1 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    data-proveedor-telefono>{{$datos->telefono}}</button>
+
+                                <button type="button" data-modal-target="modal-gestion-proveedor"
+                                    data-modal-toggle="modal-gestion-proveedor"
+                                    class="px-2 py-1 text-xs font-medium text-white bg-purple-700 rounded-lg focus:outline-none hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+                                    <i class="fa-solid fa-user-pen"></i> Gestionar proveedor
+                                </button>
+
+                            </h5>
+                        </div>
+                        <div class="flex items-center justify-end">
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-red-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab"
+                        :style="handleToggle()">
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Grupo:</strong>
+                            <span data-proveedor-grupo>{{$datos->grupo}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Nombre comercial:</strong>
+                            <span data-proveedor-nombre-comercial>{{($datos->nombre_comercial)}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Nombre legal:</strong>
+                            <span data-proveedor-nombre-legal>{{$datos->nombre_legal}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>NIT:</strong>
+                            <span data-proveedor-nit>{{$datos->nit}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Sucursal:</strong>
+                            <span data-proveedor-sucursal>{{$datos->sucursal}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Encargado:</strong>
+                            <span data-proveedor-encargado>{{$datos->nombre_encargado}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Correo:</strong>
+                            <span data-proveedor-correo>{{$datos->correo}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Descripción:</strong>
+                            <span data-proveedor-descripcion>{{$datos->descripcion}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Dirección:</strong>
+                            <span data-proveedor-direccion>{{$datos->direccion}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Barrio/Localidad:</strong>
+                            <span data-proveedor-barrio> {{$datos->barrio_localidad}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Ciudad:</strong>
+                            <span data-proveedor-ciudad>{{$ciudad->nombre_municipio}}</span>
+                        </p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Departamento:</strong>
+                            <span data-proveedor-departamento>{{$departamento->nombre_departamento}}</span>
+                        </p>
+
+                    </div>
+                </div>
+                <div x-data="accordion(2)" x-init="init()" @destroy.window="destroy()" wire:ignore.self
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+
+                    <div class="flex mb-1">
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-red-600 fa-solid fa-gears"></i>
+                            </span>
+                            <h5 class="content-center font-semibold tracking-tight text-gray-900 dark:text-white">
+                                Control - {!!$this->darStatusEnvio($estado_envio)!!}</h5>
+                        </div>
+                        <div class="flex items-center justify-end" wire:ignore>
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-red-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab" :style="handleToggle()"
+                        wire:ignore.self>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Fecha de creación:</strong>
+                            {{$fecha}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Sucursal:</strong>
+                            {{$nombre_sucursal}}</p>
+                        <p class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Usuario de
+                                registro:</strong>
+                            {{$nombre_registrado_por}}</p>
+                        <p class="mb-2 font-normal text-gray-800 dark:text-gray-400"><strong>Factura con:</strong>
+                            {{$empresa_factura->nombre_legal}}</p>
+                        <div class="block">
+                            <div class="block">
+                                <label for="estado_despacho"
+                                    class="mb-1 font-normal text-gray-800 dark:text-gray-400"><strong>Estado de
+                                        entrega</strong></label>
+                                @if (($orden->estado_envio != 2 && empty($orden->adjuntos_envios)))
+                                <select id="estado_despacho" wire:change='estadoEnvio()' wire:model='estado_envio'
+                                    x-init="updateHeight()"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="0" selected>Por despachar</option>
+                                    <option value="1">Despachado</option>
+                                    <option value="2">Facturado</option>
+                                </select>
+                                @endif
+                            </div>
+
+                            @if ($mostrar_adjunto_envio && $orden->estado_envio != 2 && empty($orden->adjuntos_envios)
+                            )
+                            <div x-init="updateHeight()">
+                                <div class="flex flex-col items-center justify-center w-full mb-2 text-center"
+                                    id="containerUploadFile">
+                                    <div class="mt-2">
+                                        <label for="fecha-pago-factura"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
+                                        <input type="date" wire:model='fecha_pago_factura' id="fecha-pago-factura"
+                                            aria-label="fecha pago factura"
+                                            class="mb-2 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            value="{{date('Y-m-d')}}">
+                                        @error('fecha_pago_factura')
+                                        <span x-init="updateHeight()" class="text-xs text-red-500">{{ $message
+                                            }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="input_adjunto_envio"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cargar
+                                            comprobante</label>
+                                        <label
+                                            class="block p-2 text-sm text-white bg-green-600 rounded-lg cursor-pointer hover:bg-green-700"
+                                            for="input_adjunto_envio">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                            Cargar comprobante
+                                        </label>
+
+                                        <div id="">
+                                            <div class="hidden" id="">
+                                                <input wire:model='archivos_envio' wire:click='subirArchivo()'
+                                                    accept="image/jpeg, image/png, image/jpg, application/pdf"
+                                                    class="hidden w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                    id="input_adjunto_envio" type="file">
+                                            </div>
+                                        </div>
+                                        @error('archivos_envio')
+                                        <span x-init="updateHeight()" class="text-xs text-red-500">{{ $message
+                                            }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            @elseif($enviar_conciliar || $orden->estado_envio == 3)
+                            <div x-init="updateHeight()" class="mt-2">
+                                <div class="relative w-full overflow-auto shadow-md max-h-80 sm:rounded-lg">
+                                    <table
+                                        class="w-full min-w-full overflow-auto text-sm text-left text-gray-500 border border-gray-200 rtl:text-right dark:text-gray-400">
+                                        <thead
+                                            class="text-xs text-gray-700 capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Fecha Comprobante
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Nombre comprobante
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Acciones
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr x-init="updateHeight()"
+                                                class="text-xs border-b odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700">
+                                                <td class="px-6 py-4">
+                                                    {{$adjuntos_envios->fecha}}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="flex w-24 truncate"
+                                                        title="{{$adjuntos_envios->nombre_original}}">
+                                                        @if (str_starts_with($adjuntos_envios->fileType,
+                                                        'image/'))
+                                                        <i class="text-blue-600 fa-solid fa-image"></i>
+                                                        @elseif ( $adjuntos_envios->fileType ===
+                                                        'application/pdf')
+                                                        <i class="text-red-600 fa-solid fa-file-pdf"></i>
+                                                        @endif
+                                                        {{$adjuntos_envios->nombre_original}}
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="d-flex">
+                                                        @if($misma_sucursal)
+                                                        @if ($orden->estado_envio == 2)
+                                                        <button type="button" wire:click='eliminarArchivoEnvio()'
+                                                            class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                            <span class="sr-only">Eliminar</span>
+                                                        </button>
+                                                        @endif
+                                                        @endif
+                                                        <button id="btnPreview_envio{{$adjuntos_envios->id}}"
+                                                            data-file-url="{{route('admin.storage', ['modulo'=> 'egresos', 'filename' => $adjuntos_envios->nombre]) }}"
+                                                            data-file-type="{{$adjuntos_envios->fileType}}"
+                                                            type="button"
+                                                            x-on:click='modalPreview("{{$adjuntos_envios->id}}","envio")'
+                                                            data-modal-target="modal-preview-soporte"
+                                                            data-modal-toggle="modal-preview-soporte"
+                                                            class='inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600'>
+                                                            <i class="fa-solid fa-eye"></i>
+                                                            <span class="sr-only">Ver</span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @if ($estado_envio != 3)
+                                <div class="flex justify-center mt-2" x-init="updateHeight()">
+                                    <button type="button" wire:click='conciliarEnvio()'
+                                        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"><i
+                                            class="fa-solid fa-check"></i> Conciliar</button>
+                                </div>
+                                @endif
+                            </div>
+                            @endif
+
+                        </div>
+                    </div>
+                </div>
+                <div x-data="accordion(3)" x-init="init()" @destroy.window="destroy()" wire:ignore.self
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+                    <div class="flex mb-1" wire:ignore>
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-red-600 fa-solid fa-comment"></i>
+                            </span>
+                            <h5
+                                class="content-center font-semibold tracking-tight text-gray-900 capitalize dark:text-white">
+                                Comentarios</h5>
+                        </div>
+                        <div class="flex items-center justify-end">
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-red-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab" :style="handleToggle()"
+                        wire:ignore.self>
+                        <div class="max-h-[140px] overflow-y-auto mt-2 rounded-lg"
+                            x-data="{ scrollToBottom() { $el.scrollTop = $el.scrollHeight; } }" x-init="scrollToBottom">
+                            @if ($historialComentarios)
+                            @foreach ( $historialComentarios as $com )
+                            <div class="p-1 mt-1 rounded-lg" x-init="updateHeight()">
+                                <div class="bg-gray-200 rounded-lg">
+                                    <div class="flex justify-start ps-1">
+                                        <span class="p-1 text-xs font-semibold text-blue-500 rounded-lg">
+                                            {{$com->nombre}}
+                                        </span>
+                                    </div>
+                                    <div class="pb-2 ps-1">
+                                        {{$com->comentario}}
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-end mt-[-10px]">
+                                    <span class="p-[2px] font-semibold text-white bg-blue-500 rounded-lg text-[12px]">
+                                        {{$com->fecha}}
+                                    </span>
+                                </div>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                        <div class="flex items-end mt-5" x-data="{ isDisabled: true }"
+                            x-on:click.away="isDisabled = true"
                             x-init="$watch('isDisabled', value => { if (!value) $refs.textarea.focus(); })">
                             <textarea id="comentario" rows="1" x-ref="textarea" :disabled="isDisabled"
                                 wire:blur='registrarComentario' wire:model='comentario'
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Registra un comentario..."></textarea>
-                            @if ($misma_sucursal)
+                                class="h-28 max-h-28 block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Registra un comentario...">
+                            </textarea>
+                            @if($misma_sucursal)
                             <button type="submit" @click="isDisabled = !isDisabled"
                                 class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
                                 <i class="fa-solid fa-pen-to-square" wire:loading.remove></i>
@@ -75,254 +340,577 @@
                             </button>
                             @endif
                         </div>
-                        {{-- <p class="text-sm">Step details here</p> --}}
-                    </li>
-
-                    <li class="pr-2 mb-8 ms-6" x-data="main({{ $fileCount }})">
-
-                        <span
-                            class="absolute flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
-                            <i class="text-red-600 fa-solid fa-cloud-arrow-up"></i>
-                        </span>
-                        @if($misma_sucursal)
-                        <h3 class="pt-2 text-sm leading-tight">COMPROBANTES</h3>
-                        <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
-                        <div x-ref="fileContainer" wire:ignore>
-
-                            <div class="flex justify-center w-full mb-2" id="containerUploadFile"
-                                x-show="fileCount < 5">
-
-                                <label
-                                    class="p-2 text-sm text-white bg-green-600 rounded-lg cursor-pointer hover:bg-green-700"
-                                    for="file_input1">
-                                    <i class="fa-solid fa-cloud-arrow-up"></i> Cargar Comprobante
-                                </label>
-
-                                <div id="blockFile1" wire:key="blockFile1">
-                                    <div class="hidden" id="subBlockFile1">
-                                        <input wire:model='archivos' wire:click='subirArchivo(1)'
-                                            accept="image/jpeg, image/png, image/jpg, application/pdf"
-                                            x-on:change="previewFile(event, 1)"
-                                            class="hidden w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                            id="file_input1" type="file">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div x-show="fileCount === 5"
-                                class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-                                role="alert">
-                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                                </svg>
-                                <span class="sr-only">Info</span>
-                                <div>
-                                    <span class="font-medium">¡Atención!</span> La máxima cantidad de archivos es 5.
-                                </div>
-                            </div>
-
-                        </div>
-                        @endif
-                        @if(!empty($archivos_orden))
-                        <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
-                        <label class="block mb-2 text-xs">Comprobantes Cargados
-                        </label>
-                        @foreach($archivos_orden as $archivo_orden)
-                        <div id="blockFile{{$archivo_orden->id}}" wire:key="blockFile{{$archivo_orden->id}}">
-                            <div class="flex mt-3" id="subBlockFile{{$archivo_orden->id}}">
-                                <div class="flex w-full">
-                                    <span
-                                        class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 rounded-e-0 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                        @if (str_starts_with($archivo_orden->fileType, 'image/'))
-                                        <i class="text-blue-600 fa-solid fa-image"></i>
-                                        @elseif ( $archivo_orden->fileType === 'application/pdf')
-                                        <i class="text-red-600 fa-solid fa-file-pdf"></i>
-                                        @endif
-                                    </span>
-                                    <input disabled type="text" id="showFile{{$archivo_orden->id}}"
-                                        value='{{$archivo_orden->nombre_original}}'
-                                        class="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Nombre Archivo">
-                                </div>
-                                @if($misma_sucursal)
-                                <button type="button" x-on:click='eliminarInputFile("blockFile{{$archivo_orden->id}}")'
-                                    wire:click='eliminarArchivo("{{$archivo_orden->id}}")'
-                                    class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
-                                    <i class="fa-solid fa-trash"></i>
-                                    <span class="sr-only">Eliminar</span>
-                                </button>
-                                @endif
-                                <button id="btnPreview{{$archivo_orden->id}}"
-                                    data-file-url="{{ route('admin.storage', ['modulo'=> 'egresos', 'filename' => $archivo_orden->nombre]) }}"
-                                    data-file-type="{{$archivo_orden->fileType}}" type="button"
-                                    x-on:click='modalPreview("{{$archivo_orden->id}}")'
-                                    data-modal-target="modal-preview-soporte" data-modal-toggle="modal-preview-soporte"
-                                    class='inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600'>
-                                    <i class="fa-solid fa-eye"></i>
-                                    <span class="sr-only">Ver</span>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                    </li>
-
-
-                </ol>
-            </div>
-
-
-
-        </div>
-
-        <div class="grid-cols-1 gap-4 mt-5 text-lg sm:grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
-            <div>
-                <div>
-                    <i class="text-red-600 fa-solid fa-bars"></i> Detalle
+                    </div>
                 </div>
-                <hr class="h-[2px] my-4 bg-red-600 border-0">
-                <div class="relative overflow-x-auto shadow-lg sm:rounded-lg shadow-gray-900">
-                    <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-                        <thead class="text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-2 py-3 rounded-s-lg">
-                                    C1
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    C2
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Detalle
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Q
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Unitario
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Subtotal
-                                </th>
-                                <th scope="col" class="px-2 py-3 sr-only rounded-e-lg">
-                                    Eliminar
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div x-data="accordion(4)" x-init="init()" @destroy.window="destroy()" wire:ignore.self
+                    class="p-4 mt-2 transition-all duration-700 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-2xl dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+                    <div class="flex mb-1">
+                        <div class="flex w-full">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-red-600 fa-solid fa-circle-dollar-to-slot"></i>
+                            </span>
+                            <h5
+                                class="content-center font-semibold tracking-tight text-gray-900 capitalize dark:text-white">
+                                Pagos {!! $estadoOrden !!}
+                            </h5>
+                        </div>
+                        <div class="flex items-center justify-end" wire:ignore>
+                            <span :class="handleRotate()" @click="handleClick()"
+                                class="transition-transform duration-500 transform cursor-pointer fill-current">
+                                <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="h-[2px] mt-0 mb-2 bg-red-600 border-0">
+                    <div class="overflow-hidden transition-all duration-700 max-h-0" x-ref="tab" :style="handleToggle()"
+                        wire:ignore.self>
 
-                            @if (!empty($listaEgresosAgregados))
-                            @foreach ($listaEgresosAgregados as $index => $egreso)
-                            <tr class="bg-white dark:bg-gray-800">
-                                <th scope="row"
-                                    class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $egreso['categoria_1'] }}
-                                </th>
-                                <td class="px-2 py-1">
-                                    {{ $egreso['categoria_2'] }}
-                                </td>
-                                <td class="px-2 py-1">
-                                    {{ $egreso['descripcion'] }}
-                                </td>
-                                <td class="px-2 py-1">
-                                    {{ $egreso['cantidad_egreso'] }}
-                                </td>
-                                <td class="px-2 py-1">
-                                    {{ "$ ".number_format($egreso['precio_unitario_con_iva'], 0, ',', '.') }}
-                                </td>
-                                <td class="px-2.5 py-1">
-                                    {{ "$ ".number_format($egreso['total'], 0, ',', '.') }}
-                                </td>
-                                <td class="px-2.5 py-1">
-                                    @if($misma_sucursal)
-                                    <button type="button"
-                                        wire:click="eliminarEgresoLista({{ $egreso['id_egreso'] }},{{$index}})"
-                                        class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
-                                        <i class="fa-solid fa-trash"></i>
-                                        <span class="sr-only">Eliminar</span>
-                                    </button>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                            @else
-                            <tr class="bg-white dark:bg-gray-800">
-                                <td colspan="6" class="px-2 py-1 text-center">
-                                    Aún no ha agregado ningún egreso.
-                                </td>
-                            </tr>
+                        @if ($listaEgresosAgregados)
+                        {{-- Mostramos el contenido siempre y cuando existan productos agregados a la lista --}}
+                        @if (!empty($orden->forma_pago) && !$aplicar_pago )
+                        {{-- Begin:Tabla de pagos registrados --}}
+                        <div class="w-full p-2 mx-auto" x-init="updateHeight()">
+                            <div class="relative overflow-auto shadow-md max-h-80 sm:rounded-lg">
+                                <table
+                                    class="w-full min-w-full text-sm text-left text-gray-500 border border-gray-200 rtl:text-right dark:text-gray-400">
+                                    <thead
+                                        class="text-xs text-gray-700 capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">
+                                                Monto
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Medio pago
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Fecha Pago
+                                            </th>
+                                            @if ($orden->forma_pago !=='efectivo')
+                                            <th scope="col" class="px-6 py-3">
+                                                Nombre comprobante
+                                            </th>
+                                            @endif
+
+                                            <th scope="col" class="px-6 py-3">
+                                                Usuario registro
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Acciones
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(isset($archivos_orden) && isset($pagoOrdenes) && $orden->forma_pago
+                                        !=='efectivo')
+                                        @foreach($archivos_orden as $archivo_orden)
+                                        @if ($pagoOrdenes->id === $archivo_orden->id_pago_ordenes)
+                                        <tr x-init="updateHeight()"
+                                            class="text-xs border-b odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700">
+                                            <th scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                $ {{ number_format($pagoOrdenes->monto, 0, ',', '.') }}
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                @php
+                                                $mediosPago = [
+                                                "banco"=>"Banco",
+                                                "efectivo"=>"Efectivo",
+                                                "credito"=>"Crédito"
+                                                ];
+                                                $medioSeleccionado = $mediosPago[$pagoOrdenes->nombre_forma_pago]
+                                                @endphp
+                                                {{$medioSeleccionado}}
+
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @php
+                                                $fechaFormateada = date('d-m-Y', $pagoOrdenes->fecha);
+                                                @endphp
+                                                {{$fechaFormateada}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex w-24 truncate"
+                                                    title="{{$archivo_orden->nombre_original}}">
+                                                    @if (str_starts_with($archivo_orden->fileType,
+                                                    'image/'))
+                                                    <i class="text-blue-600 fa-solid fa-image"></i>
+                                                    @elseif ( $archivo_orden->fileType ===
+                                                    'application/pdf')
+                                                    <i class="text-red-600 fa-solid fa-file-pdf"></i>
+                                                    @endif
+                                                    {{$archivo_orden->nombre_original}}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{$nombre_registrado_por}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex">
+                                                    @if($misma_sucursal)
+                                                    @if (!$ordenCerrada)
+                                                    <button type="button"
+                                                        wire:click='eliminarArchivo("{{$archivo_orden->id}}","{{$pagoOrdenes->id}}")'
+                                                        class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                        <span class="sr-only">Eliminar</span>
+                                                    </button>
+                                                    @endif
+
+                                                    @endif
+                                                    <button id="btnPreview_pago{{$archivo_orden->id}}"
+                                                        data-file-url="{{ route('admin.storage', ['modulo'=> 'egresos', 'filename' => $archivo_orden->nombre]) }}"
+                                                        data-file-type="{{$archivo_orden->fileType}}" type="button"
+                                                        x-on:click='modalPreview("{{$archivo_orden->id}}","pago")'
+                                                        data-modal-target="modal-preview-soporte"
+                                                        data-modal-toggle="modal-preview-soporte"
+                                                        class='inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600'>
+                                                        <i class="fa-solid fa-eye"></i>
+                                                        <span class="sr-only">Ver</span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @endforeach
+                                        @elseif(isset($pagoOrdenes) && $orden->forma_pago === 'efectivo')
+                                        <tr x-init="updateHeight()"
+                                            class="text-xs border-b odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700">
+                                            <th scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                $ {{ number_format($valor_total_orden, 0, ',', '.') }}
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                Efectivo
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @php
+                                                $fechaFormateada = date('d-m-Y', $pagoOrdenes->fecha);
+                                                @endphp
+                                                {{$fechaFormateada}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{$nombre_registrado_por}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex">
+                                                    @if($misma_sucursal)
+                                                    @if (!$ordenCerrada)
+                                                    <button type="button"
+                                                        wire:click='eliminarPagoEfectivo("{{$orden->id}}","{{$pagoOrdenes->id}}")'
+                                                        class="inline-flex justify-center p-2 text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                        <span class="sr-only">Eliminar</span>
+                                                    </button>
+                                                    @endif
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {{-- End:Tabla de pagos registrados --}}
+                        @endif
+                        @if($orden->forma_pago !== '')
+                        {{-- Begin:Mostrar botón de cerrar Orden --}}
+                        @if ($orden->estado_orden != 2 && $orden->estado_orden != 3 && $orden->forma_pago !== 'banco')
+                        <div class="flex flex-col text-center" x-init="updateHeight()">
+                            <div class="flex justify-center">
+                                <button type="button" wire:click='cerrarOrden()'
+                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    <i class="fa-solid fa-lock"></i> Validar orden
+                                </button>
+                            </div>
+                        </div>
+                        @elseif($orden->estado_orden == 3 && !$aplicar_pago)
+                        <div class="flex flex-col text-center" x-init="updateHeight()">
+                            <div class="flex justify-center">
+                                <button type="button" wire:click='aplicarPago()'
+                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    <i class="fa-solid fa-sack-dollar"></i> Aplicar pago
+                                </button>
+                            </div>
+                        </div>
+                        @endif
+
+                        {{-- End:Mostrar botón de cerrar Orden --}}
+                        @endif
+
+                        @if(empty($archivos_orden) || $aplicar_pago)
+                        {{-- Begin:Mostrar si existen pagos registrados --}}
+                        <div class="flex flex-col text-center">
+
+                            @if (empty($orden->forma_pago))
+                            {{-- Begin: Mostramos siempre y cuando no haya ningún pago registrado --}}
+                            <div class="flex items-center p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
+                                role="alert">
+                                <i class="fa-solid fa-circle-info"></i> Al agregar un pago no se podrán agregar más
+                                productos.
+                            </div>
+                            {{-- End: Mostramos siempre y cuando no haya ningún pago registrado --}}
                             @endif
 
+                            <div class="flex justify-center">
+                                @if($orden->forma_pago === '')
+                                {{-- Begin: Mostramos el botón para agregar un nuevo pago --}}
+                                @if(!$opcionesPagoActivado && !$aplicar_pago)
+                                {{-- Begin: Ocultamos el botón si se dió clic en este botón --}}
+                                <button type="button" wire:click="mostrarOpcionesPago()" x-init="updateHeight()"
+                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Agregar pago
+                                </button>
+                                {{-- End: Ocultamos el botón si se dió clic en este botón --}}
+                                @endif
+                                {{-- End: Mostramos el botón para agregar un nuevo pago --}}
+                                @endif
+                                @if ($opcionesPagoActivado || $aplicar_pago)
+                                {{-- Begin: Mostramos el contenido --}}
+                                <div x-init="updateHeight()">
+                                    <div class="w-full mx-auto">
+                                        @php
+                                        $clase = 'sm:grid-cols-2';
+                                        if($forma_pago === ''){
+                                        $clase = 'sm:grid-cols-1';
+                                        }
+                                        @endphp
+                                        <div class="grid-cols-1 gap-1 mt-5 text-lg sm:grid {{ $clase }}">
+                                            @if ($orden->forma_pago !== 'credito' || $aplicar_pago)
+                                            {{-- Begin: si el medio de pago es crédito no es necesario mostrar la forma
+                                            de pago --}}
+                                            <div>
+                                                <label for="forma-pago"
+                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Forma
+                                                    de pago</label>
 
-                        </tbody>
-                        <tfoot>
+                                                <select id="forma-pago" wire:model='forma_pago'
+                                                    wire:change='asignarFormaPago($event.target.value)'
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                    <option value="" selected>Forma de pago</option>
+                                                    <option value="efectivo">Efectivo</option>
+                                                    <option value="banco">Banco</option>
+                                                    @if (!$aplicar_pago)
+                                                    <option value="credito">Crédito</option>
+                                                    @endif
+
+                                                </select>
+
+                                            </div>
+                                            {{-- End: si el medio de pago es crédito no es necesario mostrar la forma de
+                                            pago --}}
+                                            @endif
+                                            @if ($forma_pago !== '')
+                                            @if ($forma_pago === 'banco')
+                                            <div x-init="updateHeight()">
+                                                <label for="fecha-pago"
+                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
+                                                <input type="date" wire:model='fecha_pago' id="fecha-pago"
+                                                    aria-label="fecha pago"
+                                                    class="mb-2 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    value="{{date('Y-m-d')}}">
+                                                @error('fecha_pago')
+                                                <span x-init="updateHeight()" class="text-xs text-red-500">{{ $message
+                                                    }}</span>
+                                                @enderror
+                                            </div>
+
+                                            @if ($forma_pago === 'banco')
+                                            <div>
+                                                <label for="seleccion_banco"
+                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cuenta
+                                                    de Banco</label>
+
+                                                <select id="seleccion_banco" wire:model='seleccion_banco'
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                    <option value="" selected>Seleccionar Banco</option>
+                                                    @if (isset($datos_cuentas_banco))
+                                                    @foreach ($datos_cuentas_banco as $cuenta_banco)
+                                                    <option value="{{$cuenta_banco->id}}">{{$cuenta_banco->nombre_banco.
+                                                        " - ".$cuenta_banco->numero_cuenta}}</option>
+                                                    @endforeach
+                                                    @endif
+                                                </select>
+
+                                                @error('seleccion_banco')
+                                                <span x-init="updateHeight()" class="text-xs text-red-500">{{ $message
+                                                    }}</span>
+                                                @enderror
+
+                                            </div>
+                                            @endif
+
+                                            @elseif ($forma_pago === 'credito')
+                                            <div>
+                                                <label for="plazo_pago"
+                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Plazo
+                                                    de pago</label>
+                                                <select id="plazo_pago" wire:model='plazo_pago'
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                    <option value="" selected>Elige una opción</option>
+                                                    <option value="7">1 semana (7 días)</option>
+                                                    <option value="15">2 semanas (15 días)</option>
+                                                    <option value="30">4 semanas (30 días)</option>
+                                                </select>
+                                                @error('plazo_pago')
+                                                <span x-init="updateHeight()" class="text-xs text-red-500">{{ $message
+                                                    }}</span>
+                                                @enderror
+                                            </div>
+                                            @endif
+
+                                            @if ((empty($archivos_orden) && ($forma_pago !== 'efectivo'))
+                                            ||($forma_pago !== 'efectivo' && $aplicar_pago) )
+                                            <div x-init="updateHeight()">
+                                                <div class="flex justify-center w-full mb-2 align-end"
+                                                    id="containerUploadFile">
+                                                    <div class="mb-6">
+                                                        @php
+                                                        $texto_comprobante = "Cargar comprobante";
+                                                        if($forma_pago == 'credito'){
+                                                        $texto_comprobante = "Cargar comprobante entrega";
+                                                        }
+                                                        @endphp
+
+                                                        <label for="file_input1"
+                                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{$texto_comprobante}}</label>
+                                                        <label
+                                                            class="block p-2 text-sm text-white bg-green-600 rounded-lg cursor-pointer hover:bg-green-700"
+                                                            for="file_input1">
+                                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                                            {{$texto_comprobante}}
+                                                        </label>
+
+                                                        <div id="blockFile1">
+                                                            <div class="hidden" id="subBlockFile1">
+                                                                <input wire:model='archivos' wire:click='subirArchivo()'
+                                                                    accept="image/jpeg, image/png, image/jpg, application/pdf"
+                                                                    class="hidden w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                                    id="file_input1" type="file">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @elseif ((empty($archivos_orden) && ($forma_pago === 'efectivo'))
+                                            ||($forma_pago === 'efectivo' && $aplicar_pago) )
+                                            <div x-init="updateHeight()">
+                                                <label for="confirmar_pago_efectivo_btn"
+                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirmar
+                                                    pago</label>
+                                                <button type="button" id="confirmar_pago_efectivo_btn"
+                                                    wire:click='confirmarPagoEfectivo()'
+                                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                                    <i class="fa-solid fa-check"></i> Confirmar pago</button>
+
+                                            </div>
+                                            @endif
+                                            @endif
+                                        </div>
+
+                                    </div>
+                                </div>
+                                {{-- End: Mostramos el contenido --}}
+                                @endif
+
+                            </div>
+                        </div>
+                        {{-- End:Mostrar si existen pagos registrados --}}
+                        @endif
+
+                        @else
+                        <div class="flex items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+                            role="alert">
+                            <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div>
+                                <span class="font-medium">¡Atención!</span> No hay productos agregados a la orden.
+                            </div>
+                        </div>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                @if($catalogoVisible)
+                <div
+                    class=" max-h-[392px] p-4 mt-2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+
+                    <div class="flex mb-1">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                            <i class="text-red-600 fa-solid fa-truck-moving"></i>
+                        </span>
+                        <h5 class="content-center font-semibold tracking-tight text-gray-900 dark:text-white">
+                            Catálogo de egresos</h5>
+                    </div>
+
+                    <hr class="h-[2px] mt-0 mb-2 bg-red-600 border-0">
+
+                    @if($misma_sucursal)
+
+                    <div class="overflow-y-auto max-h-[312px] p-3">
+                        <livewire:general.ordenes.lista-egresos>
+                    </div>
+
+                    @else
+                    <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+                        role="alert">
+                        <span class="font-medium">¡Atención!</span> La sucursal de esta orden es diferente a la
+                        asignada
+                        en tu perfil y no puedes realizar ninguna acción.
+                    </div>
+                    @endif
+                </div>
+                @endif
+                {{-- Items de la orden --}}
+                <div
+                    class="p-4 mt-2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 border-s shadow-gray-900">
+                    <div class="flex justify-between">
+                        <div class="flex mb-1">
+                            <span
+                                class="flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                                <i class="text-red-600 fa-solid fa-cart-arrow-down"></i>
+                            </span>
+                            <h5 class="content-center font-semibold tracking-tight text-gray-900 dark:text-white">
+                                Items de la orden ({{count($listaEgresosAgregados)}})</h5>
+                        </div>
+                    </div>
+
+                    <hr class="h-[2px] mt-0 mb-2 bg-red-600 border-0">
+
+                    @if ($listaEgresosAgregados)
+
+                    @foreach ($listaEgresosAgregados as $catalogoLista )
+
+                    <div class="flex justify-between">
+
+                        <div class="flex items-center">
+
+                            <div class="grid ml-4 place-content-start">
+                                <p class="text-base font-semibold text-gray-800">{{$catalogoLista['descripcion']}}
+                                    ({{$catalogoLista['cantidad_egreso']}})</p>
+                                <div class="flex flex-col capitalize place-items-start">
+                                    <div class="flex items-center">
+                                        <p class="text-gray-600">$ {{
+                                            number_format($catalogoLista['precio_unitario_con_iva'], 0, ',', '.') }}</p>
+                                        {{-- <p class="ml-2 text-gray-600">SKU: {{$catalogoLista['codigo_egreso']}}</p>
+                                        --}}
+                                        @if($catalogoVisible)
+                                        <div class="p-1 border rounded-lg ms-2">
+                                            <button type="button" @if ($catalogoLista['cantidad_egreso']==1 ) disabled
+                                                @else
+                                                wire:click='disminuirCatalogoLista({{ $catalogoLista["id_egreso"] }})'
+                                                @endif
+                                                class="border-0 px-2.5 py-1.5 text-xs font-medium text-center text-gray-900 bg-white  border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                            <span>
+                                                {{$catalogoLista['cantidad_egreso']}}
+                                            </span>
+                                            <button type="button"
+                                                wire:click='aumentarCatalogoLista({{$catalogoLista["id_egreso"]}})'
+                                                class="border-0 px-2.5 py-1.5 text-xs font-medium text-center text-gray-900 bg-white  border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="ms-2">
+                                            <button type="button" title="Eliminar"
+                                                wire:click="eliminarCatalogoLista({{ $catalogoLista['id_egreso'] }})"
+                                                class="inline-flex justify-center text-base text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
+                                                <i class="fa-solid fa-trash"></i>
+                                                <span class="sr-only">Eliminar</span>
+                                            </button>
+                                        </div>
+                                        @endif
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="grid place-content-end text-end">
+                                <p class="flex items-center justify-end text-base font-semibold text-gray-800">
+                                    $ -{{ number_format(($catalogoLista['precio_unitario_con_iva'] *
+                                    $catalogoLista['cantidad_egreso']),0,',','.')}}
+                                </p>
+                                <div class="flex {{-- flex-col --}} items-end capitalize place-items-start">
+                                    <p class="text-gray-600">Impuesto ({{$catalogoLista['impuesto']}} %) - $ {{
+                                        number_format((($catalogoLista['precio_unitario_con_iva'] -
+                                        $catalogoLista['precio_unitario_sin_iva']) *
+                                        $catalogoLista['cantidad_egreso']),0,',','.')}}</p>
+                                    <p class="ml-2 text-gray-600">Subtotal - $ {{
+                                        number_format(($catalogoLista['precio_unitario_sin_iva'] *
+                                        $catalogoLista['cantidad_egreso']),0,',','.')}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr class="h-[2px] my-2 bg-gray-200 border-0">
+                    @endforeach
+
+
+                    <div class="flex justify-end">
+                        <div class="flex">
 
                             @php
-
-                            $totalGeneral = 0;
-                            $cantidadTotal = 0;
-
-                            if (!empty($listaEgresosAgregados)) {
-                            foreach ($listaEgresosAgregados as $egre) {
-                            $totalGeneral += $egre['total'];
-                            $cantidadTotal += $egre['cantidad_egreso'];
-                            }
+                            $total = 0;
+                            $ivaTotal = 0;
+                            $subtotal = 0;
+                            foreach ($listaEgresosAgregados as $catalogoLista ){
+                            $total += $catalogoLista['total'];
+                            $ivaTotal += ($catalogoLista['precio_unitario_con_iva'] -
+                            $catalogoLista['precio_unitario_sin_iva']) * $catalogoLista['cantidad_egreso'];
+                            $subtotal += $catalogoLista['precio_unitario_sin_iva'] *
+                            $catalogoLista['cantidad_egreso'];
                             }
                             @endphp
 
-                            @if (!empty($listaEgresosAgregados))
-                            <tr class="font-semibold text-gray-900 dark:text-white">
-                                <th scope="row" class="px-2 py-3 text-base">Total</th>
-                                <td class="px-2 py-3 text-center">-----</td>
-                                <td class="px-2 py-3 text-center">-----</td>
-                                <td class="px-2 py-3">{{$cantidadTotal}}</td>
-                                <td class="px-2 py-3 text-center">-----</td>
-                                <td class="px-2 py-3"><span
-                                        class="bg-red-600 text-white text-sm font-medium me-2 px-2.5 py-0.5 rounded">{{
-                                        "$
-                                        ".number_format($totalGeneral, 0, ',', '.') }}</span>
-                                </td>
-                            </tr>
+                            <div class="grid place-content-end text-end">
+                                <p class="flex items-center justify-end text-base font-semibold text-gray-800">Total:
+                                    $ {{ number_format($total,0,',','.')}}
+                                </p>
+                                <div class="flex items-end capitalize place-items-start">
+                                    <p class="text-gray-600">IVA - $ {{number_format($ivaTotal,0,',','.')}}</p>
+                                    <p class="ml-2 text-gray-600">Subtotal - $ {{number_format($subtotal,0,',','.')}}
+                                    </p>
+                                </div>
 
-                            @endif
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <div>
-                <div>
-                    <i class="text-red-600 fa-solid fa-file-invoice-dollar"></i> CATALOGO DE EGRESOS
-                </div>
-                <hr class="h-[2px] my-4 bg-red-600 border-0">
-                <div
-                    class="p-4 mb-5 shadow-lg border-s dark:border-gray-700 dark:text-gray-400 sm:rounded-lg shadow-gray-900">
-                    @if ($misma_sucursal)
-                    <livewire:general.ordenes.lista-egresos>
-                        @else
-                        <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
-                            role="alert">
-                            <span class="font-medium">¡Atención!</span> La sucursal de esta orden es diferente a la
-                            asignada
-                            en tu perfil y no puedes realizar ninguna acción.
+                            </div>
                         </div>
-
-                        @endif
+                    </div>
+                    @endif
                 </div>
+
+
             </div>
+
         </div>
     </div>
 
     <!-- Main modal -->
     <div id="modal-datos-productos" tabindex="-1" aria-hidden="true" wire:ignore.self
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full z-[2000]">
         <div class="relative w-full max-w-2xl max-h-full p-4">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        {{$egresos ? $egresos->codigo_egreso ." - " .$egresos->descripcion_egreso : ''}}
+                        {{$egresos ? $egresos->descripcion_egreso : ''}}
                     </h3>
                     <button type="button"
                         class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
@@ -362,11 +950,6 @@
                     <x-live-wire-input label="Precio (sin IVA)" id="precio_unitario_sin_iva"
                         icon="fa-solid fa-dollar-sign" model="precio_unitario_sin_iva" placeholder="0"
                         typeInput="number" disabled="disabled"></x-live-wire-input>
-                    {{--
-                    <x-live-wire-input label="Precio Unitario + IVA" id="precio_unitario_con_iva"
-                        icon="fa-solid fa-dollar-sign" model="precio_unitario_con_iva" placeholder="0" typeInput="text"
-                        wire='validarPrecioUnitario' modelblur='validarPrecioUnitario'>
-                    </x-live-wire-input> --}}
 
                     <x-live-wire-input label="Cantidad a agregar" id="stock_transferencia" icon="fa-solid fa-cubes"
                         model="stock_transferencia" placeholder="Cantidad a agregar" typeInput="number"
@@ -380,18 +963,67 @@
                     class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b md:p-5 dark:border-gray-600">
 
                     <button data-modal-hide="modal-datos-productos" type="button"
-                        class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
+                        class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        Cancelar
+                    </button>
 
                     <button type="button" wire:click='agregarListaEgresos()'
                         class="ms-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmar
-                        <i class="fa-solid fa-circle-check"></i></button>
+                        <i class="fa-solid fa-circle-check"></i>
+                    </button>
 
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="modal-preview-soporte" tabindex="-1" aria-hidden="true" wire:ignore.self
+    <div wire:loading wire:target="archivos">
+        <div id="static-modal" data-modal-backdrop="static" tabindex="-1"
+            class="fixed inset-0 z-50 flex items-center justify-center w-full h-full overflow-x-hidden overflow-y-auto bg-black bg-opacity-40"
+            aria-modal="true" role="dialog">
+            <div class="relative w-full max-w-2xl max-h-full p-4 bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal content -->
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Subiendo archivo...
+                    </h3>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 space-y-4 md:p-5">
+                    <div class="text-center">
+                        <i class="text-blue-600 fa-xl fa-solid fa-cloud-arrow-up fa-beat-fade"></i>
+                        <h2 class="mt-4 text-zinc-900 dark:text-white">Cargando...</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div wire:loading wire:target="archivos_envio">
+        <div id="static-modal" data-modal-backdrop="static" tabindex="-1"
+            class="fixed inset-0 z-50 flex items-center justify-center w-full h-full overflow-x-hidden overflow-y-auto bg-black bg-opacity-40"
+            aria-modal="true" role="dialog">
+            <div class="relative w-full max-w-2xl max-h-full p-4 bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal content -->
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Subiendo archivo...
+                    </h3>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 space-y-4 md:p-5">
+                    <div class="text-center">
+                        <i class="text-blue-600 fa-xl fa-solid fa-cloud-arrow-up fa-beat-fade"></i>
+                        <h2 class="mt-4 text-zinc-900 dark:text-white">Cargando...</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-preview-soporte" tabindex="-1" aria-hidden="true" data-modal-backdrop="static" wire:ignore.self
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-4xl max-h-full p-4">
             <!-- Modal content -->
@@ -425,101 +1057,424 @@
         </div>
     </div>
 
-    <div wire:loading wire:target="archivos">
-        <div id="static-modal" data-modal-backdrop="static" tabindex="-1"
-            class="fixed inset-0 z-50 flex items-center justify-center w-full h-full overflow-x-hidden overflow-y-auto bg-black bg-opacity-40"
-            aria-modal="true" role="dialog">
-            <div class="relative w-full max-w-2xl max-h-full p-4 bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal content -->
+    <div id="modal-gestion-proveedor" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" wire:ignore.self
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-4xl max-h-full p-4">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
                 <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
+                <div
+                    class="flex items-center justify-between p-4 border-b border-gray-200 rounded-t md:p-5 dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Subiendo archivo...
+                        Gestión de proveedor
                     </h3>
+                    <button type="button"
+                        class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="modal-gestion-proveedor">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-4 space-y-4 md:p-5">
-                    <div class="text-center">
-                        <i class="text-blue-600 fa-xl fa-solid fa-cloud-arrow-up fa-beat-fade"></i>
-                        <h2 class="mt-4 text-zinc-900 dark:text-white">Cargando...</h2>
+                <div class="p-4 space-y-4 md:p-5" wire:ignore.self>
+
+                    <div id="accordion-collapse" data-accordion="collapse" class="text-base" wire:ignore.self
+                        data-active-classes="bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-white">
+                        <h2 id="accordion-collapse-heading-1" wire:ignore.self>
+                            <button type="button"
+                                class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-b-0 border-gray-200 rtl:text-right rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-collapse-body-1" aria-expanded="true"
+                                aria-controls="accordion-collapse-body-1">
+                                <span>Cambiar datos del proveedor</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-1" class="hidden"
+                            aria-labelledby="accordion-collapse-heading-1" wire:ignore.self>
+                            <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                                    role="alert">
+                                    <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        Actualice los datos del proveedor para esta orden.
+                                    </div>
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 gap-4 p-3 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+                                    {{-- Formulario de edición de datos del proveedor --}}
+                                    <x-live-wire-input label="Teléfono" id="telefono_edicion" icon="fa-solid fa-phone"
+                                        model="telefono_edicion" placeholder="3000000000" typeInput="number"
+                                        disabled="disabled">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Grupo" id="grupo_edicion" icon="fa-solid fa-layer-group"
+                                        model="grupo_edicion" placeholder="Grupo" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Comercial" id="nombreComercial_edicion"
+                                        icon="fa-solid fa-industry" model="nombreComercial_edicion"
+                                        placeholder="Nombre Comercial" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Legal" id="nombreLegal_edicion"
+                                        icon="fa-solid fa-file-signature" model="nombreLegal_edicion"
+                                        placeholder="Nombre Legal" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="NIT" id="nit_edicion" icon="fa-solid fa-address-card"
+                                        model="nit_edicion" placeholder="900000000" typeInput="number">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Sucursal" id="sucursal_edicion"
+                                        icon="fa-solid fa-ruler-horizontal" model="sucursal_edicion"
+                                        placeholder="Nombre de sucursal" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Dirección" id="direccion_edicion" icon="fa-regular fa-map"
+                                        model="direccion_edicion" placeholder="XXXXXXXXXXXXX" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad_edicion"
+                                        icon="fa-solid fa-location-arrow" model="barrio_localidad_edicion"
+                                        placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
+
+                                    <div>
+                                        <x-live-wire-input label="Ciudad" id="ciudad_edicion"
+                                            icon="fa-solid fa-location-dot" model="ciudad_edicion" placeholder="Soacha"
+                                            typeInput="text" wire='buscarCiudad'>
+                                        </x-live-wire-input>
+
+                                        <x-live-wire-input label="" id="idciudad_edicion" icon=""
+                                            model="idciudad_edicion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+
+                                        @if ($listaMunicipios)
+                                        <ul
+                                            class="max-w-md p-2 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                                            @foreach ($listaMunicipios as $mun)
+                                            <li class="cursor-pointer" wire:click='setearNombreCiudad("{{$mun->id}}")'>
+                                                {{
+                                                $mun->nombre_municipio }}
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        <x-live-wire-input label="Departamento" id="departamento"
+                                            icon="fa-solid fa-map-location-dot" model="departamento_edicion"
+                                            placeholder="Cundinamarca" typeInput="text" disabled='disabled'>
+                                        </x-live-wire-input>
+                                        <x-live-wire-input label="" id="iddepartamento" icon=""
+                                            model="iddepartamento_edicion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+                                    </div>
+
+                                    <x-live-wire-input label="Correo" id="correo_edicion" icon="fa-solid fa-envelope"
+                                        model="correo_edicion" placeholder="correo@correo.com" typeInput="email">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre encargado" id="nombreEncargado_edicion"
+                                        icon="fa-solid fa-user" model="nombreEncargado_edicion"
+                                        placeholder="Nombre encargado" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Descripción" id="descripcion_edicion"
+                                        icon="fa-solid fa-comment" model="descripcion_edicion" placeholder="Descripción"
+                                        typeInput="text"></x-live-wire-input>
+
+                                    <x-select2 label="Factura con" id="empresaFactura" icon="fa-solid fa-comment"
+                                        model="empresaFactura_edicion" optionTextDefault="Seleccione factura">
+                                    </x-select2>
+
+
+
+                                </div>
+                                <div class="flex justify-end mt-5">
+                                    <button wire:click="actualizarProveedor" type="button"
+                                        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        <div wire:loading.remove wire:target="actualizarProveedor">
+                                            <i class="fa-solid fa-floppy-disk"></i> Actualizar
+                                        </div>
+                                        <div wire:loading wire:target="actualizarProveedor">
+                                            Cargando...
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 id="accordion-collapse-heading-2" wire:ignore.self>
+                            <button type="button"
+                                class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-b-0 border-gray-200 rtl:text-right focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-collapse-body-2" aria-expanded="false"
+                                aria-controls="accordion-collapse-body-2">
+                                <span>Cambiar proveedor</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-2" class="hidden"
+                            aria-labelledby="accordion-collapse-heading-2" wire:ignore.self>
+                            <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                                    role="alert">
+                                    <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        Reemplace el proveedor de esta orden.
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <x-live-wire-input label="Proveedor" id="buscar_proveedor"
+                                        icon="fa-solid fa-location-dot" model="buscar_proveedor"
+                                        placeholder="Buscar Proveedor" typeInput="text" wire='buscarProveedor'>
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="" id="id_proveedor" icon="" model="id_proveedor"
+                                        placeholder="" typeInput="hidden">
+                                    </x-live-wire-input>
+
+                                    @if ($listaProveedores)
+                                    <ul
+                                        class="max-w-md p-2 space-y-1 text-sm text-gray-500 list-disc list-inside dark:text-gray-400">
+                                        @foreach ($listaProveedores as $proveedor)
+                                        <li class="cursor-pointer"
+                                            wire:click='setearNombreProveedor("{{$proveedor->id}}")'>
+                                            {{ $proveedor->nombre_legal.' - '. $proveedor->nit . ' -
+                                            '.$proveedor->telefono }}
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                    <div class="flex justify-end mt-5">
+                                        <button wire:click="cambiarProveedorOrden" type="button"
+                                            class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                            <div wire:loading.remove wire:target="cambiarProveedorOrden">
+                                                <i class="fa-solid fa-repeat"></i> Cambiar proveedor
+                                            </div>
+                                            <div wire:loading wire:target="cambiarProveedorOrden">
+                                                Cargando...
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 id="accordion-collapse-heading-3" wire:ignore.self>
+                            <button type="button"
+                                class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-gray-200 rtl:text-right focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                data-accordion-target="#accordion-collapse-body-3" aria-expanded="false"
+                                aria-controls="accordion-collapse-body-3">
+                                <span>Crear proveedor</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-3" class="hidden"
+                            aria-labelledby="accordion-collapse-heading-3" wire:ignore.self>
+                            <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center p-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                                    role="alert">
+                                    <svg class="inline w-4 h-4 shrink-0 me-3" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                        Cree un nuevo proveedor y asocielo a esta orden.
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="grid grid-cols-1 gap-4 p-3 mt-2 mb-5 text-sm sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+                                    {{-- Formulario de creación de datos del proveedor --}}
+                                    <x-live-wire-input label="Teléfono" id="telefono_creacion" icon="fa-solid fa-phone"
+                                        model="telefono_creacion" placeholder="3000000000" typeInput="number">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Grupo" id="grupo_creacion" icon="fa-solid fa-layer-group"
+                                        model="grupo_creacion" placeholder="Grupo" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Comercial" id="nombreComercial__creacion"
+                                        icon="fa-solid fa-industry" model="nombreComercial_creacion"
+                                        placeholder="Nombre Comercial" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre Legal" id="nombreLegal_creacion"
+                                        icon="fa-solid fa-file-signature" model="nombreLegal_creacion"
+                                        placeholder="Nombre Legal" typeInput="text"></x-live-wire-input>
+
+                                    <x-live-wire-input label="NIT" id="nit_creacion" icon="fa-solid fa-address-card"
+                                        model="nit_creacion" placeholder="900000000" typeInput="number">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Sucursal" id="sucursal_creacion"
+                                        icon="fa-solid fa-ruler-horizontal" model="sucursal_creacion"
+                                        placeholder="Nombre de sucursal" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Dirección" id="direccion_creacion"
+                                        icon="fa-regular fa-map" model="direccion_creacion" placeholder="XXXXXXXXXXXXX"
+                                        typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Barrio/Localidad" id="barrio_localidad_creacion"
+                                        icon="fa-solid fa-location-arrow" model="barrio_localidad_creacion"
+                                        placeholder="Barrio/Localidad" typeInput="text"></x-live-wire-input>
+
+                                    <div>
+                                        <x-live-wire-input label="Ciudad" id="ciudad_creacion"
+                                            icon="fa-solid fa-location-dot" model="ciudad_creacion" placeholder="Soacha"
+                                            typeInput="text" wire='buscarCiudadCreacion'>
+                                        </x-live-wire-input>
+
+                                        <x-live-wire-input label="" id="idciudad_creacion" icon=""
+                                            model="idciudad_creacion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+
+                                        @if ($listaMunicipios)
+                                        <ul
+                                            class="max-w-md p-2 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                                            @foreach ($listaMunicipios as $mun)
+                                            <li class="cursor-pointer"
+                                                wire:click='setearNombreCiudadCreacion("{{$mun->id}}")'>
+                                                {{
+                                                $mun->nombre_municipio }}
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                        @endif
+                                    </div>
+
+                                    <div>
+                                        <x-live-wire-input label="Departamento" id="departamento"
+                                            icon="fa-solid fa-map-location-dot" model="departamento_creacion"
+                                            placeholder="Cundinamarca" typeInput="text" disabled='disabled'>
+                                        </x-live-wire-input>
+                                        <x-live-wire-input label="" id="iddepartamento_creacion" icon=""
+                                            model="iddepartamento_creacion" placeholder="" typeInput="hidden">
+                                        </x-live-wire-input>
+                                    </div>
+
+                                    <x-live-wire-input label="Correo" id="correo_creacion" icon="fa-solid fa-envelope"
+                                        model="correo_creacion" placeholder="correo@correo.com" typeInput="email">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Nombre encargado" id="nombreEncargado_creacion"
+                                        icon="fa-solid fa-user" model="nombreEncargado_creacion"
+                                        placeholder="Nombre encargado" typeInput="text">
+                                    </x-live-wire-input>
+
+                                    <x-live-wire-input label="Descripción" id="descripcion_creacion"
+                                        icon="fa-solid fa-comment" model="descripcion_creacion"
+                                        placeholder="Descripción" typeInput="text"></x-live-wire-input>
+
+                                    <x-select2 label="Factura con" id="empresaFactura" icon="fa-solid fa-comment"
+                                        model="empresaFactura_creacion" optionTextDefault="Seleccione factura">
+                                    </x-select2>
+
+                                </div>
+
+                                <div class="flex justify-end mt-5">
+                                    <button wire:click="crearProveedor" type="button"
+                                        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        <div wire:loading.remove wire:target="crearProveedor">
+                                            <i class="fa-solid fa-user-plus"></i> Registrar proveedor
+                                        </div>
+                                        <div wire:loading wire:target="crearProveedor">
+                                            Cargando...
+                                        </div>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
+
+
+                </div>
+                <!-- Modal footer -->
+                <div
+                    class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b md:p-5 dark:border-gray-600">
+                    <button data-modal-hide="modal-gestion-proveedor" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Función para inicializar el modal
-            function initializeModal() {
-            const $targetEl2 = document.getElementById('modal-preview-soporte');   
-            const instanceOptions2 = {
-                    id: 'modal-preview-soporte',
-                    override: true
-                };
-                const modal2 = new Modal($targetEl2, instanceOptions2);
-                    
-                const closeModalBtns = document.querySelectorAll('.cerrarModal');
+        document.addEventListener("alpine:init", () => {
+            Alpine.store("accordion", {
+                openTabs: [1, 2, 3, 4]
+            });
 
-                closeModalBtns.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        if (modal2) {
-                            modal2.hide();
-                            // Esperar un poco para asegurarse de que el modal se ha cerrado
-                            setTimeout(() => {
-                                const backdrop = document.querySelector('[modal-backdrop]');
-                                if (backdrop) {
-                                    backdrop.remove();
-                                }
-                            }, 300);
-                        }
-                    });
-                });
-                    
-                return modal2;
-            }
-
-            // Inicializar el modal
-            let modal2 = initializeModal();
-        });
-
-        //Alpine JS
-        function main(count) {
-            return {
-                fileCount: count,
-                maxFiles: 5,
-                eliminarInputFile(id){
-                   const input = document.getElementById(id);
-                   if(input){
-                    input.remove();
-                    this.fileCount--;
-                   } 
+            Alpine.data("accordion", (idx) => ({
+                init() {
+                    this.idx = idx;
+                    this.updateHeight(); // Llamar a updateHeight directamente
+                    window.addEventListener("resize", this.updateHeight.bind(this));
                 },
-                previewFile(event, id) {
-                    if (this.fileCount < this.maxFiles) {
-                        const file = event.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            const self = this;  // Guardamos el contexto de `this`
-                            reader.onload = function(e) {       
-                                const fileInput = document.getElementById(`file_input${id}`);
-                                fileInput.value='';
-                                self.fileCount++;
-                            };
-                            reader.readAsDataURL(file);
+                idx: -1,
+                handleClick() {
+                    if (Alpine.store("accordion").openTabs.includes(this.idx)) {
+                        Alpine.store("accordion").openTabs = Alpine.store("accordion").openTabs.filter(tab => tab !== this.idx);
+                    } else {
+                        Alpine.store("accordion").openTabs.push(this.idx);
+                    }
+                    this.updateHeight();
+                },
+                handleRotate() {
+                    return Alpine.store("accordion").openTabs.includes(this.idx) ? "-rotate-180" : "";
+                },
+                handleToggle() {
+                    return Alpine.store("accordion").openTabs.includes(this.idx)
+                        ? `max-height: ${this.$refs.tab.scrollHeight}px`
+                        : "";
+                },
+                updateHeight() {
+                    if (this.$refs && this.$refs.tab) {
+                        if (Alpine.store("accordion").openTabs.includes(this.idx)) {
+                            this.$refs.tab.style.maxHeight = this.$refs.tab.scrollHeight + "px";
                         } else {
-                            previewDiv.innerHTML = ''; // Clear preview if no file
+                            this.$refs.tab.style.maxHeight = null;
                         }
                     }
+                },
+                destroy() {
+                    window.removeEventListener("resize", this.updateHeight.bind(this));
                 }
-            };
-        }
+            }));
+        });
         
-        function modalPreview(id){
+        function modalPreview(id,tipo){
             
-            let button = document.querySelector(`#btnPreview${id}[data-file-url]`);
+            let button = document.querySelector(`#btnPreview_${tipo}${id}[data-file-url]`);
             const fileURL = button.getAttribute('data-file-url');
-            button = document.querySelector(`#btnPreview${id}[data-file-type]`);
+            button = document.querySelector(`#btnPreview_${tipo}${id}[data-file-type]`);
             const fileType = button.getAttribute('data-file-type');
             let modal2 = initializeModal();
             const modalBody = document.getElementById('bodyPreview');
@@ -622,12 +1577,25 @@
 
     @script
     <script>
+        document.addEventListener('livewire:load', function () {
+            Livewire.hook('component.init', ({ component, cleanup }) => {
+                
+                // Verifica si el componente y el evento son los correctos
+                if (component.el.querySelector('#forma-pago')) {
+                    alert("Hola mundo");
+                    // Ejecuta el método de Alpine después del evento de Livewire
+                    document.querySelector('#forma-pago').dispatchEvent(new Event('change'));
+                }
+            });
+            });
+
         const $targetEl = document.getElementById('modal-datos-productos');
-        // instance options object
-        const instanceOptions = {
-        id: 'modal-datos-productos',
-        override: true
-        };
+            // instance options object
+            const instanceOptions = {
+            id: 'modal-datos-productos',
+            override: true
+            };
+            
         const modal = new Modal($targetEl, instanceOptions);
             
         $wire.on('agregar', (e) => {
@@ -682,6 +1650,85 @@
                 modal.hide();
             }
         });
+
+        $wire.on('datos-actualizados', function(event) {
+        const datos = event[0].datos;
+        const ciudad = event[0].ciudad;
+        const departamento = event[0].departamento;
+        
+        // Actualizar elementos usando el DOM tradicional
+        document.querySelector('[data-proveedor-grupo]').textContent = datos.grupo;
+        document.querySelector('[data-proveedor-nombre-comercial]').textContent = datos.nombre_comercial;
+        document.querySelector('[data-proveedor-nombre-legal]').textContent = datos.nombre_legal;
+        document.querySelector('[data-proveedor-nit]').textContent = datos.nit;
+        document.querySelector('[data-proveedor-sucursal]').textContent = datos.sucursal;
+        document.querySelector('[data-proveedor-encargado]').textContent = datos.nombre_encargado;
+        document.querySelector('[data-proveedor-correo]').textContent = datos.correo;
+        document.querySelector('[data-proveedor-descripcion]').textContent = datos.descripcion;
+        document.querySelector('[data-proveedor-direccion]').textContent = datos.direccion;
+        document.querySelector('[data-proveedor-barrio]').textContent = datos.barrio_localidad;
+        document.querySelector('[data-proveedor-ciudad]').textContent = ciudad;
+        document.querySelector('[data-proveedor-departamento]').textContent = departamento;
+        document.querySelector('[data-proveedor-telefono]').textContent = datos.telefono;
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+            });
+            Toast.fire({
+            icon: "success",
+            title: "Datos actualizados"
+            });
+
+    });
+
+
+    $wire.on('limpiar-campos-creacion', function(){
+        // Obtener todos los elementos con atributo wire:model
+    const camposWire = document.querySelectorAll('[wire\\:model]');
+    
+    // Iterar sobre cada elemento encontrado
+    camposWire.forEach(campo => {
+        // Obtener el nombre del modelo de Livewire
+        const modelName = campo.getAttribute('wire:model');
+        
+        // Verificar si es uno de los campos que queremos limpiar
+        if (modelName && modelName.includes('_creacion')) {
+            console.log("Hola soy el modelName => ", modelName);
+            // Además de establecer value a vacío, también actualiza el atributo value
+            campo.value = '';
+            campo.setAttribute('value', '');
+            
+            // Para elementos select, forzar la selección del primer elemento
+            if (campo.tagName === 'SELECT') {
+                campo.selectedIndex = 0;
+            }
+            
+            // Disparar evento input para que Livewire detecte el cambio
+            campo.dispatchEvent(new Event('input', { bubbles: true }));
+            
+            // También actualizar la propiedad en Livewire si es posible
+            try {
+                if (window.Livewire) {
+                    const wireEl = campo.closest('[wire\\:id]');
+                    if (wireEl) {
+                        const wireId = wireEl.getAttribute('wire:id');
+                        window.Livewire.find(wireId).set(modelName, '');
+                    }
+                }
+            } catch (error) {
+                console.error('Error al actualizar Livewire:', error);
+            }
+        }
+    });
+    });
 
     </script>
     @endscript

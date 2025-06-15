@@ -36,9 +36,10 @@
 
                 @if ($listaProductos)
                 <ul class="max-w-md p-2 space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
-                    @foreach ($listaProductos as $prod)
-                    <li class="cursor-pointer" wire:click='setearNombreProducto("{{$prod->id}}")'>
-                        {{ $prod->codigo_producto.' - '. $prod->descripcion . ' - '.$prod->stock }}
+                    @foreach ($listaProductos as $inventario)
+                    <li class="cursor-pointer" wire:click='setearNombreProducto("{{$inventario->id}}")'>
+                        {{ $inventario->producto->codigo_producto.' - '. $inventario->producto->descripcion . ' -
+                        '.$inventario->stock }}
                     </li>
                     @endforeach
                 </ul>

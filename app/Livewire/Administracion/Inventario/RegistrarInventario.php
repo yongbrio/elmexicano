@@ -3,8 +3,10 @@
 namespace App\Livewire\Administracion\Inventario;
 
 use App\Models\InventarioModel;
+use App\Models\ProductosModel;
 use App\Models\TipoAfectacionImpuestoModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -26,105 +28,52 @@ class RegistrarInventario extends Component
     public $precio_unitario_sin_iva;
     public $stock;
     public $stock_minimo;
+    public $comisiona;
     public $estado;
     public $tipoSeleccionado;
     public $sucursal;
     public $comision;
     public $tipo_producto;
     #[Validate('image')]
-    public $imagen;
+    public $imagen_db;
+    public $listaProductos;
+    public $id_producto;
 
     public function render()
     {
         return view('livewire.administracion.inventario.registrar-inventario');
     }
 
-    public function asignarPorcentaje()
-    {
-        $tipo_afectacion_impuesto = TipoAfectacionImpuestoModel::where('id', $this->tipo)->first();
-
-        if ($tipo_afectacion_impuesto) {
-            $this->impuesto = $tipo_afectacion_impuesto->impuesto;
-            $this->validarTipoAfectacion();
-        } else {
-            $this->precio_unitario_con_iva = '';
-            $this->precio_unitario_sin_iva = '';
-            $this->impuesto = 0;
-        }
-    }
-
-    public function validarTipoAfectacion()
-    {
-        if ($this->tipo == '') {
-            $message = "Seleccione el tipo de afectación";
-            $elementId = "precio_unitario_con_iva";
-            $this->dispatch('estadoCampos', message: $message, elementId: $elementId);
-        } else {
-
-            $tipo_afectacion_impuesto = TipoAfectacionImpuestoModel::where('id', $this->tipo)->first();
-
-            $tarifa  = 0;
-
-            if ($tipo_afectacion_impuesto) {
-                $tarifa =  $tipo_afectacion_impuesto->impuesto;
-            }
-
-            if ($this->precio_unitario_con_iva == '') {
-                $this->precio_unitario_sin_iva = '';
-            } else {
-                //validar si precio_unitario es número antes de realizar la operación
-                $this->precio_unitario_sin_iva = number_format(($this->precio_unitario_con_iva  / ($tarifa / 100 + 1)), 2, '.', '');
-            }
-        }
-    }
-
     public function validarCodigoProducto()
     {
-        if (trim($this->codigo_producto) != '' && trim($this->sucursal) != '') {
-
-            $codigo_producto_sucursal = InventarioModel::where('codigo_producto', $this->codigo_producto)->where('sucursal', $this->sucursal)->exists();
-
+        if (trim($this->id_producto) != '' && trim($this->sucursal) != '') {
+            $codigo_producto_sucursal = InventarioModel::where('producto_id', $this->id_producto)->where('sucursal_id', $this->sucursal)->exists();
             if ($codigo_producto_sucursal) {
+                $this->reset();
                 $message = "El código de producto ya existe en la sucursal seleccionada";
                 $elementId = "codigo_producto";
                 $this->dispatch('estadoCampos', message: $message, elementId: $elementId);
-                $this->reset();
                 $this->cambioImagen();
                 $this->dispatch('resetFileInput');
+                return false;
+            } else {
+                return true;
             }
         }
     }
 
     public function registrarInventario()
     {
-
         $this->validacionCampos();
-
-        $rutaImagen = "";
-        if ($this->imagen) {
-            // Cambiamos el nombre de la imagen
-            $extension = $this->imagen->extension();
-            $nombreArchivo = $this->codigo_producto . "." . $extension;
-            $rutaImagen = $this->imagen->storeAs('imagenes/productos', $nombreArchivo);
-        }
 
         $insertarInventario = InventarioModel::Create(
             [
-                'codigo_producto' => $this->codigo_producto,
-                'sucursal' => $this->sucursal,
-                'comision' => $this->comision,
-                'categoria' => $this->categoria,
-                'tipo' => $this->tipo,
-                'descripcion' => $this->descripcion,
-                'unidad_medida' => $this->unidad_medida,
-                'tipo_producto' => $this->tipo_producto,
-                'costo_unitario' => $this->costo_unitario,
-                'precio_unitario_con_iva' => $this->precio_unitario_con_iva,
-                'precio_unitario_sin_iva' => $this->precio_unitario_sin_iva,
+                'producto_id' => $this->id_producto,
+                'sucursal_id' => $this->sucursal,
                 'stock' => $this->stock,
                 'stock_minimo' => $this->stock_minimo,
-                'imagen' => "$rutaImagen",
                 'registrado_por' => Auth::user()->id,
+                'comisiona' => $this->comisiona,
                 'estado' => $this->estado,
             ]
         );
@@ -138,56 +87,84 @@ class RegistrarInventario extends Component
         }
     }
 
-    public function updatedImagen()
-    {
-        $this->validate([
-            'imagen' => 'image' // Validar la imagen
-        ], [
-            'imagen.image' => 'El archivo debe ser una imagen.',
-        ]);
-    }
-
     public function cambioImagen()
     {
-        $this->imagen = null;
+        $this->imagen_db = null;
     }
 
     public function validacionCampos()
     {
         return  $this->validate([
-            'categoria' => 'required',
-            'tipo' => 'required',
             'sucursal' => 'required',
-            'comision' => 'required',
-            'impuesto' => 'required',
-            'codigo_producto' => ['required', Rule::unique('inventario')->where('sucursal', $this->sucursal)],
-            'descripcion' => 'required',
-            'unidad_medida' => 'required',
-            'tipo_producto' => 'required',
-            'precio_unitario_con_iva' => 'required',
-            'precio_unitario_sin_iva' => 'required',
-            'costo_unitario' => 'required',
+            'codigo_producto' => [
+                'required',
+                Rule::unique('inventario', 'producto_id')
+                    ->where(fn($query) => $query->where('sucursal_id', $this->sucursal))
+            ],
             'stock' => 'required',
             'stock_minimo' => 'required',
+            'comisiona' => 'required',
             'estado' => 'required'
         ], [
-            'categoria.required' => 'La categoría es requerida',
-            'tipo.required' => 'El tipo de impuesto es requerido',
             'sucursal.required' => 'La sucursal es requerida',
-            'comision.required' => 'La comisión es requerida',
-            'impuesto.required' => 'El impuesto es requerido',
             'codigo_producto.required' => 'El código del producto es requerido',
             'codigo_producto.unique' => 'El código del producto ya existe',
-            'descripcion.required' => 'La descripción es requerida',
-            'unidad_medida.required' => 'La unidad de medida es requerida',
-            'tipo_producto.required' => 'El tipo de producto es requerido',
-            'precio_unitario_con_iva.required' => 'El precio con IVA es requerido',
-            'precio_unitario_sin_iva.required' => 'El precio sin IVA es requerido',
-            'costo_unitario.required' => 'El costo unitario es requerido',
             'stock.required' => 'El Stock es requerido',
             'stock_minimo.required' => 'El Stock mínimo es requerido',
+            'comisiona.required' => 'Comisiona es requerida',
             'estado.required' => 'El estado es requerido',
         ]);
+    }
+
+    public function buscarProducto()
+    {
+        $this->listaProductos = ProductosModel::where(function ($query) {
+            $query->where('descripcion', 'like', '%' . $this->codigo_producto . '%')
+                ->orWhere('codigo_producto', 'like', '%' . $this->codigo_producto . '%');
+        })
+            ->where('estado', 1)
+            ->orderBy('codigo_producto')
+            ->take(5)
+            ->get();
+
+        $this->id_producto = null;
+        $this->cambioImagen();
+        $this->categoria = null;
+        $this->tipo_producto = null;
+        $this->descripcion = null;
+        $this->unidad_medida = null;
+        $this->tipo = null;
+        $this->impuesto = null;
+        $this->costo_unitario = null;
+        $this->precio_unitario_con_iva = null;
+        $this->precio_unitario_sin_iva = null;
+        $this->comision = null;
+    }
+
+    public function setearNombreProducto($id)
+    {
+        $this->listaProductos = null;
+        $this->id_producto = $id;
+
+        if ($this->validarCodigoProducto()) {
+            $producto = ProductosModel::find($id);
+
+            if ($producto) {
+
+                $this->codigo_producto = $producto->codigo_producto;
+                $this->categoria = $producto->categoria;
+                $this->tipo_producto = $producto->tipo_producto;
+                $this->descripcion = $producto->descripcion;
+                $this->unidad_medida = $producto->unidad_medida;
+                $this->tipo = $producto->tipo_impuesto;
+                $this->impuesto = $producto->tipoImpuesto?->impuesto;
+                $this->costo_unitario = $producto->costo_unitario;
+                $this->precio_unitario_con_iva = $producto->precio_unitario_con_iva;
+                $this->precio_unitario_sin_iva = $producto->precio_unitario_sin_iva;
+                $this->comision = $producto->comision;
+                $this->imagen_db = $producto->imagen;
+            }
+        }
     }
 
     #[On('redirigir')]

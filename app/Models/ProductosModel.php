@@ -27,7 +27,7 @@ class ProductosModel extends Model
         'estado'
     ];
 
-    public function categoria()
+    public function categorias()
     {
         return $this->belongsTo(CategoriasModel::class, 'categoria');
     }

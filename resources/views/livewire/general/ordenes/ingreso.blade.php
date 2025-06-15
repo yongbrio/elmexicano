@@ -810,7 +810,7 @@
                                         <div class="p-1 border rounded-lg ms-2">
                                             <button type="button" @if ($productoLista['cantidad_producto']==1 ) disabled
                                                 @else
-                                                wire:click='disminuirProductoLista({{ $productoLista["id_producto"] }})'
+                                                wire:click='disminuirProductoLista({{ $productoLista["id_inventario"] }})'
                                                 @endif
                                                 class="border-0 px-2.5 py-1.5 text-xs font-medium text-center text-gray-900 bg-white  border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                 <i class="fa-solid fa-minus"></i>
@@ -819,14 +819,14 @@
                                                 {{$productoLista['cantidad_producto']}}
                                             </span>
                                             <button type="button"
-                                                wire:click='aumentarProductoLista({{$productoLista["id_producto"]}})'
+                                                wire:click='aumentarProductoLista({{$productoLista["id_inventario"]}})'
                                                 class="border-0 px-2.5 py-1.5 text-xs font-medium text-center text-gray-900 bg-white  border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                                 <i class="fa-solid fa-plus"></i>
                                             </button>
                                         </div>
                                         <div class="ms-2">
                                             <button type="button" title="Eliminar"
-                                                wire:click="eliminarProductoLista({{ $productoLista['id_producto'] }})"
+                                                wire:click="eliminarProductoLista({{ $productoLista['id_inventario'] }})"
                                                 class="inline-flex justify-center text-base text-red-600 rounded-full cursor-pointer hover:bg-red-100 dark:text-red-500 dark:hover:bg-gray-600">
                                                 <i class="fa-solid fa-trash"></i>
                                                 <span class="sr-only">Eliminar</span>

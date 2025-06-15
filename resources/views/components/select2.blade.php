@@ -74,6 +74,9 @@
             @foreach ($lista_categorias_2 as $categoria)
             <option value="{{$categoria->id}}">{{$categoria->nombre_categoria}}</option>
             @endforeach
+            @elseif ($id == 'comisiona')
+            <option value="1">Si</option>
+            <option value="0">No</option>
             @else
             @foreach ( $empresas as $empresa )
             <option value="{{$empresa->id}}">{{$empresa->nombre_comercial}}</option>

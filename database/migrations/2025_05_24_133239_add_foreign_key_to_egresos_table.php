@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -19,6 +20,8 @@ return new class extends Migration
                     ->on('inventario')
                     ->onDelete('cascade'); // O usa SET NULL si es nullable
             }
+
+            DB::statement('ALTER TABLE egresos AUTO_INCREMENT = 9000;');
         });
     }
 

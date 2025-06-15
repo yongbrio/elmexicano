@@ -15,7 +15,7 @@ class ListaEgresos extends LivewireTable
     /** @return Builder<Model> */
     protected function query(): Builder
     {
-        return $this->model()->query()->where('estado', '=', 1);
+        return $this->model()->query()->with(['categoria1', 'categoria2', 'codigoProducto']);
     }
 
     protected function columns(): array
@@ -26,9 +26,9 @@ class ListaEgresos extends LivewireTable
                     <i class="fa-solid fa-plus"></i>
                 </button>';
             })->asHtml(),
-            Column::make(__('Código'), 'codigo_egreso')->sortable()->searchable(),
-            Column::make(__('Categoría 1'), 'categoria_1')->sortable()->searchable(),
-            Column::make(__('Categoría 2'), 'categoria_2')->sortable()->searchable(),
+            Column::make(__('Código'), 'id')->sortable()->searchable(),
+            Column::make(__('Categoría 1'), 'categoria1.nombre_categoria')->sortable()->searchable(),
+            Column::make(__('Categoría 2'), 'categoria2.nombre_categoria')->sortable()->searchable(),
             Column::make(__('Descripción'), 'descripcion_egreso')->sortable()->searchable(),
         ];
     }

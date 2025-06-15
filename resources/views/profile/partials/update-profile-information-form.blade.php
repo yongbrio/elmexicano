@@ -131,6 +131,12 @@
             </div>
 
             <div>
+                <x-input-label for="sucursal" :value="__('Sucursal')" />
+                <x-text-input id="sucursal" name="sucursal" type="text" class="block w-full mt-1"
+                    :value="old('sucursal', $user->sucursal->nombre_sucursal)" disabled autocomplete="sucursal" />
+            </div>
+
+            <div>
                 <x-input-label for="cargo" :value="__('Cargo')" />
                 <x-text-input id="cargo" name="cargo" type="text" class="block w-full mt-1"
                     :value="old('cargo', $user->cargo)" disabled autocomplete="cargo" />

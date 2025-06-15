@@ -5,8 +5,10 @@ namespace App\Livewire\Administracion\Egresos;
 use App\Models\CategoriasEgresosAsociadasModel;
 use App\Models\EgresosModel;
 use App\Models\InventarioModel;
+use App\Models\ProductosModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -29,6 +31,7 @@ class RegistrarEgreso extends Component
     {
         // Obtener el próximo valor autoincrementable
         $this->codigo_egreso = $this->getNextAutoIncrementValue();
+        Log::info($this->codigo_egreso);
         $this->flujo = 0;
     }
 
@@ -154,7 +157,7 @@ class RegistrarEgreso extends Component
         $this->codigo_producto = null;
 
         if (!empty($this->codigo_producto_busqueda)) {
-            $this->listaProductos = InventarioModel::whereIn('tipo_producto', ['1', '2'])
+            $this->listaProductos = ProductosModel::whereIn('tipo_producto', ['1', '2'])
                 ->where('codigo_producto', 'LIKE', '%' . $this->codigo_producto_busqueda . '%')
                 ->select('id', 'codigo_producto', 'descripcion')
                 ->distinct()

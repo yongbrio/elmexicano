@@ -113,7 +113,9 @@ class EditarUsuario extends Component
             $usuario->name = $this->name;
             $usuario->apellidos = $this->apellidos;
             $usuario->username = $this->username;
-            $usuario->password = Hash::make($this->password);
+            if (!empty($this->password)) {
+                $usuario->password = Hash::make($this->password);
+            }
             $usuario->cedula = $this->cedula;
             $usuario->fecha_nacimiento = $this->fecha_nacimiento;
             $usuario->direccion = $this->direccion;
@@ -128,7 +130,6 @@ class EditarUsuario extends Component
             $usuario->banco = $this->banco;
             $usuario->numero_cuenta = $this->numero_cuenta;
             $usuario->cargo = $this->cargo;
-            $usuario->password = $this->password;
             $usuario->perfil = $this->perfil;
             $usuario->caja = $this->sucursal;
             if (!$this->imagen_db && $this->imagen) {
@@ -156,35 +157,38 @@ class EditarUsuario extends Component
 
     public function validacionCampos()
     {
+        $rules = [
+            'cedula' => 'required|unique:users,cedula,' . $this->id,
+            'name' => ['required', 'string', 'regex:/^[^0-9]*$/'],
+            'apellidos' => ['required', 'string', 'regex:/^[^0-9]*$/'],
+            'telefono' => ['required', 'regex:/^[\d\s\-\+\(\)]+$/'],
+            'fecha_nacimiento' => ['required', 'date', 'before_or_equal:today'],
+            'direccion' => 'required',
+            'correo' => 'required|email',
+            'fecha_inicio' => ['required', 'date'],
+            'referencia_1' => 'required',
+            'referencia_2' => 'required',
+            'horario' => 'required',
+            'username' => 'required|unique:users,username,' . $this->id,
+            'eps' => 'required',
+            'pension' => 'required',
+            'banco' => 'required',
+            'numero_cuenta' => 'required',
+            'cargo' => 'required',
+            'perfil' => 'required',
+            'sucursal' => 'required',
+            'nombre_contacto_emergencia' => ['required', 'string', 'regex:/^[^0-9]*$/'],
+            'numero_contacto_emergencia' => ['required', 'regex:/^[\d\s\-\+\(\)]+$/'],
+            'estado' => 'required',
+        ];
+
+        if ($this->password || $this->password_confirmation) {
+            $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
+            $rules['password_confirmation'] = 'required';
+        }
+
         return $this->validate(
-
-            [
-                'cedula' => 'required|unique:users,cedula,' . $this->id,
-                'name' => ['required', 'string', 'regex:/^[^0-9]*$/'],
-                'apellidos' => ['required', 'string', 'regex:/^[^0-9]*$/'],
-                'telefono' => ['required', 'regex:/^[\d\s\-\+\(\)]+$/'],
-                'fecha_nacimiento' => ['required', 'date', 'before_or_equal:today'],
-                'direccion' => 'required',
-                'correo' => 'required|email',
-                'fecha_inicio' => ['required', 'date'],
-                'referencia_1' => 'required',
-                'referencia_2' => 'required',
-                'horario' => 'required',
-                'username' => 'required|unique:users,username,' . $this->id,
-                'eps' => 'required',
-                'pension' => 'required',
-                'banco' => 'required',
-                'numero_cuenta' => 'required',
-                'cargo' => 'required',
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'password_confirmation' => 'required',
-                'perfil' => 'required',
-                'sucursal' => 'required',
-                'nombre_contacto_emergencia' => ['required', 'string', 'regex:/^[^0-9]*$/'],
-                'numero_contacto_emergencia' => ['required', 'regex:/^[\d\s\-\+\(\)]+$/'],
-                'estado' => 'required',
-
-            ],
+            $rules,
             [
                 'cedula.required' => 'El número de cédula es requerido',
                 'cedula.unique' => 'El número de cédula ya está registrado',

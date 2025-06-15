@@ -94,7 +94,7 @@ class RegistrarProducto extends Component
         }
     }
 
-    public function registrarInventario()
+    public function registrarProducto()
     {
 
         $this->validacionCampos();

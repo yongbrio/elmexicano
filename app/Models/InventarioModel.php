@@ -12,21 +12,32 @@ class InventarioModel extends Model
     protected $table = "inventario";
 
     protected $fillable = [
-        'codigo_producto',
-        'sucursal',
-        'categoria',
-        'tipo',
-        'descripcion',
-        'unidad_medida',
-        'tipo_producto',
-        'costo_unitario',
-        'precio_unitario_con_iva',
-        'precio_unitario_sin_iva',
+        'producto_id',
+        'sucursal_id',
         'stock',
         'stock_minimo',
-        'imagen',
         'registrado_por',
-        'comision',
+        'comisiona',
         'estado'
     ];
+
+    public function producto()
+    {
+        return $this->belongsTo(ProductosModel::class, 'producto_id');
+    }
+
+    public function sucursal()
+    {
+        return $this->belongsTo(SucursalesModel::class, 'sucursal_id');
+    }
+
+    public function registro()
+    {
+        return $this->belongsTo(User::class, 'registrado_por');
+    }
+
+    public function getComisionaTextoAttribute(): string
+    {
+        return is_null($this->comisiona) ? 'No seleccionó' : ($this->comisiona ? 'Sí' : 'No');
+    }
 }

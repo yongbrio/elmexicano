@@ -308,6 +308,7 @@ class ModalOrdenes extends Component
         } else if ($this->tipo_orden == 'egreso') {
             $id_datos = $this->id_proveedor;
             $datos = ProveedoresModel::find($id_datos);
+            $datos->empresa_factura = $this->id_empresa;
         }
 
         $datos_empresa = EmpresasModel::find($this->id_empresa);

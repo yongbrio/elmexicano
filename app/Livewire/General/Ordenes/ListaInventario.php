@@ -32,9 +32,26 @@ class ListaInventario extends LivewireTable
     {
         $sucursal = SucursalesModel::find(Auth::user()->caja);
         if (strtolower($sucursal->nombre_sucursal) == 'corporativo') {
-            return $this->model()->query()->where('estado', '=', 1)->where('tipo_producto', '<>', 1)->where('sucursal', '=', $this->id_sucursal);
+
+
+            $query = $this->model()->query()
+                ->where('inventario.estado', '=', 1)
+                ->where('inventario.sucursal_id', '=', $this->id_sucursal)
+                ->whereHas('producto', function ($query) {
+                    $query->where('tipo_producto', '<>', 1);
+                })->with(['sucursal', 'registro', 'producto.categorias']);
+            Log::info($query->toSql());
+            Log::info($this->id_sucursal);
+
+            return $query;
         } else {
-            return $this->model()->query()->where('estado', '=', 1)->where('sucursal', '=', Auth::user()->caja)->where('tipo_producto', '<>', 1);
+            return $this->model()->query()
+                ->where('inventario.estado', '=', 1)
+                ->where('inventario.sucursal_id', '=', Auth::user()->caja)
+                ->whereHas('producto', function ($query) {
+                    $query->where('tipo_producto', '<>', 1);
+                })
+                ->with(['sucursal', 'registro', 'producto.categorias']);
         }
     }
 
@@ -46,14 +63,11 @@ class ListaInventario extends LivewireTable
                     <i class="fa-solid fa-plus"></i>
                 </button>';
             })->asHtml(),
-            Column::make(__('Código'),  'codigo_producto')->sortable()->searchable(),
-            Column::make(__('Categoría'), function ($value) {
-                $categoria = CategoriasModel::find($value->categoria);
-                return $categoria->nombre_categoria;
-            })->sortable()->searchable(),
-            Column::make(__('Nombre del producto'), 'descripcion')->sortable()->searchable(),
+            Column::make(__('Código'), 'producto.codigo_producto')->sortable()->searchable(),
+            Column::make(__('Categoría'), 'producto.categorias.nombre_categoria')->sortable()->searchable(),
+            Column::make(__('Nombre del producto'), 'producto.descripcion')->sortable()->searchable(),
             Column::make(__('Precio + IVA'), function ($value) {
-                return "$" . number_format($value->precio_unitario_con_iva, 0, ',', '.');
+                return "$" . number_format($value->producto->precio_unitario_con_iva, 0, ',', '.');
             })->sortable()->searchable(),
             Column::make(__('Stock'), 'stock')->sortable()->searchable(),
         ];

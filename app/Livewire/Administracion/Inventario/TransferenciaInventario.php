@@ -7,6 +7,7 @@ use App\Models\HistorialTransferenciasModel;
 use App\Models\InventarioModel;
 use App\Models\SucursalesModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
@@ -55,16 +56,18 @@ class TransferenciaInventario extends Component
     {
         if (!empty(trim($this->producto_origen)) && trim($this->sucursal_origen != '')) {
 
-            $this->listaProductos = InventarioModel::where(function ($query) {
+            $this->listaProductos = InventarioModel::whereHas('producto', function ($query) {
                 $query->where('descripcion', 'like', '%' . $this->producto_origen . '%')
                     ->orWhere('codigo_producto', 'like', '%' . $this->producto_origen . '%');
             })
-                ->where('sucursal', $this->sucursal_origen)
+                ->where('sucursal_id', $this->sucursal_origen)
                 ->where('estado', 1)
-                ->orderBy('codigo_producto')
+                ->with('producto')
+                ->orderByRaw('(SELECT codigo_producto FROM productos WHERE productos.id = inventario.producto_id) ASC')
                 ->take(5)
                 ->get();
 
+            Log::info($this->listaProductos);
 
             $this->id_producto_origen = null;
             $this->stock_disponible_origen = null;
@@ -93,20 +96,20 @@ class TransferenciaInventario extends Component
         }
     }
 
-    public function setearNombreProducto($id)
+    public function setearNombreProducto($id_inventario)
     {
         $this->listaProductos = null;
 
-        $nombreProducto = InventarioModel::find($id);
+        $inventario = InventarioModel::find($id_inventario);
 
-        if ($nombreProducto) {
+        if ($inventario) {
 
-            if ($nombreProducto->stock != 0) {
-                $this->producto_origen = $nombreProducto->codigo_producto . " - " . $nombreProducto->descripcion  . " - " . $nombreProducto->stock;
-                $this->producto_origen_nombre = $nombreProducto->descripcion;
-                $this->id_producto_origen = $id;
-                $this->codigo_producto = $nombreProducto->codigo_producto;
-                $this->stock_disponible_origen = $nombreProducto->stock;
+            if ($inventario->stock != 0) {
+                $this->producto_origen = $inventario->producto->codigo_producto . " - " . $inventario->producto->descripcion  . " - " . $inventario->stock;
+                $this->producto_origen_nombre = $inventario->producto->descripcion;
+                $this->id_producto_origen = $inventario->producto_id;
+                $this->codigo_producto = $inventario->producto->codigo_producto;
+                $this->stock_disponible_origen = $inventario->stock;
             } else {
 
                 $message = "El prodcuto está sin stock disponible";
@@ -147,7 +150,11 @@ class TransferenciaInventario extends Component
     {
         $this->validacionCampos();
 
-        $validarProducto = InventarioModel::where('codigo_producto', $this->codigo_producto)->where('sucursal', $this->sucursal_destino)->exists();
+        //VALIDAR ESTA CONSULTA ---> PENDIENTE
+        Log::info($this->id_producto_origen);
+        Log::info($this->sucursal_destino);
+
+        $validarProducto = InventarioModel::where('producto_id', $this->id_producto_origen)->where('sucursal_id', $this->sucursal_destino)->exists();
         $origen = $this->sucursal_origen;
         $producto = $this->codigo_producto;
         $destino = $this->sucursal_destino;
@@ -182,7 +189,7 @@ class TransferenciaInventario extends Component
                     if ($historial) {
 
                         //Descontamos el stock del producto del inventario
-                        $inventario_prod = InventarioModel::where('id', $this->id_producto_origen)->first();
+                        $inventario_prod = InventarioModel::where('producto_id', $this->id_producto_origen)->where('sucursal_id', $this->sucursal_origen)->first();
                         $inventario_prod->stock = $inventario_prod->stock - $this->stock_transferencia;
                         $inventario_prod->save();
 

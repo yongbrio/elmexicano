@@ -23,9 +23,9 @@ class ListaInventarioTable extends LivewireTable
     protected function query(): Builder
     {
         if (Auth::user()->perfil == 1) {
-            return $this->model()->query()->where('estado', '=', 1);
+            return $this->model()->query()->where('inventario.estado', '=', 1)->with(['sucursal', 'registro', 'producto.categorias']);
         } else {
-            return $this->model()->query()->where('estado', '=', 1)->where('sucursal', '=', Auth::user()->caja);
+            return $this->model()->query()->where('inventario.estado', '=', 1)->where('inventario.sucursal_id', '=', Auth::user()->caja)->with(['sucursal', 'registro', 'producto.categorias']);
         }
     }
 
@@ -41,35 +41,19 @@ class ListaInventarioTable extends LivewireTable
                     return '<img class="w-10 h-10 transition duration-300 ease-in-out transform rounded-full cursor-pointer hover:scale-110" src="' . route("admin.storage", ["modulo" => $moduleName, "filename" => $imageName]) . '" alt="image description">';
                 } else {
                     return '<img class="w-10 h-10 transition duration-300 ease-in-out transform rounded-full cursor-pointer hover:scale-110" src="' . asset('images/imagen-defecto-producto.jpg') . '" alt="image description">';
-                    /* src="{{asset('images/imagen-defecto-producto.jpg') }}" */
                 }
             })->asHtml(),
-            Column::make(__('Sucursal'), function ($value) {
-                $sucursal = SucursalesModel::find($value->sucursal);
-                return $sucursal->nombre_sucursal;
-            })->sortable()->searchable(),
-            Column::make(__('Código del producto'), 'codigo_producto')->sortable()->searchable(),
-            Column::make(__('Categoría'), function ($value) {
-                $categoria = CategoriasModel::find($value->categoria);
-                return $categoria->nombre_categoria;
-            })->sortable()->searchable(),
-            Column::make(__('Tipo de producto'), function ($value) {
-                $tipo_producto = TipoProductoModel::find($value->tipo_producto);
-                return $tipo_producto->nombre_tipo_producto;
-            })->sortable()->searchable(),
-            Column::make(__('Nombre del producto'), 'descripcion')->sortable()->searchable(),
-            Column::make(__('Tipo de impuesto'), function ($value) {
-                $tipo_impuesto = TipoAfectacionImpuestoModel::find($value->tipo);
-                return $tipo_impuesto->codigo . " - " . $tipo_impuesto->descripcion;
-            })->sortable()->searchable(),
-            Column::make(__('Unidad de medida'), function ($value) {
-                $unidad_medida = UnidadesMedidaModel::find($value->unidad_medida);
-                return $unidad_medida->nombre_unidad_medida;
-            })->sortable()->searchable(),
-            Column::make(__('Costo Unitario'), 'costo_unitario')->sortable()->searchable(),
-            Column::make(__('Precio (con IVA)'), 'precio_unitario_con_iva')->sortable()->searchable(),
-            Column::make(__('Precio (sin IVA)'), 'precio_unitario_sin_iva')->sortable()->searchable(),
-            Column::make(__('Comisión'), 'comision')->sortable()->searchable(),
+            Column::make(__('Sucursal'), 'sucursal.nombre_sucursal')->sortable()->searchable(),
+            Column::make(__('Código del producto'), 'producto.codigo_producto')->sortable()->searchable(),
+            Column::make(__('Categoria'), 'producto.categorias.nombre_categoria')->sortable()->searchable(),
+            Column::make(__('Tipo de producto'), 'producto.tipoProducto.nombre_tipo_producto')->sortable()->searchable(),
+            Column::make(__('Nombre del producto'), 'producto.descripcion')->sortable()->searchable(),
+            Column::make(__('Tipo de impuesto'), 'producto.tipoImpuesto.descripcion')->sortable()->searchable(),
+            Column::make(__('Unidad de medida'), 'producto.unidadMedida.nombre_unidad_medida')->sortable()->searchable(),
+            Column::make(__('Costo Unitario'), 'producto.costo_unitario')->sortable()->searchable(),
+            Column::make(__('Precio (con IVA)'), 'producto.precio_unitario_con_iva')->sortable()->searchable(),
+            Column::make(__('Precio (sin IVA)'), 'producto.precio_unitario_sin_iva')->sortable()->searchable(),
+            Column::make(__('Comisión'), 'producto.comision')->sortable()->searchable(),
             Column::make(__('Stock'), 'stock')->sortable()->searchable(),
             Column::make(__('Min Stock'), 'stock_minimo')->sortable()->searchable(),
             Column::make(__('Estado'), function (mixed $value): string {

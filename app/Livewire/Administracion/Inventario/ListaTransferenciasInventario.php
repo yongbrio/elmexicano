@@ -4,6 +4,7 @@ namespace App\Livewire\Administracion\Inventario;
 
 use App\Models\HistorialTransferenciasModel;
 use App\Models\InventarioModel;
+use App\Models\ProductosModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -167,10 +168,11 @@ class ListaTransferenciasInventario extends LivewireTable
 
         $historial = HistorialTransferenciasModel::where('id', $id)->first();
 
+        $id_producto = ProductosModel::where('codigo_producto', $historial->codigo_producto)->value('id');
+
         if ($historial) {
             //Actualizamos el stock del inventario origen
-            $inventario = InventarioModel::where('codigo_producto', $historial->codigo_producto)->where('sucursal', $historial->id_sucursal_origen)->first();
-
+            $inventario = InventarioModel::where('producto_id', $id_producto)->where('sucursal_id', $historial->id_sucursal_origen)->first();
             $inventario->stock = $inventario->stock + $historial->cantidad_transferida;
             $inventario->save();
             //Actualizamos el estado de la transferencia como rechazado
@@ -206,10 +208,11 @@ class ListaTransferenciasInventario extends LivewireTable
         } else if ($this->estado == 1) {
             $estado_transferencia = 2;
         }
-        if ($transferencia) {
 
+        if ($transferencia) {
             //Actualización del producto de la sucursal destino
-            $producto_destino = InventarioModel::where('codigo_producto', $transferencia->codigo_producto)->where('sucursal', $transferencia->id_sucursal_destino)->first();
+            $id_producto = ProductosModel::where('codigo_producto', $transferencia->codigo_producto)->value('id');
+            $producto_destino = InventarioModel::where('producto_id', $id_producto)->where('sucursal_id', $transferencia->id_sucursal_destino)->first();
             if ($estado_transferencia == 2) {
                 $nuevoStock = $producto_destino->stock + $transferencia->cantidad_transferida;
                 $producto_destino->stock = $nuevoStock;
