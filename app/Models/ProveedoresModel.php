@@ -28,4 +28,14 @@ class ProveedoresModel extends Model
         'estado',
         'registrado_por'
     ];
+
+    public function ciudades()
+    {
+        return $this->belongsTo(MunicipiosModel::class, 'ciudad', 'id');
+    }
+
+    public function departamentos()
+    {
+        return $this->belongsTo(DepartamentosModel::class, 'departamento', 'id');
+    }
 }

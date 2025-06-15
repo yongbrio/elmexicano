@@ -19,9 +19,8 @@ class ListaProveedoresTable extends LivewireTable
     /** @return Builder<Model> */
     protected function query(): Builder
     {
-        return $this->model()->query()->where('estado', '=', 1);
+        return $this->model()->query()->with(['ciudades', 'departamentos'])->where('estado', '=', 1);
     }
-
 
     protected function columns(): array
     {
@@ -33,8 +32,8 @@ class ListaProveedoresTable extends LivewireTable
             Column::make(__('NIT'), 'nit')->sortable()->searchable(),
             Column::make(__('Sucursal'), 'sucursal')->sortable()->searchable(),
             Column::make(__('Dirección'), 'direccion')->sortable()->searchable(),
-            Column::make(__('Ciudad'), 'ciudad')->sortable()->searchable(),
-            Column::make(__('Departamento'), 'departamento')->sortable()->searchable(),
+            Column::make(__('Ciudad'), 'ciudades.nombre_municipio')->sortable()->searchable(),
+            Column::make(__('Departamento'), 'departamentos.nombre_departamento')->sortable()->searchable(),
             Column::make(__('Correo'), 'correo')->sortable()->searchable(),
             Column::make(__('Nombre encargado'), 'nombre_encargado')->sortable()->searchable(),
             Column::make(__('Descripción'), 'descripcion')->sortable()->searchable(),
@@ -57,5 +56,4 @@ class ListaProveedoresTable extends LivewireTable
     {
         return false;
     }
-
 }
