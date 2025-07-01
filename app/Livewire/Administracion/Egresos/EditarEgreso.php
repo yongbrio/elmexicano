@@ -5,6 +5,7 @@ namespace App\Livewire\Administracion\Egresos;
 use App\Models\CategoriasEgresosAsociadasModel;
 use App\Models\EgresosModel;
 use App\Models\InventarioModel;
+use App\Models\ProductosModel;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -165,10 +166,13 @@ class EditarEgreso extends Component
         $this->codigo_producto = null;
 
         if (!empty($this->codigo_producto_busqueda)) {
-            $this->listaProductos = InventarioModel::whereIn('tipo_producto', ['1', '2'])
-                ->where('codigo_producto', 'LIKE', '%' . $this->codigo_producto_busqueda . '%')
-                ->select('id', 'codigo_producto', 'descripcion')
-                ->distinct()
+            $this->listaProductos = ProductosModel::where(function ($query) {
+                $query->where('descripcion', 'like', '%' . $this->codigo_producto_busqueda . '%')
+                    ->orWhere('codigo_producto', 'like', '%' . $this->codigo_producto_busqueda . '%');
+            })
+                ->where('estado', 1)
+                ->orderBy('codigo_producto')
+                ->take(5)
                 ->get();
         } else {
             $this->listaProductos = '';

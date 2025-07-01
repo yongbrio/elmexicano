@@ -6,6 +6,7 @@ use App\Models\OrdenesModel;
 use App\Models\SucursalesModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use RamonRietdijk\LivewireTables\Livewire\LivewireTable;
@@ -18,6 +19,18 @@ class ListaOrdenes extends LivewireTable
     protected string $model = OrdenesModel::class;
 
     protected $appends = ['tipo_orden'];
+
+    /** @return Builder<Model> */
+    protected function query(): Builder
+    {
+        $sucursal_usuario = SucursalesModel::find(Auth::user()->caja);
+
+        if (strtolower($sucursal_usuario->nombre_sucursal) == 'corporativo') {
+            return $this->model()->query();
+        } else {
+            return $this->model()->query()->where('ordenes.id_sucursal', '=', Auth::user()->caja);
+        }
+    }
 
     protected function columns(): array
     {

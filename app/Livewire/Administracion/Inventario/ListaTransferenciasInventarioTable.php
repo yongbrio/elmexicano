@@ -20,7 +20,9 @@ class ListaTransferenciasInventarioTable extends LivewireTable
     /** @return Builder<Model> */
     protected function query(): Builder
     {
-        if (Auth::user()->perfil == 1) {
+        $sucursal_usuario = SucursalesModel::find(Auth::user()->caja);
+
+        if (strtolower($sucursal_usuario->nombre_sucursal) == 'corporativo') {
             return $this->model()->query()->where('transferencia_recibida', '<>', 0);
         } else {
             return $this->model()->query()->where('id_sucursal_destino', '=', Auth::user()->caja)->where('transferencia_recibida', '<>', 0)

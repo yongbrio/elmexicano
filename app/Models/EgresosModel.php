@@ -35,6 +35,6 @@ class EgresosModel extends Model
 
     public function codigoProducto()
     {
-        return $this->belongsTo(InventarioModel::class, 'codigo_producto', 'id');
+        return $this->belongsTo(ProductosModel::class, 'codigo_producto', 'id');
     }
 }

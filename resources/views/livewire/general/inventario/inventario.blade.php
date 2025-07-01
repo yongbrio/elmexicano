@@ -50,7 +50,7 @@
         </div>
         <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="lista-transferencias-confirmadas-inventario"
             role="tabpanel" aria-labelledby="lista-transferencias-confirmadas-inventario-tab">
-            <livewire:administracion.inventario.lista-transferencias-inventario :estado="'2'" />
+            <livewire:administracion.inventario.lista-transferencias-inventario :estado="'2'" :mostrarAcciones="'0'" />
         </div>
 
     </div>

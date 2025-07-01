@@ -1028,7 +1028,7 @@ class Ingreso extends Component
 
         $this->forma_pago = '';
 
-        $this->aplicar_pago = true;
+        $this->aplicar_pago = false;
 
         $this->opcionesPagoActivado = true;
 

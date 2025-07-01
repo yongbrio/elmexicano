@@ -36,7 +36,9 @@ class TransferenciaInventario extends Component
     #[On('actualizarTransferencias')]
     public function darListaTransferencias()
     {
-        if (Auth::user()->perfil == 1) {
+        $sucursal_usuario = SucursalesModel::find(Auth::user()->caja);
+
+        if (strtolower($sucursal_usuario->nombre_sucursal) == 'corporativo') {
             $this->disabled = '';
             $this->listaTransferencias = HistorialTransferenciasModel::where('transferencia_recibida', '=', 0)->get();
         } else {

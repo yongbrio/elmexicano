@@ -24,4 +24,9 @@ class CuentasBancariasModel extends Model
         'estado',
         'registrado_por',
     ];
+
+    public function obtenerEmpresa()
+    {
+        return $this->belongsTo(EmpresasModel::class, 'empresa', 'id');
+    }
 }

@@ -22,8 +22,10 @@ class ListaInventarioTable extends LivewireTable
     /** @return Builder<Model> */
     protected function query(): Builder
     {
-        if (Auth::user()->perfil == 1) {
-            return $this->model()->query()->where('inventario.estado', '=', 1)->with(['sucursal', 'registro', 'producto.categorias']);
+        $sucursal_usuario = SucursalesModel::find(Auth::user()->caja);
+
+        if (strtolower($sucursal_usuario->nombre_sucursal) == 'corporativo') {
+            return $this->model()->query();
         } else {
             return $this->model()->query()->where('inventario.estado', '=', 1)->where('inventario.sucursal_id', '=', Auth::user()->caja)->with(['sucursal', 'registro', 'producto.categorias']);
         }

@@ -1188,7 +1188,8 @@
                                         typeInput="text"></x-live-wire-input>
 
                                     <x-select2 label="Factura con" id="empresaFactura" icon="fa-solid fa-comment"
-                                        model="empresaFactura_edicion" optionTextDefault="Seleccione factura">
+                                        model="empresaFactura_edicion" optionTextDefault="Seleccione factura"
+                                        disabled='disabled'>
                                     </x-select2>
 
                                     <x-select2 label="Importancia" id="importancia" icon="fa-solid fa-toggle-on"
@@ -1238,7 +1239,7 @@
                                     </div>
                                 </div>
                                 <div class="p-3">
-                                    <x-live-wire-input label="Cliente" id="buscar_cliente"
+                                    <x-live-wire-input label="Buscar cliente" id="buscar_cliente"
                                         icon="fa-solid fa-location-dot" model="buscar_cliente"
                                         placeholder="Buscar Cliente" typeInput="text" wire='buscarCliente'>
                                     </x-live-wire-input>
@@ -1248,15 +1249,36 @@
                                     </x-live-wire-input>
 
                                     @if ($listaClientes)
-                                    <ul
-                                        class="max-w-md p-2 space-y-1 text-sm text-gray-500 list-disc list-inside dark:text-gray-400">
+                                    <ul class="w-full p-2 space-y-2">
                                         @foreach ($listaClientes as $cliente)
-                                        <li class="cursor-pointer" wire:click='setearNombreCliente("{{$cliente->id}}")'>
-                                            {{ $cliente->nombre_legal.' - '. $cliente->nit . ' - '.$cliente->telefono }}
+                                        <li class="cursor-pointer p-3 rounded-md border border-gray-200 hover:bg-green-700 text-gray-700 hover:text-white transition-all shadow-sm"
+                                            wire:click='setearNombreCliente("{{ $cliente->id }}")'>
+
+                                            <div class="text-sm ">
+                                                <span class="font-semibold ">Nombre legal:</span> {{
+                                                $cliente->nombre_legal }}
+                                            </div>
+                                            <div class="text-sm ">
+                                                <span class="font-semibold">Nombre comercial:</span> {{
+                                                $cliente->nombre_comercial }}
+                                            </div>
+                                            <div class="text-sm ">
+                                                <span class="font-semibold">Grupo:</span> {{
+                                                $cliente->grupo }}
+                                            </div>
+                                            <div class="text-sm ">
+                                                <span class="font-semibold">NIT:</span> {{ $cliente->nit
+                                                }}
+                                            </div>
+                                            <div class="text-sm ">
+                                                <span class="font-semibold">Teléfono:</span> {{
+                                                $cliente->telefono }}
+                                            </div>
                                         </li>
                                         @endforeach
                                     </ul>
                                     @endif
+
                                     <div class="flex justify-end mt-5">
                                         <button wire:click="cambiarClienteOrden" type="button"
                                             class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">

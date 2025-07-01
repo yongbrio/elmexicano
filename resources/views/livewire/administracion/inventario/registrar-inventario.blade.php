@@ -26,10 +26,10 @@
         <x-live-wire-input label="Nombre del producto" id="descripcion" icon="fa-solid fa-list" model="descripcion"
             placeholder="" typeInput="text" disabled="disabled"></x-live-wire-input>
 
-        <x-live-wire-input label="Stock" id="stock" icon="fa-solid fa-dollar-sign" model="stock" placeholder="0"
+        <x-live-wire-input label="Stock" id="stock" icon="fa-solid fa-boxes-stacked" model="stock" placeholder="0"
             typeInput="number"></x-live-wire-input>
 
-        <x-live-wire-input label="Stock Mínimo" id="stock_minimo" icon="fa-solid fa-dollar-sign" model="stock_minimo"
+        <x-live-wire-input label="Stock Mínimo" id="stock_minimo" icon="fa-solid fa-cubes-stacked" model="stock_minimo"
             placeholder="0" typeInput="number"></x-live-wire-input>
 
         <x-select2 label="Comisiona" id="comisiona" icon="fa-solid fa-percent" model="comisiona"

@@ -21,9 +21,12 @@ class ListaTransferenciasInventario extends LivewireTable
 
     public $estado;
 
-    public function mount(int $estado)
+    public $mostrarAcciones;
+
+    public function mount(int $estado, int $mostrarAcciones = 1)
     {
         $this->estado = $estado;
+        $this->mostrarAcciones = $mostrarAcciones;
     }
 
     /** @return Builder<Model> */
@@ -57,44 +60,34 @@ class ListaTransferenciasInventario extends LivewireTable
 
     protected function columns(): array
     {
-        return [
+        $columns = [
 
             Column::make(__('Movimiento'), function ($value) {
-
                 $estado = "Entrada";
                 $color = 'green-600';
-
                 if ($value->id_sucursal_origen == Auth::user()->caja) {
                     $estado = "Salida";
                     $color = 'red-600';
                 }
-
-                // Devuelve el HTML para mostrar
-                return "<div class='text-white p-1 bg-{$color} rounded px-2 text-center'>
-                {$estado}
-                </div>";  // Devuelve el HTML formateado
-
-
+                return "<div class='text-white p-1 bg-{$color} rounded px-2 text-center'>{$estado}</div>";
             })->asHtml()->sortable(function (Builder $builder, Direction $direction): void {
-                // Utiliza la columna original para el ordenamiento
                 $builder->orderBy('transferencia_recibida', $direction->value);
             })->searchable(function (Builder $builder, $searchTerm) {
                 $builder->where('transferencia_recibida', 'LIKE', "%{$searchTerm}%");
             }),
+
             Column::make(__('Sucursal Origen'), 'nombre_sucursal_origen')->sortable()->searchable(),
-            Column::make(__('Producto'), function ($value) {
-                return $value->codigo_producto . " - " . $value->nombre_producto;
-            })->sortable()->searchable(),
+            Column::make(__('Producto'), fn($value) => $value->codigo_producto . " - " . $value->nombre_producto)->sortable()->searchable(),
             Column::make(__('Cantidad'), 'cantidad_transferida')->sortable()->searchable(),
             Column::make(__('Sucursal Destino'), 'nombre_sucursal_destino')->sortable()->searchable(),
 
-            Column::make(__('Registrado por'), function ($value) {
-                $usuario = User::find($value->registrado_por);
-                return $usuario->name . " " . $usuario->apellidos;
-            })->sortable()->searchable(),
-
+            Column::make(__('Registrado por'), fn($value) => User::find($value->registrado_por)?->name . ' ' . User::find($value->registrado_por)?->apellidos)->sortable()->searchable(),
             Column::make(__('Fecha de registro'), 'created_at')->sortable()->searchable(),
-            Column::make(__('Acciones'), function ($value) {
+        ];
+
+        // Solo añadir columna de acciones si la condición se cumple
+        if ($this->mostrarAcciones == 1) {
+            $columns[] = Column::make(__('Acciones'), function ($value) {
 
                 $acciones = [
                     0 => [
@@ -153,10 +146,12 @@ class ListaTransferenciasInventario extends LivewireTable
                 }
 
                 return $botones;
-            })->asHtml(),
+            })->asHtml();
+        }
 
-        ];
+        return $columns;
     }
+
 
     protected function canSelect(): bool
     {
