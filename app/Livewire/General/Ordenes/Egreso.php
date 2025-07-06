@@ -483,7 +483,7 @@ class Egreso extends Component
                 // Si la cantidad es mayor a 1, solo restamos 1
                 if ($egreso['cantidad_egreso'] > 1) {
                     $egreso['cantidad_egreso']--;
-                    $egreso['total'] = -1 * ($egreso['total'] - $egreso['precio_unitario_con_iva']);
+                    $egreso['total'] = -1 * ($egreso['cantidad_egreso'] * $egreso['precio_unitario_con_iva']);
                     $this->valor_total_orden = $this->valor_total_orden - $egreso['precio_unitario_con_iva'];
                 } else {
                     // Si la cantidad es 1, lo eliminamos de la lista
@@ -508,7 +508,7 @@ class Egreso extends Component
                 // Aumenta la cantidad del producto en 1
 
                 $egreso['cantidad_egreso']++;
-                $egreso['total'] = -1 * ($egreso['total'] + $egreso['precio_unitario_con_iva']);
+                $egreso['total'] = -1 * ($egreso['cantidad_egreso'] * $egreso['precio_unitario_con_iva']);
                 $this->valor_total_orden = $this->valor_total_orden + $egreso['precio_unitario_con_iva'];
                 break;
             }
