@@ -36,54 +36,6 @@ class ListaOrdenes extends LivewireTable
     {
         return [
 
-            Column::make(__('ID'), function ($value) {
-                $datos = json_decode($value->datos);
-                return $datos->telefono;
-            })
-                ->searchable(function ($query, $search) {
-                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.telefono")) LIKE ?', ["%{$search}%"]);
-                })
-                ->sortable(function (Builder $builder, Direction $direction) {
-                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.telefono")) AS telefono')
-                        ->orderBy('telefono', $direction->value);
-                }),
-
-            Column::make(__('Grupo'), function ($value) {
-                $datos = json_decode($value->datos);
-                return strtoupper($datos->grupo);
-            })
-                ->searchable(function ($query, $search) {
-                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.grupo")) LIKE ?', ["%{$search}%"]);
-                })
-                ->sortable(function (Builder $builder, Direction $direction) {
-                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.grupo")) AS grupo')
-                        ->orderBy('grupo', $direction->value);
-                }),
-
-            Column::make(__('Nombre comercial'), function ($value) {
-                $datos = json_decode($value->datos);
-                return strtoupper($datos->nombre_comercial);
-            })
-                ->searchable(function ($query, $search) {
-                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_comercial")) LIKE ?', ["%{$search}%"]);
-                })
-                ->sortable(function (Builder $builder, Direction $direction) {
-                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_comercial")) AS nombre_comercial')
-                        ->orderBy('nombre_comercial', $direction->value);
-                }),
-
-            Column::make(__('Nombre legal'), function ($value) {
-                $datos = json_decode($value->datos);
-                return strtoupper($datos->nombre_legal);
-            })
-                ->searchable(function ($query, $search) {
-                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_legal")) LIKE ?', ["%{$search}%"]);
-                })
-                ->sortable(function (Builder $builder, Direction $direction) {
-                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_legal")) AS nombre_legal')
-                        ->orderBy('nombre_legal', $direction->value);
-                }),
-
             Column::make(__('Orden'), function ($value) {
                 $orden = trim($value->id);
                 $tipo = trim($value->tipo_orden);
@@ -98,6 +50,7 @@ class ListaOrdenes extends LivewireTable
             })->searchable(function ($query, $search) {
                 $query->where('id', 'LIKE', "%{$search}%");
             }),
+
 
             Column::make(__('Tipo'), function ($value) {
                 $tipo = strtoupper(trim($value->tipo_orden));
@@ -147,6 +100,54 @@ class ListaOrdenes extends LivewireTable
             })->searchable(function (Builder $builder, $searchTerm) {
                 $builder->where('forma_pago', 'LIKE', "%{$searchTerm}%");
             }),
+
+            Column::make(__('ID'), function ($value) {
+                $datos = json_decode($value->datos);
+                return $datos->telefono;
+            })
+                ->searchable(function ($query, $search) {
+                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.telefono")) LIKE ?', ["%{$search}%"]);
+                })
+                ->sortable(function (Builder $builder, Direction $direction) {
+                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.telefono")) AS telefono')
+                        ->orderBy('telefono', $direction->value);
+                }),
+
+            Column::make(__('Grupo'), function ($value) {
+                $datos = json_decode($value->datos);
+                return strtoupper($datos->grupo);
+            })
+                ->searchable(function ($query, $search) {
+                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.grupo")) LIKE ?', ["%{$search}%"]);
+                })
+                ->sortable(function (Builder $builder, Direction $direction) {
+                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.grupo")) AS grupo')
+                        ->orderBy('grupo', $direction->value);
+                }),
+
+            Column::make(__('Nombre comercial'), function ($value) {
+                $datos = json_decode($value->datos);
+                return strtoupper($datos->nombre_comercial);
+            })
+                ->searchable(function ($query, $search) {
+                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_comercial")) LIKE ?', ["%{$search}%"]);
+                })
+                ->sortable(function (Builder $builder, Direction $direction) {
+                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_comercial")) AS nombre_comercial')
+                        ->orderBy('nombre_comercial', $direction->value);
+                }),
+
+            Column::make(__('Nombre legal'), function ($value) {
+                $datos = json_decode($value->datos);
+                return strtoupper($datos->nombre_legal);
+            })
+                ->searchable(function ($query, $search) {
+                    $query->whereRaw('JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_legal")) LIKE ?', ["%{$search}%"]);
+                })
+                ->sortable(function (Builder $builder, Direction $direction) {
+                    $builder->selectRaw('id, datos, JSON_UNQUOTE(JSON_EXTRACT(datos, "$.nombre_legal")) AS nombre_legal')
+                        ->orderBy('nombre_legal', $direction->value);
+                }),
 
             Column::make(__('Sucursal'),  function ($value) {
                 $sucursal = SucursalesModel::find($value->id_sucursal);
@@ -225,26 +226,6 @@ class ListaOrdenes extends LivewireTable
             })->sortable(function (Builder $builder, Direction $direction) {
                 // Ordenamiento por estado_envio
                 $builder->orderBy('estado_envio', $direction->value);
-            }),
-
-
-            Column::make(__('Estado pago'), function ($value) {
-                // Verifica si estado_pago está vacío
-                return !empty($value->estado_pago) ? ucfirst(strtolower($value->estado_pago)) : 'Por asignar';
-            })->searchable(function ($query, $search) {
-                // Búsqueda por estado_pago
-                $query->where(function ($query) use ($search) {
-                    // Busca el estado_pago o considera vacío como "Por asignar"
-                    $query->where('estado_pago', 'LIKE', "%{$search}%")
-                        ->orWhere(function ($query) use ($search) {
-                            // Considera los valores vacíos como "Por asignar"
-                            $query->where('estado_pago', '')
-                                ->whereRaw('LOWER(?) = LOWER("Por asignar")', [$search]);
-                        });
-                });
-            })->sortable(function (Builder $builder, Direction $direction) {
-                // Ordenamiento por estado_pago
-                $builder->orderBy('estado_pago', $direction->value);
             }),
 
             Column::make(__('Usuario'), function ($value) {
